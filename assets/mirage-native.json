@@ -1,0 +1,477 @@
+{
+  "model": "Native CS2 Mirage",
+  "source": "Local CS2 game/csgo/maps/de_mirage.vpk",
+  "exporter": "Source 2 Viewer 20.0",
+  "editor": "Blender 5.2.1 LTS",
+  "units": {
+    "sourceToWebScale": 0.02,
+    "sourceToWebOffset": [
+      13.4,
+      3.2,
+      -16.94
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "anchors": {
+    "stairs": {
+      "target": {
+        "x": 5.7,
+        "z": 13.4,
+        "surfaces": [
+          {
+            "height": -0.08001,
+            "object": "n0_lr0_agg_merge_sitebwall13a_1.013"
+          }
+        ],
+        "height": -0.08001
+      },
+      "origin": {
+        "x": 39.1,
+        "z": -4.6,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_marble_01_0"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "jungle": {
+      "target": {
+        "x": -5.3,
+        "z": 12.4,
+        "surfaces": [
+          {
+            "height": 4.50928,
+            "object": "n0_lr0_agg_merge_marble_01_0.035"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tilefloor01_0.038"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 39.1,
+        "z": -4.6,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_marble_01_0"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "ct": {
+      "target": {
+        "x": -4.1,
+        "z": 29.4,
+        "surfaces": [
+          {
+            "height": -0.24001,
+            "object": "n0_lr0_agg_merge_de_mirage_tile_ver4_diffuse_0.001"
+          }
+        ],
+        "height": -0.24001
+      },
+      "origin": {
+        "x": 41.86,
+        "z": -11.98,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.022"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "window": {
+      "target": {
+        "x": -8.8,
+        "z": -3.8,
+        "surfaces": [
+          {
+            "height": 4.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.043"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tile_int_02_0.002"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 38.4,
+        "z": -16.2,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.022"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "connector": {
+      "target": {
+        "x": 0.2,
+        "z": 2.4,
+        "surfaces": [
+          {
+            "height": 5.44,
+            "object": "n0_lr0_agg_merge_marble_01_0.053"
+          },
+          {
+            "height": -1.12,
+            "object": "n0_lr0_agg_merge_stonestep02_0.003"
+          }
+        ],
+        "height": -1.12
+      },
+      "origin": {
+        "x": 18.8,
+        "z": -27.2,
+        "surfaces": [
+          {
+            "height": -1.99158,
+            "object": "n0_lr0_agg_merge_de_mirage_ground_tilec_blend_diffuse__0"
+          }
+        ],
+        "height": -1.99158
+      }
+    },
+    "market": {
+      "target": {
+        "x": -27.3,
+        "z": -11.3,
+        "surfaces": [
+          {
+            "height": 5.44,
+            "object": "n0_lr0_agg_merge_marble_01_0.050"
+          }
+        ],
+        "height": -0.16,
+        "heightNote": "Adjacent market interior floor probe (radar 239,432); target lies on the window facade."
+      },
+      "origin": {
+        "x": 12.5,
+        "z": -33.7,
+        "surfaces": [
+          {
+            "height": 9.28,
+            "object": "n0_lr0_agg_merge_marble_01_0.120"
+          },
+          {
+            "height": 0.48,
+            "object": "n0_lr0_agg_merge_tilefloor01_0.011"
+          }
+        ],
+        "height": 0.48
+      }
+    },
+    "flash-ramp": {
+      "target": {
+        "x": 18.8,
+        "z": 17.1,
+        "surfaces": [
+          {
+            "height": 4.48,
+            "object": "n0_lr0_agg_merge_marble_01_0.104"
+          },
+          {
+            "height": 0.40805,
+            "object": "n0_lr0_agg_merge_claypot02_0"
+          },
+          {
+            "height": -0.32,
+            "object": "n0_lr0_agg_merge_tilefloor01_0.003"
+          }
+        ],
+        "height": -0.32
+      },
+      "origin": {
+        "x": 16.4394,
+        "z": 21.3406,
+        "surfaces": [
+          {
+            "height": 6.95875,
+            "object": "n0_lr0_agg_merge_aztec_scaffolding_system_0.002"
+          },
+          {
+            "height": 2.4,
+            "object": "n0_lr0_agg_merge_woodfloor005a_0.021"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.027"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "flash-mid": {
+      "target": {
+        "x": -7.4,
+        "z": -1.4,
+        "surfaces": [
+          {
+            "height": 9.12,
+            "object": "n0_lr0_agg_merge_marble_01_0.127"
+          },
+          {
+            "height": -2.08,
+            "object": "n0_lr0_agg_merge_tilefloor01_0.004"
+          }
+        ],
+        "height": -2.08
+      },
+      "origin": {
+        "x": -11.5594,
+        "z": 1.5406,
+        "surfaces": [
+          {
+            "height": 5.43999,
+            "object": "n0_lr0_agg_merge_marble_01_0.220"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tile_int_02_0.001"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "flash-b": {
+      "target": {
+        "x": -25.2,
+        "z": -23.6,
+        "surfaces": [
+          {
+            "height": 2.73808,
+            "object": "n0_lr0_agg_merge_bomb_site_tarp_0"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_tilefloor02_0.002"
+          }
+        ],
+        "height": 0.0
+      },
+      "origin": {
+        "x": -16.0394,
+        "z": -30.2206,
+        "surfaces": [
+          {
+            "height": 2.24,
+            "object": "n0_lr0_agg_merge_tilefloor02_0.006"
+          }
+        ],
+        "height": 2.24
+      }
+    },
+    "he-default": {
+      "target": {
+        "x": 9.7,
+        "z": 23.8,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_de_mirage_tile_ver4_diffuse_0.008"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 1.0394,
+        "z": 8.1497,
+        "surfaces": [
+          {
+            "height": 5.44,
+            "object": "n0_lr0_agg_merge_marble_01_0.055"
+          },
+          {
+            "height": 2.69304,
+            "object": "n0_lr0_agg_merge_dust_arch_small_0.013"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tilefloor02_0.014"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "he-underpass": {
+      "target": {
+        "x": -6.0,
+        "z": -11.5,
+        "surfaces": [
+          {
+            "height": 5.76,
+            "object": "n0_lr0_agg_merge_marble_01_0.090"
+          },
+          {
+            "height": -4.16,
+            "object": "n0_lr0_agg_merge_tilefloor02_0.004"
+          }
+        ],
+        "height": -4.16
+      },
+      "origin": {
+        "x": -1.6408,
+        "z": -22.7615,
+        "surfaces": [
+          {
+            "height": -0.12277,
+            "object": "n0_lr0_agg_merge_de_mirage_ground_tilec_blend_diffuse__0.016"
+          }
+        ],
+        "height": -0.12277
+      }
+    },
+    "he-window": {
+      "target": {
+        "x": -8.8,
+        "z": -3.8,
+        "surfaces": [
+          {
+            "height": 4.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.043"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tile_int_02_0.002"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 23.4594,
+        "z": -3.3971,
+        "surfaces": [
+          {
+            "height": -0.01099,
+            "object": "n0_lr0_agg_merge_tilefloor01_0"
+          }
+        ],
+        "height": -0.01099
+      }
+    },
+    "fire-default": {
+      "target": {
+        "x": 9.7,
+        "z": 23.8,
+        "surfaces": [
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_de_mirage_tile_ver4_diffuse_0.008"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 1.0394,
+        "z": 8.1497,
+        "surfaces": [
+          {
+            "height": 5.44,
+            "object": "n0_lr0_agg_merge_marble_01_0.055"
+          },
+          {
+            "height": 2.69304,
+            "object": "n0_lr0_agg_merge_dust_arch_small_0.013"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tilefloor02_0.014"
+          }
+        ],
+        "height": -0.16
+      }
+    },
+    "fire-van": {
+      "target": {
+        "x": -32.4,
+        "z": -27.7,
+        "surfaces": [
+          {
+            "height": -0.115,
+            "object": "n0_lr0_agg_merge_curbs001_0.003"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_de_mirage_tile_ver4_blend_0"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": -9.2376,
+        "z": -30.7749,
+        "surfaces": [
+          {
+            "height": 8.0,
+            "object": "n0_lr0_agg_merge_marble_01_0.072"
+          },
+          {
+            "height": 1.6,
+            "object": "n0_lr0_agg_merge_tilefloor02_0"
+          }
+        ],
+        "height": 1.6
+      }
+    },
+    "fire-window": {
+      "target": {
+        "x": -8.8,
+        "z": -3.8,
+        "surfaces": [
+          {
+            "height": 4.16,
+            "object": "n0_lr0_agg_merge_marble_01_0.043"
+          },
+          {
+            "height": -0.16,
+            "object": "n0_lr0_agg_merge_tile_int_02_0.002"
+          }
+        ],
+        "height": -0.16
+      },
+      "origin": {
+        "x": 23.4593,
+        "z": -3.4223,
+        "surfaces": [
+          {
+            "height": -0.01099,
+            "object": "n0_lr0_agg_merge_tilefloor01_0"
+          }
+        ],
+        "height": -0.01099
+      }
+    }
+  },
+  "sourceSha256": "dc8f0d125014b00218582d0ab9a2f684638fa17054924fba34d07c2ef479e268",
+  "geometryPolicy": "Native interior geometry retained. Peripheral triangles trimmed to radar exterior plus 0.8 wall margin. Reviewed exterior facade panels and atmospheric dust cards removed. Simplified materials; no ratio decimation.",
+  "perimeterTrim": {
+    "objectsRemoved": 138,
+    "objectsCut": 362,
+    "trianglesBefore": 1051107,
+    "trianglesAfter": 935221
+  },
+  "panelCleanup": {
+    "removedObjects": 36,
+    "exteriorPanels": 26,
+    "dustCards": 10,
+    "removedTriangles": 262,
+    "policy": "Remove reviewed exterior-only planar facade fragments and dust effect cards. Preserve playable floors, inward-facing walls, doors, fences and covers. Never delete all open meshes."
+  }
+}
