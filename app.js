@@ -1,6 +1,6 @@
-import {maps,getMap,mapUtilities} from './maps.js';
+import {maps,getMap,mapUtilities} from './maps.js?v=2';
 import {utilityTypes} from './utility-types.js';
-import {createMap} from './map.js';
+import {createMap} from './map.js?v=2';
 import {setupMobileLayout} from './mobile-layout.js';
 
 const mobileUI=setupMobileLayout();
