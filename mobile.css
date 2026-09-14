@@ -50,3 +50,11 @@
  .rotate-prompt button{margin-top:26px;min-height:46px;padding:10px 24px;background:#d6b078;color:#18221d;border:1px solid #f4d1a2;border-radius:5px;font-size:16px}
  .rotate-prompt button:disabled{opacity:.6}
 }
+/* Map and floor selection */
+.map-picker{display:flex;align-items:center;gap:9px;color:#98a9a5;font-size:12px;flex:none}.map-picker select{font:500 14px 'IBM Plex Sans','Noto Sans SC',sans-serif;color:#e2e8df;background:#1d2929;border:1px solid #52635b;border-radius:4px;padding:9px 28px 9px 12px;max-width:185px;cursor:pointer}.map-picker select:focus-visible{outline:2px solid var(--utility-color);outline-offset:3px}.level-switch{position:absolute;top:209px;left:28px;z-index:35;display:flex;align-items:center;gap:3px;padding:3px;background:#111b1eee;border:1px solid #43534e;border-radius:5px}.level-switch button{padding:7px 11px;border:0;border-radius:3px;background:none;color:#9eada7;font-size:13px}.level-switch button.active{background:#365058;color:#d7f3f3}.level-switch>span{padding:0 7px;font-size:10px;color:#9aacaa;letter-spacing:.3px}#retry-map{display:block;margin-top:12px;padding:8px 14px;background:#d9b17d;border:0;border-radius:4px;color:#18231e}.map-view-switch button:disabled{opacity:.35;cursor:default}.filters button{white-space:nowrap}.topbar{gap:18px}.top-title{white-space:nowrap;font-size:12px}.statusbar>span:first-child{white-space:nowrap}
+@media(max-width:1150px){.top-title{display:none}.map-picker{margin-left:auto}}
+@media(max-width:760px){.level-switch{left:18px;top:204px}.level-switch>span{display:none}.map-picker select{font-size:12px;max-width:152px}.map-picker>span{display:none}.version{display:none}}
+@media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
+ .topbar{gap:8px}.brand{font-size:17px;gap:6px}.brand-symbol{width:23px}.map-picker{margin:0}.map-picker>span{display:none}.map-picker select{min-height:38px;padding:6px;max-width:150px;font-size:13px}.mobile-actions{gap:4px}.mobile-actions button{padding:7px 9px}.level-switch{left:10px;top:113px;padding:2px}.level-switch button{min-height:38px;padding:6px 12px;font-size:14px}.level-switch>span{display:none}
+}
+@media(min-width:761px){.level-switch{left:auto;right:24px;top:83px}}

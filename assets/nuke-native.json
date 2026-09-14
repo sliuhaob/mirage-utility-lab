@@ -1,0 +1,761 @@
+{
+  "model": "Native CS2 Nuke",
+  "source": "Local CS2 game/csgo/maps/de_nuke.vpk",
+  "sourceSha256": "616286bdfba283f8026cb719321e4c2d0986f04ce925cb13b0ff7ff913c33007",
+  "units": {
+    "sourceToWebScale": 0.014285714285714285,
+    "sourceToWebOffset": [
+      -1.871428571,
+      5.942857142857143,
+      -9.957142857
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "levels": {
+    "sourceAltitudeBoundary": -495,
+    "webAltitudeBoundary": -1.1285714285714286
+  },
+  "anchors": {
+    "nuke-close-red": {
+      "origin": {
+        "x": -12.34109,
+        "z": 8.93055,
+        "height": 0.12143,
+        "surfaces": [
+          {
+            "height": 0.12143,
+            "object": "n0_lr0_agg_merge_curbs_001_0.002"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.001"
+          }
+        ]
+      },
+      "target": {
+        "x": 10.45978,
+        "z": 21.80898,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.002"
+          },
+          {
+            "height": -1.66743,
+            "object": "n0_lr0_agg_merge_metal_pipe_002_0.005"
+          },
+          {
+            "height": -3.14853,
+            "object": "n0_lr0_agg_merge_nuke_machinery_02_color_0"
+          },
+          {
+            "height": -4.8,
+            "object": "n0_lr0_agg_nomerge_hr_metal_floor_001_0"
+          }
+        ]
+      }
+    },
+    "nuke-deep-red": {
+      "origin": {
+        "x": -12.34109,
+        "z": 8.93055,
+        "height": 0.12143,
+        "surfaces": [
+          {
+            "height": 0.12143,
+            "object": "n0_lr0_agg_merge_curbs_001_0.002"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.001"
+          }
+        ]
+      },
+      "target": {
+        "x": 14.06381,
+        "z": 21.80898,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.005"
+          }
+        ]
+      }
+    },
+    "nuke-garage": {
+      "origin": {
+        "x": -21.15675,
+        "z": 3.87187,
+        "height": 0.22857,
+        "surfaces": [
+          {
+            "height": 0.22857,
+            "object": "n0_lr0_agg_merge_hr_concrete_wall_001b_0.004"
+          }
+        ]
+      },
+      "target": {
+        "x": 17.85753,
+        "z": 17.53793,
+        "height": -0.0,
+        "surfaces": [
+          {
+            "height": 2.68571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.025"
+          },
+          {
+            "height": 2.2,
+            "object": "n0_lr0_agg_merge_web_joist_001_0"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.007"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_nomerge_hr_concrete_floor_001_0.001"
+          }
+        ]
+      }
+    },
+    "nuke-ramp-cross": {
+      "origin": {
+        "x": 1.72813,
+        "z": -3.32902,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 3.8548,
+            "object": "n0_lr0_agg_merge_metal_ladder_001b_0.002"
+          },
+          {
+            "height": 3.48571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.050"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_floor_tile_001_0.004"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.020"
+          }
+        ]
+      },
+      "target": {
+        "x": 5.52794,
+        "z": -10.93568,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 15.82857,
+            "object": "n0_lr0_agg_nomerge_hr_metal_corrugated_001_0"
+          },
+          {
+            "height": 15.34029,
+            "object": "n0_lr0_agg_nomerge_metal_pipe_001_1.004"
+          },
+          {
+            "height": 12.50748,
+            "object": "n0_lr0_agg_nomerge_web_joist_001_1"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.003"
+          }
+        ]
+      }
+    },
+    "nuke-ramp": {
+      "origin": {
+        "x": 1.72813,
+        "z": -4.90627,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 3.48571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.050"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_floor_tile_001_0.004"
+          }
+        ]
+      },
+      "target": {
+        "x": 3.15687,
+        "z": -14.25761,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 15.82857,
+            "object": "n0_lr0_agg_nomerge_hr_metal_corrugated_001_0"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_002_0"
+          }
+        ]
+      }
+    },
+    "nuke-control": {
+      "origin": {
+        "x": 9.18527,
+        "z": -22.92745,
+        "height": -0.91428,
+        "surfaces": [
+          {
+            "height": 6.91429,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.031"
+          },
+          {
+            "height": 2.84627,
+            "object": "n0_lr0_agg_prop_wires_002_0.104"
+          },
+          {
+            "height": -0.91428,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": 0.78579,
+        "z": -6.66464,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 6.91428,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.052"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_floor_tile_001_0.002"
+          }
+        ]
+      }
+    },
+    "nuke-hut-flash": {
+      "origin": {
+        "x": 0.41479,
+        "z": 6.04226,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 3.48571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0"
+          },
+          {
+            "height": 1.82857,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.003"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.012"
+          },
+          {
+            "height": -5.02857,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.008"
+          }
+        ]
+      },
+      "target": {
+        "x": 5.52794,
+        "z": 1.87744,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 6.91428,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.066"
+          },
+          {
+            "height": 0.22857,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_003_0"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.004"
+          },
+          {
+            "height": -5.07143,
+            "object": "n0_lr0_agg_merge_nuke_industrial_props_003_0"
+          }
+        ]
+      }
+    },
+    "nuke-yard-flash": {
+      "origin": {
+        "x": -6.8741,
+        "z": 16.54082,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.017"
+          }
+        ]
+      },
+      "target": {
+        "x": 11.21852,
+        "z": 20.85986,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.002"
+          },
+          {
+            "height": -4.8,
+            "object": "n0_lr0_agg_nomerge_hr_metal_floor_001_0"
+          }
+        ]
+      }
+    },
+    "nuke-squeaky-he": {
+      "origin": {
+        "x": -7.40129,
+        "z": 2.6196,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 3.48571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.012"
+          },
+          {
+            "height": -5.02857,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": 1.73422,
+        "z": 8.33146,
+        "height": -0.0,
+        "surfaces": [
+          {
+            "height": 2.28571,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.003"
+          },
+          {
+            "height": 2.17143,
+            "object": "n0_lr0_agg_merge_web_joist_001_0.052"
+          },
+          {
+            "height": 1.84286,
+            "object": "n0_lr0_agg_merge_web_joist_001_0.040"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.025"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.007"
+          },
+          {
+            "height": -5.14286,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.010"
+          }
+        ]
+      }
+    },
+    "nuke-silo-he": {
+      "origin": {
+        "x": 12.75446,
+        "z": 12.22897,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.013"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.004"
+          }
+        ]
+      },
+      "target": {
+        "x": 0.31158,
+        "z": 11.36865,
+        "height": 5.33839,
+        "surfaces": [
+          {
+            "height": 5.33839,
+            "object": "n0_lr0_agg_merge_nuke_silo_002_0.015"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_black_simple_0.022"
+          },
+          {
+            "height": -5.14286,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.015"
+          }
+        ]
+      }
+    },
+    "nuke-hut-fire": {
+      "origin": {
+        "x": 16.12813,
+        "z": -5.4424,
+        "height": 4.11429,
+        "surfaces": [
+          {
+            "height": 6.91429,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.011"
+          },
+          {
+            "height": 4.11429,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.005"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.002"
+          },
+          {
+            "height": -0.88571,
+            "object": "n0_lr0_agg_merge_hr_ceiling_tile_001_color_0"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_floor_tile_001_0.007"
+          }
+        ]
+      },
+      "target": {
+        "x": 3.63108,
+        "z": 4.72481,
+        "height": -0.22857,
+        "surfaces": [
+          {
+            "height": 6.91428,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.014"
+          },
+          {
+            "height": 6.42857,
+            "object": "n0_lr0_agg_merge_web_joist_001_0.020"
+          },
+          {
+            "height": 6.05473,
+            "object": "n0_lr0_agg_prop_nuke_bell_light_color_0.008"
+          },
+          {
+            "height": 2.28571,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.016"
+          },
+          {
+            "height": 0.34286,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.023"
+          },
+          {
+            "height": -0.22857,
+            "object": "n0_lr0_agg_merge_web_joist_001_0.010"
+          },
+          {
+            "height": -0.55714,
+            "object": "n0_lr0_agg_merge_web_joist_001_0.010"
+          },
+          {
+            "height": -0.62439,
+            "object": "n0_lr0_agg_merge_metal_pipe_001_0.026"
+          },
+          {
+            "height": -3.15714,
+            "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.010"
+          },
+          {
+            "height": -3.26303,
+            "object": "n0_lr0_agg_merge_wires_002_0.001"
+          },
+          {
+            "height": -5.09286,
+            "object": "n0_lr0_agg_merge_nuke_industrial_props_003_0"
+          }
+        ]
+      }
+    },
+    "nuke-secret-fire": {
+      "origin": {
+        "x": 4.69403,
+        "z": 23.77679,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.024"
+          },
+          {
+            "height": -4.8,
+            "object": "n0_lr0_agg_nomerge_hr_metal_floor_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": 17.85753,
+        "z": 22.28354,
+        "height": -0.0,
+        "surfaces": [
+          {
+            "height": 3.59999,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.060"
+          },
+          {
+            "height": -0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.008"
+          }
+        ]
+      }
+    },
+    "nuke-b-doors": {
+      "origin": {
+        "x": 3.88389,
+        "z": -10.1307,
+        "height": -3.2,
+        "surfaces": [
+          {
+            "height": 15.82857,
+            "object": "n0_lr0_agg_nomerge_hr_metal_corrugated_001_0"
+          },
+          {
+            "height": 15.48804,
+            "object": "n0_lr0_agg_prop_web_joist_001_0"
+          },
+          {
+            "height": 15.41428,
+            "object": "n0_lr0_agg_prop_web_joist_001_0"
+          },
+          {
+            "height": 12.50748,
+            "object": "n0_lr0_agg_nomerge_web_joist_001_1"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.003"
+          }
+        ]
+      },
+      "target": {
+        "x": 11.8,
+        "z": 1,
+        "height": -5.02857,
+        "surfaces": [
+          {
+            "height": 8.71589,
+            "object": "n0_lr0_agg_prop_metal_pipe_003_0.007"
+          },
+          {
+            "height": 8.2041,
+            "object": "n0_lr0_agg_prop_metal_pipe_003_0.007"
+          },
+          {
+            "height": 8.05714,
+            "object": "n0_lr0_agg_merge_nuke_roof_ac01_color_1"
+          },
+          {
+            "height": 6.91428,
+            "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.015"
+          },
+          {
+            "height": 3.97302,
+            "object": "n0_lr0_agg_merge_nuke_industrial_props_002_2.002"
+          },
+          {
+            "height": 3.88077,
+            "object": "n0_lr0_agg_merge_wires_002_1.005"
+          },
+          {
+            "height": 3.02573,
+            "object": "n0_lr0_agg_merge_metal_pipe_001_0.005"
+          },
+          {
+            "height": 2.79716,
+            "object": "n0_lr0_agg_merge_metal_pipe_001_0.005"
+          },
+          {
+            "height": 0.01429,
+            "object": "n0_lr0_agg_merge_hr_metal_trim_003_0.005"
+          },
+          {
+            "height": -3.2,
+            "object": "n0_lr0_agg_merge_hr_metal_trim_003_0"
+          },
+          {
+            "height": -3.29879,
+            "object": "n0_lr0_agg_prop_wires_001_0.095"
+          },
+          {
+            "height": -4.68856,
+            "object": "n0_lr0_agg_prop_wires_002_0.040"
+          },
+          {
+            "height": -5.02857,
+            "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.011"
+          }
+        ]
+      }
+    }
+  },
+  "perimeterTrim": {
+    "objectsRemoved": 1091,
+    "objectsCut": 544,
+    "trianglesBefore": 3426734,
+    "trianglesAfter": 2768889
+  },
+  "geometryPolicy": "Original two-level geometry retained inside the radar exterior plus 0.8 wall margin. Helper geometry, glass/effect cards and peripheral scenery removed. Simplified materials; no ratio decimation.",
+  "probes": {
+    "Stacked sites": {
+      "x": 7.8,
+      "z": 4.8,
+      "surfaces": [
+        {
+          "height": 6.91428,
+          "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.015"
+        },
+        {
+          "height": 0.0,
+          "object": "n0_lr0_agg_merge_hazard_stripe_001_trim_metal_0.002"
+        }
+      ]
+    },
+    "A tanks": {
+      "x": 7.8,
+      "z": 0.3,
+      "surfaces": [
+        {
+          "height": 10.8543,
+          "object": "n0_lr0_agg_merge_metal_pipe_002_0.006"
+        },
+        {
+          "height": 6.91428,
+          "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.015"
+        },
+        {
+          "height": 2.94414,
+          "object": "n0_lr0_agg_merge_nuke_bombsite_target01_color_0.004"
+        },
+        {
+          "height": 0.0,
+          "object": "n0_lr0_agg_merge_hazard_stripe_001_trim_metal_0.002"
+        },
+        {
+          "height": -5.02857,
+          "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.009"
+        },
+        {
+          "height": -5.25714,
+          "object": "n0_lr0_agg_nomerge_black_simple_0"
+        }
+      ]
+    },
+    "Ramp": {
+      "x": 7.3,
+      "z": -11.4,
+      "surfaces": [
+        {
+          "height": 15.45714,
+          "object": "n0_lr0_agg_nomerge_web_joist_001_2"
+        },
+        {
+          "height": 0.0,
+          "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0"
+        },
+        {
+          "height": -0.11428,
+          "object": "n0_lr0_agg_merge_web_joist_001_0.004"
+        },
+        {
+          "height": -0.44285,
+          "object": "n0_lr0_agg_merge_web_joist_001_0.004"
+        },
+        {
+          "height": -3.2,
+          "object": "n0_lr0_agg_merge_hr_concrete_polished_001_0.003"
+        }
+      ]
+    },
+    "Heaven": {
+      "x": 13.7,
+      "z": -3.4,
+      "surfaces": [
+        {
+          "height": 6.91428,
+          "object": "n0_lr0_agg_merge_hr_concrete_roof_001_0.006"
+        },
+        {
+          "height": 4.11429,
+          "object": "n0_lr0_agg_merge_hr_metal_floor_001_0.005"
+        },
+        {
+          "height": 0.0,
+          "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.014"
+        },
+        {
+          "height": -3.2,
+          "object": "n0_lr0_agg_merge_hr_concrete_floor_001_0.015"
+        }
+      ]
+    },
+    "Secret": {
+      "x": 18.1,
+      "z": 13.8,
+      "surfaces": [
+        {
+          "height": 1.72266,
+          "object": "n0_lr0_agg_merge_metal_crate_001b_0.011"
+        },
+        {
+          "height": -0.0,
+          "object": "n0_lr0_agg_merge_hr_asphalt_blend_001_1.005"
+        },
+        {
+          "height": -0.91429,
+          "object": "n0_lr0_agg_merge_web_joist_001_0.011"
+        },
+        {
+          "height": -1.34286,
+          "object": "n0_lr0_agg_merge_web_joist_001_0.011"
+        },
+        {
+          "height": -3.7,
+          "object": "n0_lr0_agg_merge_nuke_machinery_02_color_0.001"
+        },
+        {
+          "height": -5.02857,
+          "object": "n0_lr0_agg_merge_black_simple_0.002"
+        }
+      ]
+    },
+    "Silo": {
+      "x": -0.9,
+      "z": 14.3,
+      "surfaces": [
+        {
+          "height": 5.67142,
+          "object": "n0_lr0_agg_merge_nuke_silo_002_0.005"
+        },
+        {
+          "height": -0.0,
+          "object": "n0_lr0_agg_merge_black_simple_0.022"
+        }
+      ]
+    }
+  }
+}

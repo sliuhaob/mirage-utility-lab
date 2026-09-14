@@ -1,6 +1,6 @@
 # Mirage Utility Lab
 
-Public website assets for the CS2 Mirage utility map.
+Public website assets for the CS2 Mirage and Nuke utility maps.
 
 Website: https://cs2.roxy-design.com
 

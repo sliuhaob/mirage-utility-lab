@@ -1,14 +1,16 @@
-import {smokes,utilities} from './data.js';
-import {utilityTypes,filterUtilities} from './utility-types.js';
+import {maps,getMap,mapUtilities} from './maps.js';
+import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js';
 import {setupMobileLayout} from './mobile-layout.js';
 
 const mobileUI=setupMobileLayout();
 
-let type='smoke',filter='all',current=smokes[0],map;
-const zoneName=z=>({A:'A 区',B:'B 区',mid:'中路',all:'全部区域'}[z]);
+let config=getMap(new URLSearchParams(location.search).get('map'));
+let utilities=config.utilities,type='smoke',filter='all',level='upper',current=utilities.find(s=>s.type==='smoke'),map,loadController,loadGeneration=0;
+let view='3d';
+const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
-const visible=()=>filterUtilities(utilities,type,filter);
+const visible=()=>mapUtilities(config,type,filter,level);
 const icon=s=>utilityTypes[s.type].icon;
 const pad=n=>String(n).padStart(2,'0');
 
@@ -16,7 +18,7 @@ function renderList(){
  const items=visible();
  $('#library-heading').textContent=utilityTypes[type].targetLabel;
  $('#point-count').textContent=pad(items.length);
- $('#point-list').innerHTML=items.length?items.map(s=>'<button class="point-item '+(s.id===current?.id?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+(s.id===current?.id)+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+s.name+'</strong><small>'+s.en+'</small></span><span class="zone-tag">'+(s.zone==='mid'?'M':s.zone)+'</span></button>').join(''):'<p class="empty-points">'+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>选择“全部”查看已有教程。</p>';
+ $('#point-list').innerHTML=items.length?items.map(s=>'<button class="point-item '+(s.id===current?.id?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+(s.id===current?.id)+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+s.name+'</strong><small>'+s.en+'</small></span><span class="zone-tag">'+({mid:'M',outside:'Y',ramp:'R'}[s.zone]||s.zone)+'</span></button>').join(''):'<p class="empty-points">'+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>选择“全部”查看已有教程。</p>';
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
@@ -45,11 +47,15 @@ function syncFilters(){
 }
 function select(id){
  const next=utilities.find(s=>s.id===id);
- if(next){type=next.type;if(filter!=='all'&&filter!==next.zone)filter='all';}
+ if(next){type=next.type;if(config.levelBoundary&&next.level!==level){level=next.level;map?.setLevel(level);syncLevelControls();resetCutControl();}if(filter!=='all'&&filter!==next.zone)filter='all';}
  current=next||null;
  syncFilters();map?.select(current);renderList();renderDetail();mobileUI.showDetails();
 }
 function changeFilters(nextType,nextZone){
+ if(config.levelBoundary&&nextZone!=='all'){
+  const targetLevel=nextZone==='B'?'lower':'upper';
+  if(targetLevel!==level){level=targetLevel;map?.setLevel(level);syncLevelControls();resetCutControl();}
+ }
  type=nextType;filter=nextZone;
  const items=visible();
  current=items.find(s=>s.id===current?.id)||items[0]||null;
@@ -57,28 +63,59 @@ function changeFilters(nextType,nextZone){
 }
 $('#utility-switch').innerHTML=Object.entries(utilityTypes).map(([id,t])=>'<button data-type="'+id+'" aria-label="'+t.label+'" title="'+t.label+'" aria-pressed="'+(id===type)+'" class="'+(id===type?'active':'')+'" style="--type-color:'+t.color+'">'+t.icon+'<span>'+t.short+'</span></button>').join('');
 document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>changeFilters(b.dataset.type,filter));
-document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>changeFilters(type,b.dataset.filter));
+function bindZones(){document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>changeFilters(type,b.dataset.filter));}
 $('#zoom-in').onclick=()=>map?.zoom(.83);$('#zoom-out').onclick=()=>map?.zoom(1.2);$('#reset-view').onclick=()=>map?.reset();
-for(const view of ['3d','top','radar'])$('#view-'+view).onclick=()=>{map?.setView(view);$('.touch-gesture').textContent=view==='3d'?'单指旋转 · 双指平移与缩放':'单指平移 · 双指平移与缩放';for(const v of ['3d','top','radar']){const b=$('#view-'+v);b.classList.toggle('active',v===view);b.setAttribute('aria-pressed',String(v===view));}};
+for(const nextView of ['3d','top','radar'])$('#view-'+nextView).onclick=()=>{view=nextView;map?.setView(view);$('.touch-gesture').textContent=view==='3d'?'单指旋转 · 双指平移与缩放':'单指平移 · 双指平移与缩放';for(const v of ['3d','top','radar']){const b=$('#view-'+v);b.classList.toggle('active',v===view);b.setAttribute('aria-pressed',String(v===view));}};
 const roofButton=$('#toggle-roofs');
 roofButton.onclick=()=>{const enabled=roofButton.getAttribute('aria-pressed')!=='true';map?.setRoofs(enabled);roofButton.setAttribute('aria-pressed',String(enabled));roofButton.classList.toggle('active',enabled);roofButton.textContent=enabled?'返回剖切':'完整建筑';$('#cut-height').disabled=enabled;};
 $('#cut-height').oninput=e=>map?.setCutHeight(Number(e.target.value));
-syncFilters();renderList();renderDetail();
-try{
- map=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon);
- map.setRoofs(roofButton.getAttribute('aria-pressed')==='true');
- map.setCutHeight(Number($('#cut-height').value));
- const selectedView=document.querySelector('.map-view-switch button.active')?.id;
- if(selectedView==='view-top'||selectedView==='view-radar')map.setView(selectedView.slice(5));
- syncFilters();map.select(current);
-}catch(e){console.error('3D map initialization failed',e);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
-renderDetail();
+function syncLevelControls(){
+ $('#level-switch').hidden=!config.levelBoundary;
+ document.querySelectorAll('[data-level]').forEach(b=>{b.classList.toggle('active',b.dataset.level===level);b.setAttribute('aria-pressed',String(b.dataset.level===level));});
+ $('#cut-height').disabled=roofButton.getAttribute('aria-pressed')==='true'&&level!=='lower';
+ roofButton.disabled=level==='lower';
+ $('#level-note').textContent=level==='lower'?'下层 / B 区与地下通道':'上层 / A 区、外场与铁板';
+}
+function chooseLevel(next){
+ level=next;filter='all';map?.setLevel(level);syncLevelControls();
+ resetCutControl();
+ const items=visible();current=items[0]||null;syncFilters();map?.select(current);renderList();renderDetail();
+}
+function resetCutControl(){const cut=$('#cut-height');cut.min=level==='lower'?-4.8:config.cut.min;cut.max=level==='lower'?-1.2:config.cut.max;cut.value=level==='lower'?config.lowerCut:config.cut.default;map?.setCutHeight(Number(cut.value));}
+document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>chooseLevel(b.dataset.level));
+async function switchMap(id,updateUrl=true){
+ const generation=++loadGeneration;loadController?.abort();map?.dispose();map=undefined;
+ loadController=new AbortController();config=getMap(id);utilities=config.utilities;filter='all';level='upper';
+ current=visible()[0]||null;
+ if(updateUrl){const url=new URL(location.href);url.searchParams.set('map',config.id);history.replaceState(null,'',url);}
+ $('#map-picker').value=config.id;document.title=config.en+' LAB · '+config.name+'道具地图';
+ $('#brand-map').textContent=config.en;$('.top-title').textContent=config.name+' / 互动道具地图';
+ $('.map-card h1').innerHTML=config.name+'<span>'+config.en+'</span>';
+ $('.map-card .eyebrow').textContent='ACTIVE MAP / '+(config.id==='nuke'?'02':'01');
+ $('.filters').innerHTML=Object.entries({all:'全部',...config.zones}).map(([zone,name])=>'<button data-filter="'+zone+'" aria-pressed="false">'+name+'</button>').join('');bindZones();
+ $('.map-stage').setAttribute('aria-label',config.name+'三维互动地图');
+ $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+config.name+'…';$('#map-error').hidden=true;
+ const cut=$('#cut-height');cut.min=config.cut.min;cut.max=config.cut.max;cut.value=config.cut.default;
+ roofButton.setAttribute('aria-pressed','false');roofButton.classList.remove('active');roofButton.textContent='完整建筑';
+ $('.map-disclaimer').innerHTML=config.en+' / 游戏几何 · 简化材质 · 示意弹道 <a class="map-source" href="'+config.reference+'" target="_blank" rel="noopener noreferrer">地图参考 ↗</a>';
+ syncLevelControls();syncFilters();renderList();renderDetail();
+ try{
+  const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal);
+  if(generation!==loadGeneration){loaded.dispose();return;}
+  map=loaded;map.setLevel(level);map.setRoofs(roofButton.getAttribute('aria-pressed')==='true');map.setCutHeight(Number(cut.value));map.setView(view);syncFilters();map.select(current);
+ }catch(error){if(generation!==loadGeneration||error.name==='AbortError')return;console.error('3D map initialization failed',error);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
+ renderDetail();
+}
+$('#map-picker').onchange=e=>switchMap(e.target.value);
+$('#retry-map').onclick=()=>switchMap(config.id,false);
+addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();});
+await switchMap(config.id,false);
 
-// Preserve the existing smoke integration and expose the other utility types.
+// Keep the public Mirage integration stable and add Nuke as a separate tool.
 if(document.modelContext?.registerTool){
- const lifecycle=new AbortController();
- addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
- for(const [name,title,items] of [['show_mirage_smoke','查看荒漠迷城烟雾教程',smokes],['show_mirage_utility','查看荒漠迷城道具教程',utilities]]){
-  try{Promise.resolve(document.modelContext.registerTool({name,title,description:'在地图和教学面板中显示道具落点、站位与投掷方法。',inputSchema:{type:'object',properties:{id:{type:'string',enum:items.map(s=>s.id)}},required:['id'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||typeof input!=='object'||Object.keys(input).some(k=>k!=='id')||!items.some(s=>s.id===input.id))throw new Error('请选择有效的道具点位');filter='all';select(input.id);return {id:current.id,type:current.type,name:current.name,from:current.from,method:current.method,steps:current.steps,videoAvailable:false};}},{signal:lifecycle.signal})).catch(e=>console.warn('Optional WebMCP registration unavailable',e));}catch(e){console.warn('Optional WebMCP unavailable',e);}
+ const lifecycle=new AbortController();addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
+ for(const [name,mapId,smokeOnly] of [['show_mirage_smoke','mirage',true],['show_mirage_utility','mirage',false],['show_nuke_utility','nuke',false]]){
+  const target=maps[mapId],items=target.utilities.filter(s=>!smokeOnly||s.type==='smoke');
+  try{Promise.resolve(document.modelContext.registerTool({name,title:'查看'+target.name+'道具教程',description:'切换地图并显示道具落点、站位与投掷方法。',inputSchema:{type:'object',properties:{id:{type:'string',enum:items.map(s=>s.id)}},required:['id'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},async execute(input){if(!input||typeof input!=='object'||Object.keys(input).some(k=>k!=='id')||!items.some(s=>s.id===input.id))throw new Error('请选择有效的道具点位');if(config.id!==mapId)await switchMap(mapId);filter='all';select(input.id);return {id:current.id,map:config.id,type:current.type,name:current.name,from:current.from,method:current.method,steps:current.steps,videoAvailable:false};}},{signal:lifecycle.signal})).catch(e=>console.warn('Optional WebMCP registration unavailable',e));}catch(e){console.warn('Optional WebMCP unavailable',e);}
  }
 }
