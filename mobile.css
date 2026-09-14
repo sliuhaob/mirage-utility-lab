@@ -28,13 +28,13 @@
  .detail-heading{font-size:23px}.detail-description,.steps li{font-size:14px;line-height:1.75}.route-row{font-size:14px;flex-wrap:wrap}.steps-title{font-size:16px}.tip,.source-link{font-size:13px}.source-link{line-height:1.8}
  .video-placeholder{min-height:88px;aspect-ratio:auto;padding:14px 8px}.video-placeholder .play,.video-format,.video-placeholder small{display:none}.video-placeholder strong{font-size:14px;margin:0}
  .empty-points{min-width:0;padding:10px 2px}.key-row{flex-wrap:wrap}.key-row kbd{font-size:13px}.trajectory-button{min-height:42px;font-size:14px}
- .utility-switch{top:8px;right:10px;gap:2px;padding:3px;z-index:40}.utility-switch button{min-width:46px;height:40px;padding:5px 7px;font-size:14px}.utility-switch svg{width:18px;height:23px}
+ .utility-switch{top:8px;right:10px;gap:2px;padding:3px;z-index:40}.utility-switch button{min-width:46px;height:40px;padding:5px 7px;font-size:14px}.utility-switch svg{width:23px;height:26px}
  .map-view-switch{top:8px;left:10px;z-index:40;padding:3px}.map-view-switch button{min-height:40px;padding:5px 10px;font-size:14px}
  .cut-height-control{left:10px;top:63px;z-index:40;font-size:14px;gap:7px;padding:3px 8px}.cut-height-control input{height:30px;width:100px}
  .compass{top:67px;right:16px}.compass svg{width:30px;height:30px}
  .map-controls{right:10px;bottom:40px;z-index:40;padding:2px;flex-direction:row}.map-controls button{width:38px;height:36px}.map-controls>span{margin:0 4px;width:1px;height:22px}
  .map-bottom{bottom:8px;left:12px;right:12px;padding:0;border:0;gap:8px;align-items:center}.legend{gap:12px;font-size:12px}.map-bottom p{font-size:12px;color:#abbdb2}.desktop-gesture{display:none}.touch-gesture{display:inline}
- .map-disclaimer{display:none}.world-marker{width:40px;height:40px}.world-marker svg{width:22px;height:25px}.area-label{font-size:12px}.site-label{font-size:32px}
+ .map-disclaimer{display:none}.world-marker{width:40px;height:40px}.world-marker svg{width:25px;height:28px}.area-label{font-size:12px}.site-label{font-size:32px}
  #map-error{left:12%;right:12%;top:30%;max-height:60%;overflow:auto;padding:16px;font-size:14px}
 }
 
