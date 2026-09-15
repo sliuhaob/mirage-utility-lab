@@ -1,0 +1,489 @@
+{
+  "model": "Native CS2 Ancient",
+  "source": "Local CS2 game/csgo/maps/de_ancient.vpk",
+  "sourceSha256": "db67fb7c45e4a92a87473dc8d9dae0b5ead6887e282ecd7d98076f5c01af0d26",
+  "units": {
+    "sourceToWebScale": 0.02,
+    "sourceToWebOffset": [
+      7.86,
+      -2.56,
+      -7.92
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "anchors": {
+    "ancient-temple": {
+      "origin": {
+        "x": -27.51173,
+        "z": 16.99923,
+        "height": -3.25128,
+        "surfaces": [
+          {
+            "height": -3.04722,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_03_individual_bricks_moss-topmoss-wet_0.034"
+          },
+          {
+            "height": -3.25128,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud03-groundmoss02-wet-b_1.042"
+          }
+        ]
+      },
+      "target": {
+        "x": -25.62517,
+        "z": -31.06147,
+        "height": -1.52203,
+        "surfaces": [
+          {
+            "height": -1.52203,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.004"
+          }
+        ]
+      }
+    },
+    "ancient-donut": {
+      "origin": {
+        "x": -14.42563,
+        "z": 14.13009,
+        "height": -2.50107,
+        "surfaces": [
+          {
+            "height": -2.50107,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.025"
+          }
+        ]
+      },
+      "target": {
+        "x": -15.16281,
+        "z": -4.93881,
+        "height": -0.49134,
+        "surfaces": [
+          {
+            "height": 13.64442,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_01_individual_bricks_moss_wet_1.003"
+          },
+          {
+            "height": 13.52445,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_stone_01_moss_wet_3.001"
+          },
+          {
+            "height": -0.49134,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver02-grounddirt04-wet_0.003"
+          }
+        ]
+      }
+    },
+    "ancient-ct": {
+      "origin": {
+        "x": -30.80817,
+        "z": 9.32063,
+        "height": -2.90676,
+        "surfaces": [
+          {
+            "height": -2.90676,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -15.16281,
+        "z": -27.57845,
+        "height": -1.49215,
+        "surfaces": [
+          {
+            "height": -1.49215,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.001"
+          }
+        ]
+      }
+    },
+    "ancient-long": {
+      "origin": {
+        "x": 32.97894,
+        "z": 21.75937,
+        "height": -2.35418,
+        "surfaces": [
+          {
+            "height": -2.35418,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_01_individual_bricks_grey-moss-topmoss-wet-b_3.031"
+          },
+          {
+            "height": -2.41329,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud03-groundmoss02-wet-b_1.018"
+          }
+        ]
+      },
+      "target": {
+        "x": 31.91778,
+        "z": -14.51712,
+        "height": -0.14014,
+        "surfaces": [
+          {
+            "height": -0.14014,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.005"
+          }
+        ]
+      }
+    },
+    "ancient-short": {
+      "origin": {
+        "x": 32.97935,
+        "z": 21.67689,
+        "height": -2.33363,
+        "surfaces": [
+          {
+            "height": -2.33363,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_01_individual_bricks_grey-moss-topmoss-wet-b_3.031"
+          },
+          {
+            "height": -2.41582,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud03-groundmoss02-wet-b_1.018"
+          }
+        ]
+      },
+      "target": {
+        "x": 21.45543,
+        "z": -17.12938,
+        "height": -0.06904,
+        "surfaces": [
+          {
+            "height": -0.06904,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.015"
+          }
+        ]
+      }
+    },
+    "ancient-red": {
+      "origin": {
+        "x": 1.29999,
+        "z": 37.84,
+        "height": -5.82563,
+        "surfaces": [
+          {
+            "height": -5.82563,
+            "object": "n0_lr0_agg_merge_hr_ancient_ground_mud_03_wet_0"
+          }
+        ]
+      },
+      "target": {
+        "x": -2.78236,
+        "z": -21.04778,
+        "height": 0.13243,
+        "surfaces": [
+          {
+            "height": 9.78,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver01-groundmoss02-wet-b_1.002"
+          },
+          {
+            "height": 0.13243,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver02-grounddirt04-wet_0.001"
+          }
+        ]
+      }
+    },
+    "ancient-a-flash": {
+      "origin": {
+        "x": -35.49289,
+        "z": 0.93684,
+        "height": -1.06772,
+        "surfaces": [
+          {
+            "height": 6.62933,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_stone_01_grey-moss-wet-b_3.003"
+          },
+          {
+            "height": 1.42369,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_05_trims_grey_wet_0.010"
+          },
+          {
+            "height": -1.06772,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver02-grounddirt04-wet_0.002"
+          }
+        ]
+      },
+      "target": {
+        "x": -31.72821,
+        "z": -18.87089,
+        "height": -1.51026,
+        "surfaces": [
+          {
+            "height": -1.51026,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.006"
+          }
+        ]
+      }
+    },
+    "ancient-b-flash": {
+      "origin": {
+        "x": 32.97942,
+        "z": 21.75937,
+        "height": -2.35394,
+        "surfaces": [
+          {
+            "height": -2.35394,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_01_individual_bricks_grey-moss-topmoss-wet-b_3.031"
+          },
+          {
+            "height": -2.41325,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud03-groundmoss02-wet-b_1.018"
+          }
+        ]
+      },
+      "target": {
+        "x": 23.19915,
+        "z": -5.80957,
+        "height": 0.00937,
+        "surfaces": [
+          {
+            "height": 0.00937,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver01-grounddirt01-moss-02-wet_0.001"
+          }
+        ]
+      }
+    },
+    "ancient-mid-flash": {
+      "origin": {
+        "x": -6.85937,
+        "z": 29.26808,
+        "height": -5.71346,
+        "surfaces": [
+          {
+            "height": -5.71346,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud03-groundmoss02-wet-b_1.017"
+          }
+        ]
+      },
+      "target": {
+        "x": -2.08487,
+        "z": 8.99327,
+        "height": -1.91027,
+        "surfaces": [
+          {
+            "height": -1.91027,
+            "object": "n0_lr0_agg_merge_hr_ancient_ground_paver_01_individual_rocks_wet_0.001"
+          }
+        ]
+      }
+    },
+    "ancient-triple-fire": {
+      "origin": {
+        "x": -31.50132,
+        "z": -14.72064,
+        "height": -0.81753,
+        "surfaces": [
+          {
+            "height": 4.46183,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_stair02edgegrey-moss-topmoss-wet-b_0.022"
+          },
+          {
+            "height": 4.31358,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_stair02edgegrey-moss-topmoss-wet-b_0.022"
+          },
+          {
+            "height": 3.95718,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_stair02edgegrey-moss-topmoss-wet-b_0.022"
+          },
+          {
+            "height": -0.81753,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_stair01-moss-wet-b_0.006"
+          }
+        ]
+      },
+      "target": {
+        "x": -14.72688,
+        "z": -24.96618,
+        "height": -1.45676,
+        "surfaces": [
+          {
+            "height": -1.45676,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.003"
+          }
+        ]
+      }
+    },
+    "ancient-cubby-fire": {
+      "origin": {
+        "x": 31.05942,
+        "z": 10.46376,
+        "height": -2.49,
+        "surfaces": [
+          {
+            "height": 3.04934,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_01_individual_bricks_moss_wet_0"
+          },
+          {
+            "height": 2.87318,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_01_individual_bricks_moss_wet_0"
+          },
+          {
+            "height": 2.13932,
+            "object": "n0_lr0_agg_merge_hr_ancient_wall_stone_01_moss_wet_2.002"
+          },
+          {
+            "height": -2.49,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.014"
+          }
+        ]
+      },
+      "target": {
+        "x": 21.45543,
+        "z": -2.32655,
+        "height": 0.21256,
+        "surfaces": [
+          {
+            "height": 0.21256,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.013"
+          }
+        ]
+      }
+    },
+    "ancient-lane-fire": {
+      "origin": {
+        "x": 22.79363,
+        "z": -22.19254,
+        "height": -0.08016,
+        "surfaces": [
+          {
+            "height": -0.08016,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0"
+          }
+        ]
+      },
+      "target": {
+        "x": 21.45543,
+        "z": 7.25176,
+        "height": -0.98844,
+        "surfaces": [
+          {
+            "height": -0.98844,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.009"
+          }
+        ]
+      }
+    },
+    "ancient-catwalk-he": {
+      "origin": {
+        "x": 20.82063,
+        "z": -15.17365,
+        "height": -0.14977,
+        "surfaces": [
+          {
+            "height": -0.14977,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.015"
+          }
+        ]
+      },
+      "target": {
+        "x": 24.24869,
+        "z": 7.15617,
+        "height": -1.57557,
+        "surfaces": [
+          {
+            "height": -1.57557,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.009"
+          }
+        ]
+      }
+    },
+    "ancient-jaguar-he": {
+      "origin": {
+        "x": -10.96509,
+        "z": -5.59942,
+        "height": -0.74541,
+        "surfaces": [
+          {
+            "height": -0.74541,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundrock01-grounddirt01-moss-02-wet_0.003"
+          }
+        ]
+      },
+      "target": {
+        "x": 11.68174,
+        "z": 7.98004,
+        "height": 0.5,
+        "surfaces": [
+          {
+            "height": 0.5,
+            "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.007"
+          }
+        ]
+      }
+    }
+  },
+  "perimeterTrim": {
+    "objectsRemoved": 516,
+    "objectsCut": 624,
+    "trianglesBefore": 7524418,
+    "trianglesAfter": 5628134
+  },
+  "geometryPolicy": "Original geometry and elevation retained inside the radar exterior plus 0.8 wall margin. Helper geometry, glass/effect cards and peripheral scenery removed. Simplified materials; no ratio decimation.",
+  "probes": {
+    "A site": {
+      "x": -20.2,
+      "z": -24.2,
+      "surfaces": [
+        {
+          "height": -1.51749,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_groundcarvings01-grounddirt01-wet_0"
+        }
+      ]
+    },
+    "B site": {
+      "x": 26.8,
+      "z": -10.2,
+      "surfaces": [
+        {
+          "height": 0.03889,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_groundcarvings01-grounddirt01-wet_0.001"
+        }
+      ]
+    },
+    "Mid": {
+      "x": -3.2,
+      "z": -3.2,
+      "surfaces": [
+        {
+          "height": -1.44,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver01-grounddirt01-moss-02-wet_0"
+        }
+      ]
+    },
+    "Donut": {
+      "x": -16.2,
+      "z": -4.2,
+      "surfaces": [
+        {
+          "height": 17.39137,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_wall_04_surface_deco_grey-white-wet_1"
+        },
+        {
+          "height": -0.49765,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_groundpaver02-grounddirt04-wet_0.003"
+        }
+      ]
+    },
+    "T Spawn": {
+      "x": -0.2,
+      "z": 37.8,
+      "surfaces": [
+        {
+          "height": -5.82563,
+          "object": "n0_lr0_agg_merge_hr_ancient_ground_mud_03_wet_0"
+        }
+      ]
+    },
+    "CT Spawn": {
+      "x": 0.8,
+      "z": -34.2,
+      "surfaces": [
+        {
+          "height": -2.0533,
+          "object": "n0_lr0_agg_merge_hr_ancient_blend_groundmud01-groundrock01-wet_0.005"
+        }
+      ]
+    }
+  }
+}

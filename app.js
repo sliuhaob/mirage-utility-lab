@@ -1,4 +1,4 @@
-import {maps,getMap,mapUtilities} from './maps.js?v=2';
+import {maps,getMap,mapUtilities} from './maps.js?v=3';
 import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=2';
 import {setupMobileLayout} from './mobile-layout.js';
@@ -91,7 +91,7 @@ async function switchMap(id,updateUrl=true){
  $('#map-picker').value=config.id;document.title=config.en+' LAB · '+config.name+'道具地图';
  $('#brand-map').textContent=config.en;$('.top-title').textContent=config.name+' / 互动道具地图';
  $('.map-card h1').innerHTML=config.name+'<span>'+config.en+'</span>';
- $('.map-card .eyebrow').textContent='ACTIVE MAP / '+(config.id==='nuke'?'02':'01');
+ $('.map-card .eyebrow').textContent='ACTIVE MAP / '+String(Object.keys(maps).indexOf(config.id)+1).padStart(2,'0');
  $('.filters').innerHTML=Object.entries({all:'全部',...config.zones}).map(([zone,name])=>'<button data-filter="'+zone+'" aria-pressed="false">'+name+'</button>').join('');bindZones();
  $('.map-stage').setAttribute('aria-label',config.name+'三维互动地图');
  $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+config.name+'…';$('#map-error').hidden=true;
@@ -111,10 +111,10 @@ $('#retry-map').onclick=()=>switchMap(config.id,false);
 addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();});
 await switchMap(config.id,false);
 
-// Keep the public Mirage integration stable and add Nuke as a separate tool.
+// Preserve existing map integrations and expose one utility tool per new map.
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
- for(const [name,mapId,smokeOnly] of [['show_mirage_smoke','mirage',true],['show_mirage_utility','mirage',false],['show_nuke_utility','nuke',false]]){
+ for(const [name,mapId,smokeOnly] of [['show_mirage_smoke','mirage',true],['show_mirage_utility','mirage',false],['show_nuke_utility','nuke',false],['show_ancient_utility','ancient',false]]){
   const target=maps[mapId],items=target.utilities.filter(s=>!smokeOnly||s.type==='smoke');
   try{Promise.resolve(document.modelContext.registerTool({name,title:'查看'+target.name+'道具教程',description:'切换地图并显示道具落点、站位与投掷方法。',inputSchema:{type:'object',properties:{id:{type:'string',enum:items.map(s=>s.id)}},required:['id'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},async execute(input){if(!input||typeof input!=='object'||Object.keys(input).some(k=>k!=='id')||!items.some(s=>s.id===input.id))throw new Error('请选择有效的道具点位');if(config.id!==mapId)await switchMap(mapId);filter='all';select(input.id);return {id:current.id,map:config.id,type:current.type,name:current.name,from:current.from,method:current.method,steps:current.steps,videoAvailable:false};}},{signal:lifecycle.signal})).catch(e=>console.warn('Optional WebMCP registration unavailable',e));}catch(e){console.warn('Optional WebMCP unavailable',e);}
  }

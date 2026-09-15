@@ -1,5 +1,6 @@
 import {utilities as mirageUtilities} from './data.js';
 import {nukeUtilities} from './nuke-data.js';
+import {ancientUtilities} from './ancient-data.js';
 
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
@@ -16,5 +17,11 @@ export const maps={
   reference:'https://csnades.gg/nuke',
   labels:[['A',590,515,.6,'site-label','upper'],['T 出生点',197,549,.8,'area-label','upper'],['CT 出生点',846,470,.8,'area-label','upper'],['外 场',635,718,.8,'area-label','upper'],['大仓',746,715,1,'area-label','upper'],['水塔',503,653,4.5,'area-label','upper'],['黄房',549,545,1,'area-label','upper'],['铁门',545,606,.8,'area-label','upper'],['正门',591,649,.8,'area-label','upper'],['三楼',650,472,4.8,'area-label','upper'],['大厅',480,559,1,'area-label','upper'],['铁 板',585,375,.3,'area-label','upper'],['奖杯室',520,474,1,'area-label','upper'],['B',586,569,-4.4,'site-label','lower'],['B 下坡',569,455,-3,'area-label','lower'],['双开门',644,516,-4,'area-label','lower'],['观察室',665,486,-3.4,'area-label','lower'],['活门',590,620,-4.4,'area-label','lower'],['K1 / SECRET',689,651,-3.2,'area-label','lower'],['通风管道',530,630,-4.2,'area-label','lower']]}
 };
+maps.ancient={id:'ancient',name:'远古遗迹',en:'ANCIENT',utilities:ancientUtilities,
+ model:'./assets/ancient-native.glb?v=1',metadata:'./assets/ancient-native.json?v=1',
+ radars:{upper:'./assets/ancient-radar.png'},center:[0,-1,0],gridHeight:-8.2,defaultZoom:1.1,
+ cut:{min:-4,max:14,default:3.2},zones:{A:'A 区',mid:'中路',B:'B 区'},
+ reference:'https://csnades.gg/ancient',
+ labels:[['A',302,275,.1,'site-label'],['B',785,430,.6,'site-label'],['中 路',484,492,-.5],['T 出生点',511,882,-5],['CT 出生点',517,155,.8],['神庙',315,171,1],['A 大',175,457,-1],['A 外',283,675,-3],['甜甜圈',316,475,.8],['红房',478,277,1],['黑屋',631,543,-.5],['B 门',746,550,-1.5],['B 长廊',832,305,.6],['B 短廊',676,329,.5],['B 通道',669,594,-1],['匪口',817,726,-3]]};
 export const getMap=id=>maps[id]||maps.mirage;
 export const mapUtilities=(config,type,zone='all',level='upper')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level));
