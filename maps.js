@@ -2,6 +2,7 @@ import {utilities as mirageUtilities} from './data.js';
 import {nukeUtilities} from './nuke-data.js';
 import {ancientUtilities} from './ancient-data.js';
 import {dust2Utilities} from './dust2-data.js';
+import {infernoUtilities} from './inferno-data.js';
 
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
@@ -30,5 +31,11 @@ maps.dust2={id:'dust2',name:'炙热沙城 II',en:'DUST II',utilities:dust2Utilit
  cut:{min:-4,max:16,default:4},zones:{A:'A 区',mid:'中路',B:'B 区'},
  reference:'https://www.cs2util.com/dust2',
  labels:[['A',820,172,3,'site-label'],['B',210,130,1.8,'site-label'],['中 路',465,557,-1],['T 出生点',390,921,2.6],['CT 出生点',600,207,-2],['A 大',903,425,.8],['A 门',727,605,1],['大坑',941,622,-1],['A 小',587,416,1.5],['A 平台',724,166,3],['鹅位',842,64,3.5],['中 门',465,352,-2],['Xbox',495,431,.8],['B1',353,417,-1.7],['B 洞',160,459,1],['B 门',274,216,.8],['B 窗',270,120,2.2],['B 后平台',105,55,2.1],['匪家平台',253,817,3]]};
+maps.inferno={id:'inferno',name:'炼狱小镇',en:'INFERNO',utilities:infernoUtilities,
+ model:'./assets/inferno-native.glb?v=1',metadata:'./assets/inferno-native.json?v=1',
+ radars:{upper:'./assets/inferno-radar.png'},center:[3,1,1],gridHeight:-5.5,defaultZoom:.97,
+ cut:{min:-3,max:18,default:6.2},zones:{A:'A 区',mid:'中路',banana:'香蕉道',B:'B 区'},
+ reference:'https://www.cs2util.com/inferno',
+ labels:[["A",825,690,4,"site-label"],["B",490,225,4,"site-label"],["T 出生点",92,734,-0.5],["CT 出生点",898,367,3],["香蕉道",479,447,2.4],["中 路",554,669,2.5],["侧 道",539,817,2.7],["A 二楼",737,854,6],["大 坑",943,831,2.2],["小 坑",854,871,2.9],["锅炉房",672,728,3.6],["连 接",800,563,3.8],["A 短",777,784,3.7],["拱 门",795,503,3.8],["书 房",946,556,3.8],["摩 托",930,599,4],["教 堂",623,127,4.2],["棺 材",533,152,4.2],["木 板",511,366,3.4],["沙 袋",566,403,4],["B 死点",432,141,4.2],["警家长廊",759,345,3.6]]};
 export const getMap=id=>maps[id]||maps.mirage;
 export const mapUtilities=(config,type,zone='all',level='upper')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level));

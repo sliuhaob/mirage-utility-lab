@@ -1,0 +1,551 @@
+{
+  "model": "Native CS2 Inferno",
+  "source": "Local CS2 game/csgo/maps/de_inferno.vpk",
+  "sourceSha256": "bfe3d8a996feb43962b11a51acd76068fd001f793fa750f7df5cf7d9d23a9d89",
+  "units": {
+    "sourceToWebScale": 0.02040816326530612,
+    "sourceToWebOffset": [
+      -8.608163265306125,
+      0,
+      27.779591836734696
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "anchors": {
+    "inferno-ct": {
+      "origin": {
+        "x": -2.68311,
+        "z": -4.15856,
+        "height": 2.47574,
+        "surfaces": [
+          {
+            "height": 14.68283,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.004"
+          },
+          {
+            "height": 2.47574,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.012"
+          }
+        ]
+      },
+      "target": {
+        "x": 12.32135,
+        "z": -27.47011,
+        "height": 2.63343,
+        "surfaces": [
+          {
+            "height": 2.63343,
+            "object": "n0_lr0_agg_merge_inferno_stone_floor_08_blend_0.016"
+          }
+        ]
+      }
+    },
+    "inferno-coffins": {
+      "origin": {
+        "x": 1.16785,
+        "z": -13.38304,
+        "height": 2.77551,
+        "surfaces": [
+          {
+            "height": 2.77551,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.029"
+          }
+        ]
+      },
+      "target": {
+        "x": 1.35675,
+        "z": -37.20007,
+        "height": 3.28811,
+        "surfaces": [
+          {
+            "height": 3.28811,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_dirt_blend_0.006"
+          }
+        ]
+      }
+    },
+    "inferno-arch": {
+      "origin": {
+        "x": 11.6371,
+        "z": 18.65651,
+        "height": 1.96623,
+        "surfaces": [
+          {
+            "height": 1.96623,
+            "object": "n0_lr0_agg_merge_inferno_stone_trim_01_1.002"
+          }
+        ]
+      },
+      "target": {
+        "x": 28.52665,
+        "z": -0.00095,
+        "height": 3.26531,
+        "surfaces": [
+          {
+            "height": 13.9129,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.027"
+          },
+          {
+            "height": 3.26531,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_0"
+          }
+        ]
+      }
+    },
+    "inferno-moto": {
+      "origin": {
+        "x": 17.7266,
+        "z": 21.51364,
+        "height": 2.63094,
+        "surfaces": [
+          {
+            "height": 11.72413,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.071"
+          },
+          {
+            "height": 9.55102,
+            "object": "n0_lr0_agg_merge_bk01_trim_wood01b_0.111"
+          },
+          {
+            "height": 9.48979,
+            "object": "n0_lr0_agg_merge_bk01_trim_wood01b_0.111"
+          },
+          {
+            "height": 2.63094,
+            "object": "n0_lr0_agg_merge_inferno_stone_trim_block_01_0.019"
+          },
+          {
+            "height": 2.61225,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_02_blend_0.002"
+          }
+        ]
+      },
+      "target": {
+        "x": 38.06058,
+        "z": 10.49157,
+        "height": 3.04343,
+        "surfaces": [
+          {
+            "height": 3.04343,
+            "object": "n0_lr0_agg_merge_inferno_stone_trim_01_grass_blend_0"
+          }
+        ]
+      }
+    },
+    "inferno-library": {
+      "origin": {
+        "x": -4.40466,
+        "z": 18.86576,
+        "height": 1.61642,
+        "surfaces": [
+          {
+            "height": 1.61642,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_1.003"
+          }
+        ]
+      },
+      "target": {
+        "x": 42.83025,
+        "z": 4.77084,
+        "height": 3.23492,
+        "surfaces": [
+          {
+            "height": 10.55067,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.075"
+          },
+          {
+            "height": 6.69388,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_1.001"
+          },
+          {
+            "height": 3.23492,
+            "object": "n0_lr0_agg_merge_interno_tile_ground_blend_01_notint_0"
+          }
+        ]
+      }
+    },
+    "inferno-pit": {
+      "origin": {
+        "x": -4.77207,
+        "z": 31.81985,
+        "height": 1.31166,
+        "surfaces": [
+          {
+            "height": 6.65211,
+            "object": "n0_lr0_agg_merge_roofkit01_trim_01_base_1.017"
+          },
+          {
+            "height": 6.39926,
+            "object": "n0_lr0_agg_merge_gutter_kit_01_0.053"
+          },
+          {
+            "height": 1.31166,
+            "object": "n0_lr0_agg_merge_inferno_stone_trim_01_0"
+          }
+        ]
+      },
+      "target": {
+        "x": 42.82414,
+        "z": 29.56578,
+        "height": 1.95527,
+        "surfaces": [
+          {
+            "height": 1.95527,
+            "object": "n0_lr0_agg_merge_inferno_concrete_02_dirt_blend_0.001"
+          }
+        ]
+      }
+    },
+    "inferno-banana-flash": {
+      "origin": {
+        "x": 6.65814,
+        "z": -10.58833,
+        "height": 2.77551,
+        "surfaces": [
+          {
+            "height": 10.50396,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.019"
+          },
+          {
+            "height": 2.77551,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.009"
+          }
+        ]
+      },
+      "target": {
+        "x": -1.51102,
+        "z": -9.54487,
+        "height": 2.52909,
+        "surfaces": [
+          {
+            "height": 2.52909,
+            "object": "n0_lr0_agg_merge_inferno_soil_trail_01_0.010"
+          }
+        ]
+      }
+    },
+    "inferno-a-flash": {
+      "origin": {
+        "x": -1.01697,
+        "z": 13.85028,
+        "height": 1.57357,
+        "surfaces": [
+          {
+            "height": 1.57357,
+            "object": "n0_lr0_agg_merge_inferno_stone_wall_09_trim_0.090"
+          }
+        ]
+      },
+      "target": {
+        "x": 20.4145,
+        "z": 24.792,
+        "height": 2.69388,
+        "surfaces": [
+          {
+            "height": 2.69388,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.002"
+          }
+        ]
+      }
+    },
+    "inferno-b-flash": {
+      "origin": {
+        "x": 1.57487,
+        "z": -21.99662,
+        "height": 3.30613,
+        "surfaces": [
+          {
+            "height": 3.30613,
+            "object": "n0_lr0_agg_merge_inferno_soil_trail_02_0.021"
+          }
+        ]
+      },
+      "target": {
+        "x": 7.07584,
+        "z": -25.75483,
+        "height": 2.77552,
+        "surfaces": [
+          {
+            "height": 2.77552,
+            "object": "n0_lr0_agg_merge_inferno_stone_floor_08_blend_0.013"
+          }
+        ]
+      }
+    },
+    "inferno-banana-he": {
+      "origin": {
+        "x": 9.06885,
+        "z": -17.60303,
+        "height": 2.77551,
+        "surfaces": [
+          {
+            "height": 9.92784,
+            "object": "n0_lr0_agg_merge_gutter_kit_01_0.024"
+          },
+          {
+            "height": 2.77551,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.009"
+          }
+        ]
+      },
+      "target": {
+        "x": -5.80481,
+        "z": -0.00942,
+        "height": 1.93509,
+        "surfaces": [
+          {
+            "height": 1.93509,
+            "object": "n0_lr0_agg_merge_inferno_stone_trim_01_base_0"
+          }
+        ]
+      }
+    },
+    "inferno-pit-he": {
+      "origin": {
+        "x": 27.20099,
+        "z": 29.61564,
+        "height": 2.88,
+        "surfaces": [
+          {
+            "height": 8.46454,
+            "object": "n0_lr0_agg_merge_roofkit01_trim_01_base_1.010"
+          },
+          {
+            "height": 5.06791,
+            "object": "n0_lr0_agg_merge_lamp_02_0.044"
+          },
+          {
+            "height": 4.72106,
+            "object": "n0_lr0_agg_merge_lamp_02_0.044"
+          },
+          {
+            "height": 2.88,
+            "object": "n0_lr0_agg_merge_inferno_stone_wall_09_trim_0.032"
+          },
+          {
+            "height": 2.69388,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.001"
+          }
+        ]
+      },
+      "target": {
+        "x": 34.24057,
+        "z": 32.42462,
+        "height": 1.95918,
+        "surfaces": [
+          {
+            "height": 5.22449,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_white_0.002"
+          },
+          {
+            "height": 1.95918,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_dirt_blend_0.005"
+          }
+        ]
+      }
+    },
+    "inferno-car-fire": {
+      "origin": {
+        "x": -5.48698,
+        "z": 8.54137,
+        "height": 1.63644,
+        "surfaces": [
+          {
+            "height": 1.63644,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.004"
+          }
+        ]
+      },
+      "target": {
+        "x": -0.0796,
+        "z": -13.35913,
+        "height": 2.77551,
+        "surfaces": [
+          {
+            "height": 2.77551,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.029"
+          }
+        ]
+      }
+    },
+    "inferno-dark-fire": {
+      "origin": {
+        "x": 0.72385,
+        "z": -9.63495,
+        "height": 2.77551,
+        "surfaces": [
+          {
+            "height": 8.93878,
+            "object": "n0_lr0_agg_merge_bk01_trim_concrete01a_0.025"
+          },
+          {
+            "height": 2.77551,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.029"
+          }
+        ]
+      },
+      "target": {
+        "x": -7.22635,
+        "z": -36.24853,
+        "height": 3.27464,
+        "surfaces": [
+          {
+            "height": 7.92369,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.070"
+          },
+          {
+            "height": 3.27464,
+            "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.003"
+          }
+        ]
+      }
+    },
+    "inferno-boiler-fire": {
+      "origin": {
+        "x": 5.80499,
+        "z": 33.18712,
+        "height": 1.79592,
+        "surfaces": [
+          {
+            "height": 9.23246,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.025"
+          },
+          {
+            "height": 1.79592,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_0.011"
+          }
+        ]
+      },
+      "target": {
+        "x": 16.12354,
+        "z": 22.88363,
+        "height": 2.93878,
+        "surfaces": [
+          {
+            "height": 12.21235,
+            "object": "n0_lr0_agg_merge_roofkit01_trim_01_base_1.002"
+          },
+          {
+            "height": 12.091,
+            "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_3.037"
+          },
+          {
+            "height": 2.93878,
+            "object": "n0_lr0_agg_merge_inferno_tile_floor_03_blend_0.001"
+          }
+        ]
+      }
+    }
+  },
+  "perimeterTrim": {
+    "objectsRemoved": 689,
+    "objectsCut": 1114,
+    "trianglesBefore": 7094794,
+    "trianglesAfter": 5432159
+  },
+  "geometryPolicy": "Original geometry and elevation retained inside the radar exterior plus 0.8 wall margin. Helper geometry, glass/effect cards and peripheral scenery removed. Simplified materials; no ratio decimation.",
+  "probes": {
+    "A site": {
+      "x": 31.3,
+      "z": 17.8,
+      "surfaces": [
+        {
+          "height": 3.2653,
+          "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_1.002"
+        }
+      ]
+    },
+    "B site": {
+      "x": -1.0,
+      "z": -24.0,
+      "surfaces": [
+        {
+          "height": 3.28572,
+          "object": "n0_lr0_agg_merge_inferno_stonefloor07_dirt_blend_0.011"
+        }
+      ]
+    },
+    "B fountain": {
+      "x": -2.2,
+      "z": -28.7,
+      "surfaces": [
+        {
+          "height": 3.80613,
+          "object": "n0_lr0_c0_s_cb_nomerge105_inferno_fountain.meshset_0"
+        },
+        {
+          "height": 3.72003,
+          "object": "n0_lr0_agg_merge_inferno_fountain_floor_01_0.001"
+        }
+      ]
+    },
+    "Banana": {
+      "x": -1.7,
+      "z": -8.4,
+      "surfaces": [
+        {
+          "height": 2.5383,
+          "object": "n0_lr0_agg_merge_inferno_stonefloor07_concrete_blend_0.012"
+        }
+      ]
+    },
+    "Mid": {
+      "x": 6.3,
+      "z": 16.5,
+      "surfaces": [
+        {
+          "height": 1.9131,
+          "object": "n0_lr0_agg_merge_inferno_stone_floor_08_blend_1"
+        }
+      ]
+    },
+    "A Apartments": {
+      "x": 22.5,
+      "z": 34.2,
+      "surfaces": [
+        {
+          "height": 8.81469,
+          "object": "n0_lr0_agg_merge_roofkit01_shingles_01_base_1.025"
+        },
+        {
+          "height": 5.22449,
+          "object": "n0_lr0_agg_merge_inferno_tile_floor_03_blend_0.015"
+        }
+      ]
+    },
+    "Pit": {
+      "x": 38.7,
+      "z": 30.1,
+      "surfaces": [
+        {
+          "height": 2.19748,
+          "object": "n0_lr0_agg_merge_inferno_stonefloor07_dirt_blend_0.005"
+        }
+      ]
+    },
+    "T Spawn": {
+      "x": -40.0,
+      "z": 20.3,
+      "surfaces": [
+        {
+          "height": -1.30612,
+          "object": "n0_lr0_agg_merge_inferno_tile_floor_04_blend_0.008"
+        }
+      ]
+    },
+    "CT Spawn": {
+      "x": 40.4,
+      "z": -15.8,
+      "surfaces": [
+        {
+          "height": 2.69398,
+          "object": "n0_lr0_agg_merge_inferno_stonefloor07_dirt_blend_0"
+        }
+      ]
+    }
+  }
+}
