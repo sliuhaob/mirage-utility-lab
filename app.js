@@ -1,4 +1,4 @@
-import {maps,getMap,mapUtilities} from './maps.js?v=3';
+import {maps,getMap,mapUtilities} from './maps.js?v=4';
 import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=2';
 import {setupMobileLayout} from './mobile-layout.js';
@@ -114,7 +114,7 @@ await switchMap(config.id,false);
 // Preserve existing map integrations and expose one utility tool per new map.
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
- for(const [name,mapId,smokeOnly] of [['show_mirage_smoke','mirage',true],['show_mirage_utility','mirage',false],['show_nuke_utility','nuke',false],['show_ancient_utility','ancient',false]]){
+ for(const [name,mapId,smokeOnly] of [['show_mirage_smoke','mirage',true],['show_mirage_utility','mirage',false],['show_nuke_utility','nuke',false],['show_ancient_utility','ancient',false],['show_dust2_utility','dust2',false]]){
   const target=maps[mapId],items=target.utilities.filter(s=>!smokeOnly||s.type==='smoke');
   try{Promise.resolve(document.modelContext.registerTool({name,title:'查看'+target.name+'道具教程',description:'切换地图并显示道具落点、站位与投掷方法。',inputSchema:{type:'object',properties:{id:{type:'string',enum:items.map(s=>s.id)}},required:['id'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},async execute(input){if(!input||typeof input!=='object'||Object.keys(input).some(k=>k!=='id')||!items.some(s=>s.id===input.id))throw new Error('请选择有效的道具点位');if(config.id!==mapId)await switchMap(mapId);filter='all';select(input.id);return {id:current.id,map:config.id,type:current.type,name:current.name,from:current.from,method:current.method,steps:current.steps,videoAvailable:false};}},{signal:lifecycle.signal})).catch(e=>console.warn('Optional WebMCP registration unavailable',e));}catch(e){console.warn('Optional WebMCP unavailable',e);}
  }

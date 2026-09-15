@@ -1,6 +1,7 @@
 import {utilities as mirageUtilities} from './data.js';
 import {nukeUtilities} from './nuke-data.js';
 import {ancientUtilities} from './ancient-data.js';
+import {dust2Utilities} from './dust2-data.js';
 
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
@@ -23,5 +24,11 @@ maps.ancient={id:'ancient',name:'远古遗迹',en:'ANCIENT',utilities:ancientUti
  cut:{min:-4,max:14,default:3.2},zones:{A:'A 区',mid:'中路',B:'B 区'},
  reference:'https://csnades.gg/ancient',
  labels:[['A',302,275,.1,'site-label'],['B',785,430,.6,'site-label'],['中 路',484,492,-.5],['T 出生点',511,882,-5],['CT 出生点',517,155,.8],['神庙',315,171,1],['A 大',175,457,-1],['A 外',283,675,-3],['甜甜圈',316,475,.8],['红房',478,277,1],['黑屋',631,543,-.5],['B 门',746,550,-1.5],['B 长廊',832,305,.6],['B 短廊',676,329,.5],['B 通道',669,594,-1],['匪口',817,726,-3]]};
+maps.dust2={id:'dust2',name:'炙热沙城 II',en:'DUST II',utilities:dust2Utilities,
+ model:'./assets/dust2-native.glb?v=1',metadata:'./assets/dust2-native.json?v=1',
+ radars:{upper:'./assets/dust2-radar.png'},center:[0,0,0],gridHeight:-8.2,defaultZoom:.94,
+ cut:{min:-4,max:16,default:4},zones:{A:'A 区',mid:'中路',B:'B 区'},
+ reference:'https://www.cs2util.com/dust2',
+ labels:[['A',820,172,3,'site-label'],['B',210,130,1.8,'site-label'],['中 路',465,557,-1],['T 出生点',390,921,2.6],['CT 出生点',600,207,-2],['A 大',903,425,.8],['A 门',727,605,1],['大坑',941,622,-1],['A 小',587,416,1.5],['A 平台',724,166,3],['鹅位',842,64,3.5],['中 门',465,352,-2],['Xbox',495,431,.8],['B1',353,417,-1.7],['B 洞',160,459,1],['B 门',274,216,.8],['B 窗',270,120,2.2],['B 后平台',105,55,2.1],['匪家平台',253,817,3]]};
 export const getMap=id=>maps[id]||maps.mirage;
 export const mapUtilities=(config,type,zone='all',level='upper')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level));
