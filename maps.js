@@ -3,6 +3,7 @@ import {nukeUtilities} from './nuke-data.js';
 import {ancientUtilities} from './ancient-data.js';
 import {dust2Utilities} from './dust2-data.js';
 import {infernoUtilities} from './inferno-data.js';
+import {anubisUtilities} from './anubis-data.js';
 
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
@@ -37,5 +38,11 @@ maps.inferno={id:'inferno',name:'炼狱小镇',en:'INFERNO',utilities:infernoUti
  cut:{min:-3,max:18,default:6.2},zones:{A:'A 区',mid:'中路',banana:'香蕉道',B:'B 区'},
  reference:'https://www.cs2util.com/inferno',
  labels:[["A",825,690,4,"site-label"],["B",490,225,4,"site-label"],["T 出生点",92,734,-0.5],["CT 出生点",898,367,3],["香蕉道",479,447,2.4],["中 路",554,669,2.5],["侧 道",539,817,2.7],["A 二楼",737,854,6],["大 坑",943,831,2.2],["小 坑",854,871,2.9],["锅炉房",672,728,3.6],["连 接",800,563,3.8],["A 短",777,784,3.7],["拱 门",795,503,3.8],["书 房",946,556,3.8],["摩 托",930,599,4],["教 堂",623,127,4.2],["棺 材",533,152,4.2],["木 板",511,366,3.4],["沙 袋",566,403,4],["B 死点",432,141,4.2],["警家长廊",759,345,3.6]]};
+maps.anubis={id:'anubis',name:'阿努比斯',en:'ANUBIS',utilities:anubisUtilities,
+ model:'./assets/anubis-native.glb?v=1',metadata:'./assets/anubis-native.json?v=1',
+ radars:{upper:'./assets/anubis-radar.png'},center:[0,-1,7],gridHeight:-8,defaultZoom:1.1,
+ cut:{min:-4,max:16,default:3.6},zones:{A:'A 区',mid:'中路',water:'水下',B:'B 区'},
+ reference:'https://csnades.gg/anubis',
+ labels:[['A',755,273,-2.8,'site-label'],['B',322,536,.7,'site-label'],['T 出生点',486,926,.4],['CT 出生点',433,236,.9],['中 路',585,424,.7],['中路桥',518,606,.7],['VIP',526,488,.7],['匪 中',507,709,1],['水 下',589,616,-2.7,'area-label lower-label'],['船 位',726,543,-2.4],['A 大',874,445,-2.2],['A 天堂',729,200,-.1],['A 平台',722,365,-1],['A 小',650,385,-.8],['喷 泉',890,261,-2.7],['黑 屋',405,620,-1.4],['B 门',222,574,.6],['B 一柱',300,577,.7],['B 死点',408,546,1.2],['B 连接',374,427,1.2],['B 后巷',287,402,.7],['B 外',273,661,.7],['遗 迹',356,802,.7],['侧 巷',650,781,.7]]};
 export const getMap=id=>maps[id]||maps.mirage;
 export const mapUtilities=(config,type,zone='all',level='upper')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level));

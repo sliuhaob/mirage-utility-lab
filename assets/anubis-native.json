@@ -1,0 +1,583 @@
+{
+  "model": "Native CS2 Anubis",
+  "source": "Local CS2 game/csgo/maps/de_anubis.vpk",
+  "sourceSha256": "bca91cee11592c65c2869c599769232f29335458376ed90431a013b58c938e07",
+  "units": {
+    "sourceToWebScale": 0.019157088122605363,
+    "sourceToWebOffset": [
+      2.3632183908045903,
+      0,
+      12.554789272030646
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "anchors": {
+    "anubis-window": {
+      "origin": {
+        "x": -5.60614,
+        "z": 45.04522,
+        "height": 0.01916,
+        "surfaces": [
+          {
+            "height": 0.01916,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.015"
+          }
+        ]
+      },
+      "target": {
+        "x": 1.02401,
+        "z": -2.04314,
+        "height": 0.00479,
+        "surfaces": [
+          {
+            "height": 13.71647,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.221"
+          },
+          {
+            "height": 4.28946,
+            "object": "n0_lr0_agg_merge_stone_pile_0"
+          },
+          {
+            "height": 0.00479,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.028"
+          }
+        ]
+      }
+    },
+    "anubis-heaven": {
+      "origin": {
+        "x": 16.61662,
+        "z": 0.56306,
+        "height": -2.91188,
+        "surfaces": [
+          {
+            "height": -2.91188,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_wet_0.002"
+          }
+        ]
+      },
+      "target": {
+        "x": 22.54631,
+        "z": -30.73961,
+        "height": -0.76628,
+        "surfaces": [
+          {
+            "height": 7.01765,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.210"
+          },
+          {
+            "height": -0.76628,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0"
+          }
+        ]
+      }
+    },
+    "anubis-a-connector": {
+      "origin": {
+        "x": 26.38561,
+        "z": -2.8098,
+        "height": -2.91187,
+        "surfaces": [
+          {
+            "height": -2.91187,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_wet_0.003"
+          }
+        ]
+      },
+      "target": {
+        "x": 13.32247,
+        "z": -13.31676,
+        "height": -1.68103,
+        "surfaces": [
+          {
+            "height": 5.82376,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.056"
+          },
+          {
+            "height": -1.68103,
+            "object": "n0_lr0_agg_merge_stairs03_0.014"
+          }
+        ]
+      }
+    },
+    "anubis-palace": {
+      "origin": {
+        "x": -18.83779,
+        "z": 21.63462,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -16.39884,
+        "z": -9.21723,
+        "height": 0.61303,
+        "surfaces": [
+          {
+            "height": 6.28353,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.074"
+          },
+          {
+            "height": 0.61303,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.059"
+          }
+        ]
+      }
+    },
+    "anubis-street": {
+      "origin": {
+        "x": -21.50467,
+        "z": 19.00835,
+        "height": 0.04876,
+        "surfaces": [
+          {
+            "height": 0.04876,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -22.54807,
+        "z": -7.67992,
+        "height": 1e-05,
+        "surfaces": [
+          {
+            "height": 1e-05,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.002"
+          }
+        ]
+      }
+    },
+    "anubis-ebox": {
+      "origin": {
+        "x": 10.98451,
+        "z": 26.66678,
+        "height": -0.01915,
+        "surfaces": [
+          {
+            "height": -0.01915,
+            "object": "n0_lr0_agg_merge_hr_stone_ground02_sand_0.013"
+          }
+        ]
+      },
+      "target": {
+        "x": -8.19983,
+        "z": 11.79265,
+        "height": -2.14559,
+        "surfaces": [
+          {
+            "height": 15.32566,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.032"
+          },
+          {
+            "height": 3.99768,
+            "object": "n0_lr0_agg_merge_stones_single_0.020"
+          },
+          {
+            "height": 2.45211,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.064"
+          },
+          {
+            "height": -1.68083,
+            "object": "n0_lr0_agg_merge_stairs01_trim_0.002"
+          },
+          {
+            "height": -2.14559,
+            "object": "n0_lr0_agg_merge_hr_stone_wall02_trim_0.063"
+          }
+        ]
+      }
+    },
+    "anubis-a-flash": {
+      "origin": {
+        "x": 24.39327,
+        "z": 0.86843,
+        "height": -3.61829,
+        "surfaces": [
+          {
+            "height": -3.18008,
+            "object": "n0_lr0_c0_s_cb_nomerge76_anubis_water_canal.meshset_0"
+          },
+          {
+            "height": -3.61829,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.053"
+          }
+        ]
+      },
+      "target": {
+        "x": 27.15825,
+        "z": -19.46601,
+        "height": -2.91188,
+        "surfaces": [
+          {
+            "height": -2.91188,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0.012"
+          }
+        ]
+      }
+    },
+    "anubis-mid-flash": {
+      "origin": {
+        "x": -9.22722,
+        "z": 24.64246,
+        "height": 1.22606,
+        "surfaces": [
+          {
+            "height": 1.22606,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -0.00086,
+        "z": -2.04314,
+        "height": 0.00479,
+        "surfaces": [
+          {
+            "height": 13.71647,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.221"
+          },
+          {
+            "height": 0.00479,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.028"
+          }
+        ]
+      }
+    },
+    "anubis-b-flash": {
+      "origin": {
+        "x": -21.92736,
+        "z": 15.82372,
+        "height": 0.00333,
+        "surfaces": [
+          {
+            "height": 0.00333,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -27.67243,
+        "z": 4.61856,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 8.42912,
+            "object": "n0_lr0_agg_merge_hr_stone_wall02_sand_0.015"
+          },
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.063"
+          }
+        ]
+      }
+    },
+    "anubis-pillar-fire": {
+      "origin": {
+        "x": -21.9274,
+        "z": 18.58571,
+        "height": 0.07681,
+        "surfaces": [
+          {
+            "height": 0.07681,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -19.47344,
+        "z": 6.15586,
+        "height": 0.1431,
+        "surfaces": [
+          {
+            "height": 4.94476,
+            "object": "n0_lr0_agg_merge_pillar_block01_0.014"
+          },
+          {
+            "height": 0.1431,
+            "object": "n0_lr0_agg_merge_pillar02_0.013"
+          },
+          {
+            "height": -0.44061,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.007"
+          }
+        ]
+      }
+    },
+    "anubis-ninja-fire": {
+      "origin": {
+        "x": -15.24148,
+        "z": 7.76492,
+        "height": -1.0728,
+        "surfaces": [
+          {
+            "height": -1.0728,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.007"
+          }
+        ]
+      },
+      "target": {
+        "x": -10.76203,
+        "z": 2.05636,
+        "height": 0.68965,
+        "surfaces": [
+          {
+            "height": 0.68965,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.032"
+          }
+        ]
+      }
+    },
+    "anubis-a-fire": {
+      "origin": {
+        "x": 16.61669,
+        "z": 0.01818,
+        "height": -2.10534,
+        "surfaces": [
+          {
+            "height": -2.10534,
+            "object": "n0_lr0_agg_merge_dust_grain_basket_color_0.002"
+          },
+          {
+            "height": -2.30405,
+            "object": "n0_lr0_agg_merge_dust_grain_basket_color_0.002"
+          }
+        ]
+      },
+      "target": {
+        "x": 23.57119,
+        "z": -25.61524,
+        "height": -3.67815,
+        "surfaces": [
+          {
+            "height": -3.67815,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0"
+          }
+        ]
+      }
+    },
+    "anubis-water-he": {
+      "origin": {
+        "x": 18.97128,
+        "z": -12.17773,
+        "height": -1.68582,
+        "surfaces": [
+          {
+            "height": 7.50958,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.200"
+          },
+          {
+            "height": 7.04981,
+            "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.245"
+          },
+          {
+            "height": 6.30982,
+            "object": "n0_lr0_agg_merge_stone_blocks_0.009"
+          },
+          {
+            "height": -1.68582,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": 18.51084,
+        "z": -3.53598,
+        "height": -3.18007,
+        "surfaces": [
+          {
+            "height": -3.18007,
+            "object": "n0_lr0_c0_s_cb_nomerge76_anubis_water_canal.meshset_0"
+          },
+          {
+            "height": -3.61829,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.053"
+          }
+        ]
+      }
+    },
+    "anubis-pillar-he": {
+      "origin": {
+        "x": -17.10092,
+        "z": 13.48564,
+        "height": 0.0,
+        "surfaces": [
+          {
+            "height": 0.0,
+            "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.010"
+          }
+        ]
+      },
+      "target": {
+        "x": -17.23432,
+        "z": 5.85816,
+        "height": -0.44062,
+        "surfaces": [
+          {
+            "height": -0.44062,
+            "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.007"
+          }
+        ]
+      }
+    }
+  },
+  "perimeterTrim": {
+    "objectsRemoved": 451,
+    "objectsCut": 805,
+    "trianglesBefore": 3081729,
+    "trianglesAfter": 2470633
+  },
+  "geometryPolicy": "Original geometry and elevation retained inside the competitive radar exterior plus 0.8 wall margin; coastal backdrop beyond CT spawn removed. Helper geometry, glass/effect cards and peripheral scenery removed. Simplified materials; no ratio decimation.",
+  "probes": {
+    "A site": {
+      "x": 24.3,
+      "z": -23.9,
+      "surfaces": [
+        {
+          "height": -1.99233,
+          "object": "n0_lr0_agg_merge_sandstone_wall03a_0.023"
+        },
+        {
+          "height": -3.67816,
+          "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0.009"
+        }
+      ]
+    },
+    "B site": {
+      "x": -19.0,
+      "z": 2.4,
+      "surfaces": [
+        {
+          "height": 0.00453,
+          "object": "n0_lr0_agg_merge_stone_blocks_0.258"
+        }
+      ]
+    },
+    "Mid bridge": {
+      "x": 0.2,
+      "z": 7.2,
+      "surfaces": [
+        {
+          "height": 0.0042,
+          "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.022"
+        },
+        {
+          "height": -3.18008,
+          "object": "n0_lr0_c0_s_cb_nomerge76_anubis_water_canal.meshset_0"
+        },
+        {
+          "height": -3.61829,
+          "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.038"
+        }
+      ]
+    },
+    "Canal under bridge": {
+      "x": 0.2,
+      "z": 8.2,
+      "surfaces": [
+        {
+          "height": 0.00311,
+          "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.022"
+        },
+        {
+          "height": -3.18008,
+          "object": "n0_lr0_c0_s_cb_nomerge76_anubis_water_canal.meshset_0"
+        },
+        {
+          "height": -3.61829,
+          "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.038"
+        }
+      ]
+    },
+    "Water": {
+      "x": 19.4,
+      "z": 4.4,
+      "surfaces": [
+        {
+          "height": -3.18008,
+          "object": "n0_lr0_c0_s_cb_nomerge76_anubis_water_canal.meshset_0"
+        },
+        {
+          "height": -3.60967,
+          "object": "n0_lr0_agg_merge_hr_stone_ground01_sand_0.070"
+        }
+      ]
+    },
+    "A Heaven": {
+      "x": 22.5,
+      "z": -30.2,
+      "surfaces": [
+        {
+          "height": 7.01283,
+          "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.210"
+        },
+        {
+          "height": 5.82376,
+          "object": "n0_lr0_agg_merge_stone_blocks_0.003"
+        },
+        {
+          "height": -0.76628,
+          "object": "n0_lr0_agg_merge_hr_stone_floor03b_sand_0"
+        }
+      ]
+    },
+    "B Connector": {
+      "x": -13.8,
+      "z": -8.5,
+      "surfaces": [
+        {
+          "height": 6.28352,
+          "object": "n0_lr0_agg_merge_hr_stone_wall01_wall02_0.029"
+        },
+        {
+          "height": 5.05747,
+          "object": "n0_lr0_agg_merge_stone_blocks_0.209"
+        },
+        {
+          "height": 3.62989,
+          "object": "n0_lr0_agg_merge_stone_blocks_0.295"
+        },
+        {
+          "height": 0.67816,
+          "object": "n0_lr0_agg_merge_stone_blocks_0.202"
+        },
+        {
+          "height": 0.61303,
+          "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.024"
+        }
+      ]
+    },
+    "T Spawn": {
+      "x": -2.6,
+      "z": 41.4,
+      "surfaces": [
+        {
+          "height": -0.22989,
+          "object": "n0_lr0_agg_merge_hr_stone_ground02_sand_0.020"
+        }
+      ]
+    },
+    "CT Spawn": {
+      "x": -7.9,
+      "z": -27.6,
+      "surfaces": [
+        {
+          "height": 0.39074,
+          "object": "n0_lr0_agg_merge_stones_single_0.004"
+        },
+        {
+          "height": 0.30712,
+          "object": "n0_lr0_agg_merge_hr_stone_floor03_sand_0.006"
+        }
+      ]
+    }
+  }
+}
