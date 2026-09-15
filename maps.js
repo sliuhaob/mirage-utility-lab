@@ -1,9 +1,9 @@
-import {utilities as mirageUtilities} from './data.js';
-import {nukeUtilities} from './nuke-data.js';
-import {ancientUtilities} from './ancient-data.js';
-import {dust2Utilities} from './dust2-data.js';
-import {infernoUtilities} from './inferno-data.js';
-import {anubisUtilities} from './anubis-data.js';
+import {utilities as mirageUtilities} from './data.js?v=2';
+import {nukeUtilities} from './nuke-data.js?v=2';
+import {ancientUtilities} from './ancient-data.js?v=2';
+import {dust2Utilities} from './dust2-data.js?v=2';
+import {infernoUtilities} from './inferno-data.js?v=2';
+import {anubisUtilities} from './anubis-data.js?v=2';
 
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
@@ -45,4 +45,4 @@ maps.anubis={id:'anubis',name:'阿努比斯',en:'ANUBIS',utilities:anubisUtiliti
  reference:'https://csnades.gg/anubis',
  labels:[['A',755,273,-2.8,'site-label'],['B',322,536,.7,'site-label'],['T 出生点',486,926,.4],['CT 出生点',433,236,.9],['中 路',585,424,.7],['中路桥',518,606,.7],['VIP',526,488,.7],['匪 中',507,709,1],['水 下',589,616,-2.7,'area-label lower-label'],['船 位',726,543,-2.4],['A 大',874,445,-2.2],['A 天堂',729,200,-.1],['A 平台',722,365,-1],['A 小',650,385,-.8],['喷 泉',890,261,-2.7],['黑 屋',405,620,-1.4],['B 门',222,574,.6],['B 一柱',300,577,.7],['B 死点',408,546,1.2],['B 连接',374,427,1.2],['B 后巷',287,402,.7],['B 外',273,661,.7],['遗 迹',356,802,.7],['侧 巷',650,781,.7]]};
 export const getMap=id=>maps[id]||maps.mirage;
-export const mapUtilities=(config,type,zone='all',level='upper')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level));
+export const mapUtilities=(config,type,zone='all',level='upper',team='all')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level)&&(team==='all'||s.team==='any'||s.team===team));

@@ -2,6 +2,7 @@
 export const nukeUtilities=[
   {
     "id": "nuke-close-red",
+    "team": "t",
     "name": "外场近点烟",
     "en": "CROSS / NEAR",
     "zone": "outside",
@@ -40,6 +41,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-deep-red",
+    "team": "t",
     "name": "外场远点烟",
     "en": "CROSS / FAR",
     "zone": "outside",
@@ -78,6 +80,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-garage",
+    "team": "t",
     "name": "大仓烟",
     "en": "GARAGE",
     "zone": "outside",
@@ -117,6 +120,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-ramp-cross",
+    "team": "t",
     "name": "铁板过点烟",
     "en": "RAMP CROSS",
     "zone": "ramp",
@@ -155,6 +159,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-ramp",
+    "team": "t",
     "name": "铁板斜坡烟",
     "en": "RAMP",
     "zone": "ramp",
@@ -193,6 +198,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-control",
+    "team": "ct",
     "name": "连接烟",
     "en": "CONTROL / TROPHY",
     "zone": "ramp",
@@ -231,6 +237,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-hut-flash",
+    "team": "t",
     "name": "黄房出点闪",
     "en": "HUT FLASH",
     "zone": "A",
@@ -268,6 +275,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-yard-flash",
+    "team": "t",
     "name": "外场红箱闪",
     "en": "YARD FLASH",
     "zone": "outside",
@@ -306,6 +314,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-squeaky-he",
+    "team": "t",
     "name": "铁门雷",
     "en": "SQUEAKY HE",
     "zone": "A",
@@ -344,6 +353,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-silo-he",
+    "team": "ct",
     "name": "水塔雷",
     "en": "SILO HE",
     "zone": "outside",
@@ -381,6 +391,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-hut-fire",
+    "team": "ct",
     "name": "黄房火",
     "en": "HUT FIRE",
     "zone": "A",
@@ -418,6 +429,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-secret-fire",
+    "team": "t",
     "name": "K1 入口火",
     "en": "SECRET FIRE",
     "zone": "outside",
@@ -456,6 +468,7 @@ export const nukeUtilities=[
   },
   {
     "id": "nuke-b-doors",
+    "team": "ct",
     "name": "B 区双开门烟",
     "en": "B DOUBLE DOORS",
     "zone": "B",

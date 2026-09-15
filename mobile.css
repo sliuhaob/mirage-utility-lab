@@ -57,4 +57,8 @@
 @media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
  .topbar{gap:8px}.brand{font-size:17px;gap:6px}.brand-symbol{width:23px}.map-picker{margin:0}.map-picker>span{display:none}.map-picker select{min-height:38px;padding:6px;max-width:150px;font-size:13px}.mobile-actions{gap:4px}.mobile-actions button{padding:7px 9px}.level-switch{left:10px;top:113px;padding:2px}.level-switch button{min-height:38px;padding:6px 12px;font-size:14px}.level-switch>span{display:none}
 }
-@media(min-width:761px){.level-switch{left:auto;right:24px;top:83px}}
+@media(min-width:761px){.level-switch{left:auto;right:24px;top:130px}}
+@media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
+ .team-switch{right:10px;top:59px;padding:2px;z-index:40}.team-switch button{min-width:89px;min-height:40px;padding:6px 10px;font-size:14px}
+ .compass{top:118px}.level-switch{left:10px;right:auto;top:113px}
+}

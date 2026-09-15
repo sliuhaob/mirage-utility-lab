@@ -2,6 +2,7 @@
 export const infernoUtilities=[
   {
     "id": "inferno-ct",
+    "team": "t",
     "name": "警家烟",
     "en": "CT & BOOST",
     "zone": "B",
@@ -38,6 +39,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-coffins",
+    "team": "t",
     "name": "棺材烟",
     "en": "COFFINS",
     "zone": "B",
@@ -76,6 +78,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-arch",
+    "team": "t",
     "name": "拱门烟",
     "en": "ARCH",
     "zone": "A",
@@ -112,6 +115,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-moto",
+    "team": "t",
     "name": "摩托烟",
     "en": "MOTO",
     "zone": "A",
@@ -148,6 +152,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-library",
+    "team": "t",
     "name": "书房烟",
     "en": "LIBRARY",
     "zone": "A",
@@ -185,6 +190,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-pit",
+    "team": "t",
     "name": "大坑烟",
     "en": "PIT",
     "zone": "A",
@@ -222,6 +228,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-banana-flash",
+    "team": "ct",
     "name": "香蕉道反清闪",
     "en": "BANANA FLASH",
     "zone": "banana",
@@ -259,6 +266,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-a-flash",
+    "team": "t",
     "name": "A 区高闪",
     "en": "A ENTRY FLASH",
     "zone": "A",
@@ -296,6 +304,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-b-flash",
+    "team": "ct",
     "name": "B 入口反清闪",
     "en": "B ENTRY FLASH",
     "zone": "B",
@@ -332,6 +341,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-banana-he",
+    "team": "ct",
     "name": "香蕉道木桶雷",
     "en": "BANANA HE",
     "zone": "banana",
@@ -369,6 +379,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-pit-he",
+    "team": "t",
     "name": "小坑雷",
     "en": "MINI PIT HE",
     "zone": "A",
@@ -408,6 +419,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-car-fire",
+    "team": "t",
     "name": "香蕉道木板火",
     "en": "CAR FIRE",
     "zone": "banana",
@@ -445,6 +457,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-dark-fire",
+    "team": "t",
     "name": "B 死点火",
     "en": "DARK FIRE",
     "zone": "B",
@@ -482,6 +495,7 @@ export const infernoUtilities=[
   },
   {
     "id": "inferno-boiler-fire",
+    "team": "t",
     "name": "锅炉房火",
     "en": "BOILER FIRE",
     "zone": "mid",

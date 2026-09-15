@@ -2,6 +2,7 @@
 export const dust2Utilities=[
   {
     "id": "dust2-xbox",
+    "team": "t",
     "name": "Xbox 烟",
     "en": "XBOX",
     "zone": "mid",
@@ -39,6 +40,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-cross",
+    "team": "t",
     "name": "A 大过点烟",
     "en": "A CROSS",
     "zone": "A",
@@ -75,6 +77,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-ct",
+    "team": "t",
     "name": "警家烟",
     "en": "CT CROSS",
     "zone": "A",
@@ -111,6 +114,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-doors",
+    "team": "t",
     "name": "B 门烟",
     "en": "B DOORS",
     "zone": "B",
@@ -149,6 +153,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-window",
+    "team": "t",
     "name": "B 窗烟",
     "en": "B WINDOW",
     "zone": "B",
@@ -186,6 +191,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-mid-doors",
+    "team": "t",
     "name": "中门挂门烟",
     "en": "MID DOORS",
     "zone": "mid",
@@ -223,6 +229,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-long-flash",
+    "team": "t",
     "name": "A 大支援闪",
     "en": "LONG FLASH",
     "zone": "A",
@@ -260,6 +267,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-short-flash",
+    "team": "ct",
     "name": "A 小反清闪",
     "en": "SHORT FLASH",
     "zone": "A",
@@ -297,6 +305,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-b-flash",
+    "team": "t",
     "name": "B 洞出点闪",
     "en": "B ENTRY FLASH",
     "zone": "B",
@@ -333,6 +342,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-a-he",
+    "team": "ct",
     "name": "A 默认包雷",
     "en": "A DEFAULT HE",
     "zone": "A",
@@ -371,6 +381,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-b-he",
+    "team": "ct",
     "name": "B 死点雷",
     "en": "B NINJA HE",
     "zone": "B",
@@ -407,6 +418,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-car-fire",
+    "team": "t",
     "name": "A 车火",
     "en": "A CAR FIRE",
     "zone": "A",
@@ -444,6 +456,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-goose-fire",
+    "team": "t",
     "name": "A 鹅位火",
     "en": "GOOSE FIRE",
     "zone": "A",
@@ -480,6 +493,7 @@ export const dust2Utilities=[
   },
   {
     "id": "dust2-back-fire",
+    "team": "any",
     "name": "B 后平台火",
     "en": "B BACK PLAT FIRE",
     "zone": "B",

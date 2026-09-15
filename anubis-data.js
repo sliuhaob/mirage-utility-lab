@@ -2,6 +2,7 @@
 export const anubisUtilities=[
   {
     "id": "anubis-window",
+    "team": "t",
     "name": "VIP 烟",
     "en": "MID WINDOW",
     "zone": "mid",
@@ -39,6 +40,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-heaven",
+    "team": "t",
     "name": "A 天堂烟",
     "en": "A HEAVEN",
     "zone": "A",
@@ -76,6 +78,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-a-connector",
+    "team": "t",
     "name": "A 小烟",
     "en": "A CONNECTOR",
     "zone": "A",
@@ -114,6 +117,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-palace",
+    "team": "t",
     "name": "B 连接烟",
     "en": "B CONNECTOR",
     "zone": "B",
@@ -150,6 +154,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-street",
+    "team": "t",
     "name": "B 后巷烟",
     "en": "B STREET",
     "zone": "B",
@@ -186,6 +191,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-ebox",
+    "team": "t",
     "name": "水下黑屋烟",
     "en": "E BOX",
     "zone": "water",
@@ -222,6 +228,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-a-flash",
+    "team": "t",
     "name": "A 区进点闪",
     "en": "A ENTRY FLASH",
     "zone": "A",
@@ -258,6 +265,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-mid-flash",
+    "team": "t",
     "name": "中路瞬爆闪",
     "en": "MID POP FLASH",
     "zone": "mid",
@@ -295,6 +303,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-b-flash",
+    "team": "t",
     "name": "B 区进点闪",
     "en": "B ENTRY FLASH",
     "zone": "B",
@@ -332,6 +341,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-pillar-fire",
+    "team": "t",
     "name": "B 一柱火",
     "en": "B PILLAR FIRE",
     "zone": "B",
@@ -369,6 +379,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-ninja-fire",
+    "team": "t",
     "name": "B 死点火",
     "en": "B NINJA FIRE",
     "zone": "B",
@@ -405,6 +416,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-a-fire",
+    "team": "t",
     "name": "A 默认包火",
     "en": "A DEFAULT FIRE",
     "zone": "A",
@@ -442,6 +454,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-water-he",
+    "team": "ct",
     "name": "水下拐角雷",
     "en": "WATER CORNER HE",
     "zone": "water",
@@ -477,6 +490,7 @@ export const anubisUtilities=[
   },
   {
     "id": "anubis-pillar-he",
+    "team": "t",
     "name": "B 柱后雷",
     "en": "B PILLAR HE",
     "zone": "B",

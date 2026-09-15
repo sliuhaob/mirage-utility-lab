@@ -2,6 +2,7 @@
 export const ancientUtilities=[
   {
     "id": "ancient-temple",
+    "team": "t",
     "name": "神庙烟",
     "en": "TEMPLE",
     "zone": "A",
@@ -39,6 +40,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-donut",
+    "team": "t",
     "name": "甜甜圈烟",
     "en": "DONUT",
     "zone": "A",
@@ -75,6 +77,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-ct",
+    "team": "t",
     "name": "A 区警家烟",
     "en": "A CT",
     "zone": "A",
@@ -112,6 +115,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-long",
+    "team": "t",
     "name": "B 长廊烟",
     "en": "B LONG",
     "zone": "B",
@@ -149,6 +153,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-short",
+    "team": "t",
     "name": "B 短廊烟",
     "en": "B SHORT",
     "zone": "B",
@@ -186,6 +191,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-red",
+    "team": "t",
     "name": "红房烟",
     "en": "RED ROOM",
     "zone": "mid",
@@ -224,6 +230,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-a-flash",
+    "team": "t",
     "name": "A 区进点闪",
     "en": "A SITE FLASH",
     "zone": "A",
@@ -261,6 +268,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-b-flash",
+    "team": "any",
     "name": "B 区进点闪",
     "en": "B SITE FLASH",
     "zone": "B",
@@ -298,6 +306,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-mid-flash",
+    "team": "t",
     "name": "中路进攻闪",
     "en": "MID FLASH",
     "zone": "mid",
@@ -335,6 +344,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-triple-fire",
+    "team": "t",
     "name": "A 三箱火",
     "en": "A TRIPLE FIRE",
     "zone": "A",
@@ -371,6 +381,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-cubby-fire",
+    "team": "t",
     "name": "B 死点火",
     "en": "B CUBBY FIRE",
     "zone": "B",
@@ -407,6 +418,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-lane-fire",
+    "team": "ct",
     "name": "B 通道火",
     "en": "B LANE FIRE",
     "zone": "B",
@@ -444,6 +456,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-catwalk-he",
+    "team": "ct",
     "type": "he",
     "name": "B 通道雷",
     "en": "CATWALK HE",
@@ -480,6 +493,7 @@ export const ancientUtilities=[
   },
   {
     "id": "ancient-jaguar-he",
+    "team": "ct",
     "type": "he",
     "name": "黑屋入口雷",
     "en": "JAGUAR HE",
