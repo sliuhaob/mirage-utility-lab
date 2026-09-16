@@ -1,13 +1,13 @@
 import {getMap} from './maps.js';
 import {createRadarEditor} from './radar-editor.js?v=1';
-import {api,uploadVideo} from './community.js';
+import {api,uploadVideo} from './community.js?v=2';
 import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
 
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const fragment=new URLSearchParams(location.hash.slice(1));
 let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.has('invite')?'register':fragment.has('setup')?'setup':'login';
 if(accessToken)history.replaceState(null,'',location.pathname+location.search);
-let user,map,mapAbort,mapGeneration=0,editorView='radar',points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false;
+let user,map,mapAbort,mapGeneration=0,editorView='radar',points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false,libraryItems=[];
 const message=(id,text,error=false)=>{const e=$(id);e.textContent=text;e.classList.toggle('danger-message',error);};
 const errorText=e=>e instanceof TypeError?'无法连接服务，请检查网络后重试':e.message;
 function authLabels(){
@@ -40,7 +40,7 @@ async function loadMap(view='radar'){
  try{
   let next;
   if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
-  else {const {createMap}=await import('./map.js?v=4');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  else {const {createMap}=await import('./map.js?v=5');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
   if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
   message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');
@@ -59,7 +59,7 @@ function resetEditor(item=null){
  releasePreview();saved=item;videoId=item?.videoId||null;videoUrl=item?.video||null;points=item?{origin:[item.origin[0],item.originHeight,item.origin[1]],target:[item.target[0],item.targetHeight,item.target[1]]}:{};
  $('#lineup-form').reset();$('#lineup-form').scrollTop=0;if(item)$('#edit-map').value=item.map;zoneOptions();
  if(item){for(const key of ['zone','team','type','level','name','from','method','description','tip'])$('#edit-'+key).value=item[key];$('#edit-steps').value=item.steps.join('\n');all('.key-options input').forEach(e=>e.checked=item.keys.includes(e.value));}
- $('#editor-title').textContent=item?'编辑教程':'把你的投掷分享出来';$('#save-draft').textContent=item?.status==='published'?'撤为草稿':'保存草稿';message('#save-status','');message('#upload-status',videoId?'已载入保存的视频':'');preview(videoUrl);dirty=false;loadMap();
+ $('#editor-title').textContent=item?'编辑教程':'把你的投掷分享出来';$('#save-draft').textContent=item?.status==='published'?'撤为草稿':'保存草稿';message('#save-status','');message('#upload-status',videoId?'已载入保存的视频':'');preview(videoUrl);$('#video-help').textContent=item?.builtinId?'原有图文教程可以直接保存或发布，教学视频可稍后补充。单个 MP4 / WebM 不超过 40 MB。':'MP4 / WebM，单个不超过 40 MB。发布前需要视频，草稿可暂不上传。';$('#publish-lineup').textContent=item?.status==='published'?'更新发布':'发布教程';dirty=false;loadMap();
 }
 async function showTab(name){
  message('#dev-message','');
@@ -68,7 +68,7 @@ async function showTab(name){
  if(name==='library')await loadLibrary();if(name==='team')await loadTeam();
 }
 async function enter(account){
- user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';$('#tab-library').textContent=user.role==='admin'?'全部教程':'我的教程';
+ user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';$('#tab-library').textContent=user.role==='admin'?'全部教程':'我的教程与原有教程';
  await showTab('compose');resetEditor();
 }
 $('#auth-form').onsubmit=async e=>{e.preventDefault();$('#auth-submit').disabled=true;message('#auth-message','正在验证…');try{const result=await api('/auth/'+authMode,{method:'POST',data:{username:$('#auth-username').value,password:$('#auth-password').value,token:accessToken}});$('#auth-password').value='';accessToken=null;authMode='login';authLabels();message('#auth-message','');await enter(result.user);}catch(err){message('#auth-message',errorText(err),true);}finally{$('#auth-submit').disabled=false;}};
@@ -101,7 +101,7 @@ $('#upload-cancel').onclick=()=>uploadAbort?.abort();
 $('#video-preview').onerror=()=>message('#upload-status','此视频无法播放。建议使用 H.264 编码的 MP4 或 VP8/VP9 编码的 WebM 后重新上传。',true);
 async function save(status){
  if(uploadAbort||saving)return;
- try{const data=collect();if(status==='published'&&!videoId)throw Error('发布前请上传教学视频');if(status==='published'&&$('#video-preview').error)throw Error('视频无法播放，请重新上传兼容的视频');saving=true;setBusy();message('#save-status','正在保存…');
+ try{const data=collect();if(status==='published'&&!videoId&&!saved?.builtinId)throw Error('发布前请上传教学视频');if(status==='published'&&$('#video-preview').error)throw Error('视频无法播放，请重新上传兼容的视频');saving=true;setBusy();message('#save-status','正在保存…');
   const result=await api('/dev/lineups',{method:'POST',data:{...data,id:saved?.id,revision:saved?.revision,status,videoId}});saved=result.item;dirty=false;message('#save-status',status==='published'?'已发布。访客刷新地图后即可看到这条教程。':status==='draft'?'草稿已保存，仅你和管理员可见。':'已保存');$('#editor-title').textContent='编辑教程';$('#save-draft').textContent=status==='published'?'撤为草稿':'保存草稿';
  }catch(e){message('#save-status',errorText(e),true);}finally{saving=false;setBusy();}
 }
@@ -110,13 +110,23 @@ function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefine
 function action(label,fn){const b=el('button',label);b.type='button';b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){message('#dev-message',errorText(e),true);}finally{b.disabled=false;}};return b;}
 const statusName={draft:'草稿',published:'已发布',archived:'已撤下'},teamName={t:'匪方 T',ct:'警方 CT',any:'双方通用'};
 async function loadLibrary(){
- message('#dev-message','正在读取教程…');const {items}=await api('/dev/lineups');$('#lineup-library').replaceChildren();
- for(const item of items){const row=el('article',undefined,'library-row'),info=el('div');info.append(el('strong',item.name),el('small',`${getMap(item.map).name} · ${teamName[item.team]} · ${statusName[item.status]} · ${item.author}`));row.append(info,
-  action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),
-  action(item.status==='published'?'撤下':'发布',async()=>{await api('/dev/lineups',{method:'POST',data:{...item,status:item.status==='published'?'archived':'published'}});await loadLibrary();})
- );$('#lineup-library').append(row);}
- if(!items.length)$('#lineup-library').append(el('p','还没有教程。点击“新建教程”开始上传。'));message('#dev-message','');
+ message('#dev-message','正在读取教程…');const {items}=await api('/dev/lineups');libraryItems=items;renderLibrary();message('#dev-message','');
 }
+function renderLibrary(){
+ const mapId=$('#library-map').value,status=$('#library-status').value,search=$('#library-search').value.trim().toLowerCase();
+ const items=libraryItems.filter(item=>(!mapId||item.map===mapId)&&(!status||item.status===status)&&(!search||[item.name,item.from,item.author].some(t=>String(t).toLowerCase().includes(search))));
+ $('#library-count').textContent=`${items.length} / ${libraryItems.length} 条教程`;$('#lineup-library').replaceChildren();
+ for(const item of items){
+  const row=el('article',undefined,'library-row'),info=el('div');info.append(el('strong',item.name),el('small',`${getMap(item.map).name} · ${teamName[item.team]} · ${statusName[item.status]} · ${item.builtinId?'原有教程':item.author}`));row.append(info);
+  if(item.canEdit){row.append(action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),action(item.status==='published'?'撤下':'发布',async()=>{await api('/dev/lineups',{method:'POST',data:{...item,status:item.status==='published'?'archived':'published'}});await loadLibrary();}));}
+  row.append(action('基于此新建',async()=>{if(canLeave()){await showTab('compose');resetEditor({...item,id:undefined,revision:undefined,builtinId:null,video:null,videoId:null,status:'draft',name:item.name.slice(0,72)+' · 新投法'});saved=null;$('#editor-title').textContent='添加一种新投法';dirty=true;}}));
+  $('#lineup-library').append(row);
+ }
+ if(!items.length)$('#lineup-library').append(el('p',libraryItems.length?'没有符合筛选条件的教程。':'还没有教程。点击“新建教程”开始上传。'));
+}
+for(const id of ['#library-map','#library-status'])$(id).onchange=renderLibrary;
+$('#library-search').oninput=renderLibrary;
+
 async function loadTeam(){
  const [members,invites]=await Promise.all([api('/admin/users'),api('/admin/invites')]);$('#member-list').replaceChildren();$('#invite-list').replaceChildren();
  for(const member of members.users){const row=el('div',undefined,'member-row');row.append(el('strong',member.username),el('span',member.role==='admin'?'管理员':member.active?'开发者':'已停用'));if(member.role!=='admin')row.append(action(member.active?'停用':'启用',async()=>{await api('/admin/users',{method:'POST',data:{id:member.id,active:!member.active}});await loadTeam();}));$('#member-list').append(row);}

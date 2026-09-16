@@ -4,6 +4,7 @@ import { GLTFLoader } from './vendor/loaders/GLTFLoader.js';
 import { DRACOLoader } from './vendor/loaders/DRACOLoader.js';
 import { utilityTypes } from './utility-types.js';
 import { createUtilityEffect } from './utility-effects.js';
+import {groupLineups} from './lineup-groups.js';
 
 // Native geometry is transformed once in Blender into this radar-aligned frame.
 export const radarToWorld = (u, v, height = 0) => new THREE.Vector3((u - 512) / 10, height, (v - 512) / 10);
@@ -74,7 +75,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;m.clippingPlanes=[...perimeter,cutPlane];m.clipShadows=true;modelMaterials.add(m)}}});
   model.updateMatrixWorld(true);
   const floorLevels = new Map();
-  for(const s of smokes) for(const kind of ['origin','target'])floorLevels.set(s[kind],metadata.anchors[s.id]?.[kind]?.height??s[kind+'Height']??0);
+  for(const s of smokes) for(const kind of ['origin','target'])floorLevels.set(s[kind],s[kind+'Height']??metadata.anchors[s.id]?.[kind]?.height??0);
   scene.add(model);
   await Promise.all(Object.entries(config.radars).map(async([id,url])=>{const texture=await new THREE.TextureLoader().loadAsync(url);if(disposed){texture.dispose();throw new DOMException('Map load cancelled','AbortError');}texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());radarTextures[id]=texture;}));
 
@@ -93,10 +94,23 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     const e=document.createElement('button');e.className='world-label world-marker';
     e.innerHTML=utilityIcon(s);const caption=document.createElement('span');caption.className='marker-caption';caption.textContent=s.name;e.append(caption);
     e.style.setProperty('--marker-color',utilityTypes[s.type].color);
-    e.setAttribute('aria-label',s.name+'：查看投掷方法');e.title=s.name;e.onclick=()=>select(s.id);labels.append(e);elements.push(e);
+    e.setAttribute('aria-label',s.name+'：查看投掷方法');e.title=s.name;e.onclick=()=>select(m.group?.items.find(item=>item.id===active?.id)?.id||m.group?.items[0].id||s.id);labels.append(e);elements.push(e);
     const markerHeight=levelAt(s.target)+(s.targetOffset||0)+2.2;
-    const m={e,position:new THREE.Vector3(s.target[0],markerHeight,s.target[1]),baseHeight:markerHeight,smoke:s};
+    const m={e,position:new THREE.Vector3(s.target[0],markerHeight,s.target[1]),baseHeight:markerHeight,smoke:s,group:{items:[s]}};
     projected.push(m);markers.set(s.id,m);
+  }
+  function filterMarkers(items){
+    markers.forEach(m=>{m.e.hidden=true;});
+    for(const group of groupLineups(items)){
+      const m=markers.get(group.id),s=group.items[0];if(!m)continue;
+      m.group=group;m.e.hidden=false;m.e.querySelector('.marker-count')?.remove();
+      if(group.items.length>1){const count=document.createElement('span');count.className='marker-count';count.textContent=group.items.length;m.e.append(count);}
+      const title=group.items.length>1?s.name+' · '+group.items.length+' 种投掷方法':s.name;
+      m.e.querySelector('.marker-caption').textContent=title;m.e.title=title;m.e.setAttribute('aria-label',title+'：查看投掷方法');
+      const height=group.items.reduce((sum,item)=>sum+levelAt(item.target)+(item.targetOffset||0)+2.2,0)/group.items.length;
+      m.position.set(group.target[0],height,group.target[1]);m.baseHeight=height;
+      const selected=group.items.some(item=>item.id===active?.id);m.e.classList.toggle('selected',selected);m.e.setAttribute('aria-pressed',String(selected));
+    }
   }
   const origin=label('投掷站位',0,0,2,'origin-label');
   let picking=null,downPoint;
@@ -126,7 +140,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     while(routeGroup.children.length){const c=routeGroup.children[0];c.traverse(o=>{o.geometry?.dispose();if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())});routeGroup.remove(c)}
     ring.visible=originRing.visible=!!s;origin.e.hidden=!s;
     if(!s){markers.forEach(m=>{m.e.classList.remove('selected');m.e.setAttribute('aria-pressed','false')});return;}
-    markers.forEach((m,id)=>{m.e.classList.toggle('selected',id===s.id);m.e.setAttribute('aria-pressed',String(id===s.id))});
+    markers.forEach((m,id)=>{m.e.classList.toggle('selected',m.group.items.some(item=>item.id===s.id));m.e.setAttribute('aria-pressed',String(m.group.items.some(item=>item.id===s.id)))});
     const oy=view==='radar'?0:levelAt(s.origin,s.originHeight),ty=view==='radar'?0:levelAt(s.target,s.targetHeight);
     const color=utilityTypes[s.type].color;
     ring.material.color.set(color);
@@ -151,7 +165,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   function frame(now){
     if(disposed)return;frameId=requestAnimationFrame(frame);controls.update();renderer.render(scene,camera);
     const w=host.clientWidth,h=host.clientHeight;
-    for(const {e,position,smoke} of projected){temp.copy(position);if(view==='radar')temp.y=.3;temp.project(camera);e.style.left=((temp.x*.5+.5)*w)+'px';e.style.top=((-temp.y*.5+.5)*h)+'px';e.style.visibility=temp.z>1||temp.z< -1?'hidden':'visible';e.style.zIndex=smoke?.id===active?.id?25:10;}
+    for(const {e,position,smoke} of projected){if(e.hidden)continue;temp.copy(position);if(view==='radar')temp.y=.3;temp.project(camera);e.style.left=((temp.x*.5+.5)*w)+'px';e.style.top=((-temp.y*.5+.5)*h)+'px';e.style.visibility=temp.z>1||temp.z< -1?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;}
     // North rotates with the camera; its initial orientation matches the radar.
     const north=document.querySelector('.compass svg');if(north)north.style.transform=`rotate(${controls.getAzimuthalAngle()*180/Math.PI}deg)`;
     if(active&&!reduce)ring.scale.setScalar(1+Math.sin(now*.002)*.035);
@@ -165,7 +179,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
    referencePlane.material.map=radarTextures[level]||radarTextures.upper;referencePlane.material.needsUpdate=true;
   }
   updateSection();
-  return {dispose,setPicking:kind=>{picking=kind;},setEditorPoints,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;},select:selectSmoke,play,filter:items=>{const ids=new Set(items.map(s=>s.id));markers.forEach(({e,smoke})=>e.hidden=!ids.has(smoke.id));},zoom,reset,setView:v=>{view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
+  return {dispose,setPicking:kind=>{picking=kind;},setEditorPoints,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;},select:selectSmoke,play,filter:filterMarkers,zoom,reset,setView:v=>{view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
   } catch(error){dispose();throw error;}
   function cancelPlay(){playing=false;if(resolvePlay){resolvePlay();resolvePlay=null}}
   function onKey(e){const moves={ArrowLeft:[-3,0],ArrowRight:[3,0],ArrowUp:[0,-3],ArrowDown:[0,3]};if(moves[e.key]){e.preventDefault();const[x,z]=moves[e.key];const d=new THREE.Vector3(x,0,z);controls.target.add(d);camera.position.add(d)}if(e.key==='+'||e.key==='='){camera.zoom=Math.min(camera.zoom/.85,5);camera.updateProjectionMatrix();}if(e.key==='-'){camera.zoom=Math.max(camera.zoom/1.15,.65);camera.updateProjectionMatrix();}}

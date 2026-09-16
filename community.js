@@ -7,8 +7,11 @@ export async function api(path,{method='GET',data,signal}={}){
 export function publicItem(value){
  const data=validateSubmission(value);
  if(!/^[a-f0-9-]{36}$/.test(value.id)||value.status!=='published')throw Error('无效教程');
- if(typeof value.video!=='string'||!value.video.startsWith(API_BASE+'/media/')||!/^\/media\/[a-f0-9-]{36}$/.test(new URL(value.video).pathname))throw Error('无效视频');
- return {...data,id:'custom-'+value.id,video:value.video,source:'',sourceName:'开发者 · '+String(value.author||'').slice(0,32),custom:true};
+ const builtin=typeof value.builtinId==='string'&&/^[a-z0-9-]{1,80}$/.test(value.builtinId);
+ if(value.video){if(typeof value.video!=='string'||!value.video.startsWith(API_BASE+'/media/')||!/^\/media\/[a-f0-9-]{36}$/.test(new URL(value.video).pathname))throw Error('无效视频');}
+ else if(!builtin)throw Error('无效视频');
+ const source=builtin&&typeof value.source==='string'&&/^https:\/\//.test(value.source)?value.source:'';
+ return {...data,id:builtin?value.builtinId:'custom-'+value.id,recordId:value.id,builtinId:builtin?value.builtinId:null,video:value.video||null,en:builtin?String(value.en||''):data.en,targetOffset:builtin&&Number.isFinite(value.targetOffset)?value.targetOffset:data.targetOffset,source,sourceName:source?String(value.sourceName||'图文来源'):'开发者 · '+String(value.author||'').slice(0,32),custom:!source};
 }
 export async function loadCommunity(map,signal){
  const response=await fetch(API_BASE+'/lineups?map='+encodeURIComponent(map),{signal});if(!response.ok)throw Error('社区教程加载失败');
