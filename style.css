@@ -19,3 +19,7 @@
 @media(max-width:1300px){.stage-heading{right:20px;top:83px}.stage-heading h2{display:none}.stage-heading .eyebrow{font-size:10px}.utility-switch{right:20px;top:23px}.map-view-switch{top:113px}.cut-height-control{top:159px;left:28px}}
 @media(max-width:580px){.utility-switch{right:16px;top:16px}.utility-switch button{min-width:48px;height:38px}.stage-heading{left:18px;top:77px}.map-view-switch{top:103px;left:18px}.cut-height-control{top:146px;left:18px}.compass{top:195px;right:17px}.empty-points{margin:0;padding:8px;min-width:240px}}
 .world-marker .marker-caption{color:var(--marker-color);border-color:var(--marker-color)}
+
+.developer-entry{font-size:12px;color:#c3b291;white-space:nowrap;text-decoration:none;border:1px solid #495548;padding:7px 9px;border-radius:4px}.tutorial-video{width:100%;max-height:300px;aspect-ratio:16/9;background:#080d0e;border-radius:5px}.community-status{font-size:11px;line-height:1.7;color:#90a398}.community-status:empty{display:none}
+@media(max-width:1100px){.version{display:none}}
+@media(pointer:coarse) and (max-height:600px){.developer-entry{padding:6px;font-size:11px}.brand small{display:none}}

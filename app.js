@@ -1,6 +1,8 @@
 import {maps,getMap,mapUtilities} from './maps.js?v=7';
 import {utilityTypes} from './utility-types.js';
-import {createMap} from './map.js?v=3';
+import {createMap} from './map.js?v=4';
+import {loadCommunity} from './community.js';
+import {escapeHtml} from './submission-schema.js';
 import {setupMobileLayout} from './mobile-layout.js';
 
 const mobileUI=setupMobileLayout();
@@ -29,14 +31,14 @@ function renderList(){
  const items=visible();
  $('#library-heading').textContent=utilityTypes[type].targetLabel;
  $('#point-count').textContent=pad(items.length);
- $('#point-list').innerHTML=items.length?items.map(s=>'<button class="point-item '+(s.id===current?.id?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+(s.id===current?.id)+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+s.name+'</strong><small>'+s.en+'</small></span><span class="zone-tag">'+({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone)+'</span></button>').join(''):'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
+ $('#point-list').innerHTML=items.length?items.map(s=>'<button class="point-item '+(s.id===current?.id?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+(s.id===current?.id)+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+escapeHtml(s.name)+'</strong><small>'+escapeHtml(s.en)+'</small></span><span class="zone-tag">'+({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone)+'</span></button>').join(''):'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
- const items=visible(),s=current;
+ const items=visible(),raw=current,s=raw?{...raw,...Object.fromEntries(['name','en','description','from','method','tip','sourceName'].map(k=>[k,escapeHtml(raw[k])])),steps:raw.steps.map(escapeHtml),keys:raw.keys.map(escapeHtml)}:null;
  $('#detail-number').textContent=pad(s?items.findIndex(x=>x.id===s.id)+1:0)+' / '+pad(items.length);
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
- $('#detail-content').innerHTML='<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p><div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div><div class="route-info"><div class="route-row"><span>投掷位置</span><span><i class="origin-swatch">◉</i>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><div class="key-row">'+s.keys.map(k=>'<kbd>'+k+'</kbd>').join('<span>+</span>')+'</div><button class="trajectory-button" id="play-route">⌁ <span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p><a class="source-link" href="'+s.source+'" target="_blank" rel="noopener noreferrer">图文来源：'+s.sourceName+' ↗</a>';
+ $('#detail-content').innerHTML='<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p>'+(s.video?'<video class="tutorial-video" controls playsinline preload="metadata" src="'+escapeHtml(s.video)+'" aria-label="投掷教学视频"></video>':'<div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div>')+'<div class="route-info"><div class="route-row"><span>投掷位置</span><span><i class="origin-swatch">◉</i>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><div class="key-row">'+s.keys.map(k=>'<kbd>'+k+'</kbd>').join('<span>+</span>')+'</div><button class="trajectory-button" id="play-route">⌁ <span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p>'+(s.custom?'<p class="source-link">'+s.sourceName+'</p>':'<a class="source-link" href="'+s.source+'" target="_blank" rel="noopener noreferrer">图文来源：'+s.sourceName+' ↗</a>');
  const b=$('#play-route');
  b.disabled=!map;
  if(!map)b.querySelector('span').textContent=$('#map-error').hidden?'地图加载中…':'3D 地图不可用';
@@ -113,6 +115,13 @@ async function switchMap(id,updateUrl=true){
  roofButton.setAttribute('aria-pressed','false');roofButton.classList.remove('active');roofButton.textContent='完整建筑';
  $('.map-disclaimer').innerHTML=config.en+' / 游戏几何 · 简化材质 · 示意弹道 <a class="map-source" href="'+config.reference+'" target="_blank" rel="noopener noreferrer">地图参考 ↗</a>';
  syncLevelControls();syncFilters();renderList();renderDetail();
+ try{
+  const community=await loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)]));
+  if(generation!==loadGeneration)return;
+  config={...config,utilities:[...utilities,...community]};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
+  $('#community-status').textContent=community.length?'已载入 '+community.length+' 个开发者教程':'';
+ }catch(error){if(generation!==loadGeneration)return;$('#community-status').textContent='开发者教程暂时无法加载，内置教程可正常查看。';}
+ syncFilters();renderList();renderDetail();
  try{
   const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal);
   if(generation!==loadGeneration){loaded.dispose();return;}

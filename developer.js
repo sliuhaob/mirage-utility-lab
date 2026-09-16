@@ -1,0 +1,118 @@
+import {getMap} from './maps.js';
+import {createMap} from './map.js?v=4';
+import {api,uploadVideo} from './community.js';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
+
+const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
+const fragment=new URLSearchParams(location.hash.slice(1));
+let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.has('invite')?'register':fragment.has('setup')?'setup':'login';
+if(accessToken)history.replaceState(null,'',location.pathname+location.search);
+let user,map,mapAbort,mapGeneration=0,points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false;
+const message=(id,text,error=false)=>{const e=$(id);e.textContent=text;e.classList.toggle('danger-message',error);};
+const errorText=e=>e instanceof TypeError?'无法连接服务，请检查网络后重试':e.message;
+function authLabels(){
+ const setup=authMode==='setup',invite=authMode==='register';
+ $('#auth-title').textContent=setup?'创建管理员账户':invite?'接受开发者邀请':'登录开发者通道';
+ $('#auth-description').textContent=setup?'设置你的用户名和密码，之后可邀请其他开发者。':invite?'创建你的账户后，可以上传和管理自己的教程。':'仅管理员与受邀开发者可以上传和发布教程。';
+ $('#auth-submit').textContent=setup?'创建管理员':invite?'创建账户并加入':'登录';
+ $('#auth-password').autocomplete=setup||invite?'new-password':'current-password';
+}
+function setBusy(){for(const id of ['#save-draft','#publish-lineup','#edit-video'])$(id).disabled=!!uploadAbort||saving;$('#lineup-form').inert=saving;}
+function preview(url){const v=$('#video-preview');v.pause();v.hidden=!url;if(url){v.crossOrigin='use-credentials';v.src=url;}else v.removeAttribute('src');v.load();}
+function releasePreview(){if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}}
+function updatePoints(){
+ for(const kind of ['origin','target']){$('#'+kind+'-value').textContent=points[kind]?`X ${points[kind][0].toFixed(2)} · Y ${points[kind][2].toFixed(2)} · 高度 ${points[kind][1].toFixed(2)}`:'尚未选择';$('#pick-'+kind).classList.remove('active');}
+ map?.setEditorPoints(points);map?.select(null);$('#editor-preview').disabled=!points.origin||!points.target;
+}
+function zoneOptions(){const config=getMap($('#edit-map').value);$('#edit-zone').replaceChildren(...Object.entries(config.zones).map(([id,name])=>new Option(name,id)));$('#edit-level-row').hidden=config.id!=='nuke';}
+function cutControls(){const config=getMap($('#edit-map').value),lower=config.id==='nuke'&&$('#edit-level').value==='lower',cut=$('#editor-cut');cut.min=lower?-7:config.cut.min;cut.max=lower?-.2:config.cut.max;cut.value=lower?config.lowerCut:config.cut.default;map?.setCutHeight(Number(cut.value));}
+async function loadMap(){
+ const generation=++mapGeneration;mapAbort?.abort();map?.dispose();map=null;mapAbort=new AbortController();
+ $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+getMap($('#edit-map').value).name+'…';$('#editor-map-error').hidden=true;$('#pick-status').textContent='正在加载选点地图…';
+ for(const id of ['#pick-target','#pick-origin'])$(id).disabled=true;
+ try{
+  const next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',getMap($('#edit-map').value),mapAbort.signal,{
+   onPick:(kind,point)=>{points[kind]=point;if(kind==='target'&&$('#edit-map').value==='nuke'){$('#edit-zone').value=point[1]<getMap('nuke').levelBoundary?'B':$('#edit-zone').value==='B'?'A':$('#edit-zone').value;}dirty=true;updatePoints();message('#pick-status',kind==='target'?'落点已标记，请继续选择投掷位置':'站位已标记，可预览路线或继续填写教程');},
+   onMiss:()=>message('#pick-status','这里没有可选的地面，请旋转地图或调节剖切高度后重试',true)
+  });
+  if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);cutControls();updatePoints();
+  $('#editor-3d').classList.add('active');$('#editor-top').classList.remove('active');
+  for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
+  message('#pick-status','选择落点或站位后，点击地图地面');
+ }catch(e){if(generation!==mapGeneration)return;$('#map-loading').hidden=true;$('#editor-map-error').hidden=false;message('#pick-status','地图未载入，请重试',true);}
+}
+function collect(){
+ const data={};for(const key of ['map','zone','team','type','level','name','from','method','description','tip'])data[key]=$('#edit-'+key).value;
+ for(const kind of ['origin','target']){const p=points[kind];data[kind]=p?[p[0],p[2]]:null;data[kind+'Height']=p?.[1];}
+ if(data.map==='nuke')data.level=data.targetHeight<getMap('nuke').levelBoundary?'lower':'upper';
+ data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=all('.key-options input:checked').map(e=>e.value);
+ return validateSubmission(data);
+}
+function canLeave(){if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
+function resetEditor(item=null){
+ releasePreview();saved=item;videoId=item?.videoId||null;videoUrl=item?.video||null;points=item?{origin:[item.origin[0],item.originHeight,item.origin[1]],target:[item.target[0],item.targetHeight,item.target[1]]}:{};
+ $('#lineup-form').reset();$('#lineup-form').scrollTop=0;if(item)$('#edit-map').value=item.map;zoneOptions();
+ if(item){for(const key of ['zone','team','type','level','name','from','method','description','tip'])$('#edit-'+key).value=item[key];$('#edit-steps').value=item.steps.join('\n');all('.key-options input').forEach(e=>e.checked=item.keys.includes(e.value));}
+ $('#editor-title').textContent=item?'编辑教程':'把你的投掷分享出来';$('#save-draft').textContent=item?.status==='published'?'撤为草稿':'保存草稿';message('#save-status','');message('#upload-status',videoId?'已载入保存的视频':'');preview(videoUrl);dirty=false;loadMap();
+}
+async function showTab(name){
+ message('#dev-message','');
+ for(const tab of ['compose','library','team']){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
+ if(name==='library')await loadLibrary();if(name==='team')await loadTeam();
+}
+async function enter(account){
+ user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';$('#tab-library').textContent=user.role==='admin'?'全部教程':'我的教程';
+ await showTab('compose');resetEditor();
+}
+$('#auth-form').onsubmit=async e=>{e.preventDefault();$('#auth-submit').disabled=true;message('#auth-message','正在验证…');try{const result=await api('/auth/'+authMode,{method:'POST',data:{username:$('#auth-username').value,password:$('#auth-password').value,token:accessToken}});$('#auth-password').value='';accessToken=null;authMode='login';authLabels();message('#auth-message','');await enter(result.user);}catch(err){message('#auth-message',errorText(err),true);}finally{$('#auth-submit').disabled=false;}};
+$('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/logout',{method:'POST'});mapAbort?.abort();map?.dispose();map=null;dirty=false;releasePreview();preview(null);user=null;$('#creator').hidden=true;$('#dev-account').hidden=true;$('#auth-panel').hidden=false;authLabels();}catch(e){message('#dev-message',errorText(e),true);}};
+$('#tab-compose').onclick=()=>{if(canLeave()){showTab('compose');resetEditor();}};
+for(const tab of ['library','team'])$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
+$('#lineup-form').addEventListener('input',()=>{dirty=true;});
+$('#edit-map').onchange=()=>{points={};$('#edit-level').value='upper';zoneOptions();updatePoints();loadMap();};
+$('#edit-level').onchange=()=>{map?.setLevel($('#edit-level').value);map?.setPicking(null);cutControls();updatePoints();};
+$('#edit-zone').onchange=()=>{if($('#edit-map').value==='nuke'){const next=$('#edit-zone').value==='B'?'lower':'upper';if($('#edit-level').value!==next){$('#edit-level').value=next;map?.setLevel(next);map?.setPicking(null);cutControls();updatePoints();}}};
+for(const kind of ['origin','target'])$('#pick-'+kind).onclick=()=>{map?.setPicking(kind);if(innerWidth<=640) $('.editor-map').scrollIntoView({behavior:'smooth',block:'start'});for(const k of ['origin','target'])$('#pick-'+k).classList.toggle('active',k===kind);message('#pick-status',kind==='target'?'点击地图地面，标记道具落点':'点击地图地面，标记投掷站位');};
+$('#editor-cut').oninput=e=>map?.setCutHeight(Number(e.target.value));
+$('#editor-reset').onclick=()=>map?.reset();$('#editor-retry').onclick=loadMap;
+for(const view of ['3d','top'])$('#editor-'+view).onclick=()=>{map?.setView(view);for(const v of ['3d','top'])$('#editor-'+v).classList.toggle('active',v===view);};
+$('#editor-preview').onclick=()=>{if(!points.target||!points.origin)return;map?.select({id:'preview',type:$('#edit-type').value,origin:[points.origin[0],points.origin[2]],originHeight:points.origin[1],target:[points.target[0],points.target[2]],targetHeight:points.target[1],targetOffset:$('#edit-type').value==='flash'?2:0});map?.play();message('#pick-status','路线仅为起终点示意，实际投掷请以视频为准');};
+$('#edit-video').onchange=async()=>{
+ const file=$('#edit-video').files[0];if(!file)return;
+ if(!['video/mp4','video/webm'].includes(file.type)||file.size>MAX_VIDEO_BYTES||!file.size){message('#upload-status','请选择不超过 40 MB 的 MP4 或 WebM 视频',true);$('#edit-video').value='';return;}
+ releasePreview();objectUrl=URL.createObjectURL(file);preview(objectUrl);uploadAbort=new AbortController();setBusy();$('#upload-progress').hidden=false;$('#upload-progress').value=0;$('#upload-cancel').hidden=false;message('#upload-status','正在上传，请保持此页面打开…');
+ try{const result=await uploadVideo(file,p=>{$('#upload-progress').value=p;message('#upload-status',p===100?'正在保存视频…':`正在上传 ${p}%`);},uploadAbort.signal);videoId=result.id;videoUrl=result.url;dirty=true;message('#upload-status','视频已上传；保存草稿或发布后与教程关联。');}
+ catch(e){message('#upload-status',errorText(e),true);releasePreview();preview(videoUrl);}
+ finally{uploadAbort=null;$('#edit-video').value='';$('#upload-progress').hidden=true;$('#upload-cancel').hidden=true;setBusy();}
+};
+$('#upload-cancel').onclick=()=>uploadAbort?.abort();
+$('#video-preview').onerror=()=>message('#upload-status','此视频无法播放。建议使用 H.264 编码的 MP4 或 VP8/VP9 编码的 WebM 后重新上传。',true);
+async function save(status){
+ if(uploadAbort||saving)return;
+ try{const data=collect();if(status==='published'&&!videoId)throw Error('发布前请上传教学视频');if(status==='published'&&$('#video-preview').error)throw Error('视频无法播放，请重新上传兼容的视频');saving=true;setBusy();message('#save-status','正在保存…');
+  const result=await api('/dev/lineups',{method:'POST',data:{...data,id:saved?.id,revision:saved?.revision,status,videoId}});saved=result.item;dirty=false;message('#save-status',status==='published'?'已发布。访客刷新地图后即可看到这条教程。':status==='draft'?'草稿已保存，仅你和管理员可见。':'已保存');$('#editor-title').textContent='编辑教程';$('#save-draft').textContent=status==='published'?'撤为草稿':'保存草稿';
+ }catch(e){message('#save-status',errorText(e),true);}finally{saving=false;setBusy();}
+}
+$('#lineup-form').onsubmit=e=>{e.preventDefault();save('published');};$('#save-draft').onclick=()=>save('draft');
+function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
+function action(label,fn){const b=el('button',label);b.type='button';b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){message('#dev-message',errorText(e),true);}finally{b.disabled=false;}};return b;}
+const statusName={draft:'草稿',published:'已发布',archived:'已撤下'},teamName={t:'匪方 T',ct:'警方 CT',any:'双方通用'};
+async function loadLibrary(){
+ message('#dev-message','正在读取教程…');const {items}=await api('/dev/lineups');$('#lineup-library').replaceChildren();
+ for(const item of items){const row=el('article',undefined,'library-row'),info=el('div');info.append(el('strong',item.name),el('small',`${getMap(item.map).name} · ${teamName[item.team]} · ${statusName[item.status]} · ${item.author}`));row.append(info,
+  action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),
+  action(item.status==='published'?'撤下':'发布',async()=>{await api('/dev/lineups',{method:'POST',data:{...item,status:item.status==='published'?'archived':'published'}});await loadLibrary();})
+ );$('#lineup-library').append(row);}
+ if(!items.length)$('#lineup-library').append(el('p','还没有教程。点击“新建教程”开始上传。'));message('#dev-message','');
+}
+async function loadTeam(){
+ const [members,invites]=await Promise.all([api('/admin/users'),api('/admin/invites')]);$('#member-list').replaceChildren();$('#invite-list').replaceChildren();
+ for(const member of members.users){const row=el('div',undefined,'member-row');row.append(el('strong',member.username),el('span',member.role==='admin'?'管理员':member.active?'开发者':'已停用'));if(member.role!=='admin')row.append(action(member.active?'停用':'启用',async()=>{await api('/admin/users',{method:'POST',data:{id:member.id,active:!member.active}});await loadTeam();}));$('#member-list').append(row);}
+ for(const invite of invites.items){const usable=!invite.used_by&&!invite.revoked&&invite.expires>Date.now()/1000,row=el('div',undefined,'invite-row');row.append(el('span',invite.label),el('span',invite.used_by?'已接受':invite.revoked?'已撤销':usable?'等待接受':'已过期'));if(usable)row.append(action('撤销邀请',async()=>{await api('/admin/invites/revoke',{method:'POST',data:{hash:invite.hash}});await loadTeam();}));$('#invite-list').append(row);}
+ if(!invites.items.length)$('#invite-list').append(el('p','暂未发出邀请。'));
+}
+$('#invite-form').onsubmit=async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;try{const result=await api('/admin/invites',{method:'POST',data:{label:$('#invite-label').value}});$('#invite-result').hidden=false;$('#invite-link').value=result.link;await loadTeam();message('#dev-message','邀请链接已生成，请复制后发给受邀者。');}catch(err){message('#dev-message',errorText(err),true);}finally{b.disabled=false;}};
+$('#copy-invite').onclick=async()=>{try{await navigator.clipboard.writeText($('#invite-link').value);message('#dev-message','邀请链接已复制');}catch{$('#invite-link').select();message('#dev-message','请复制已选中的邀请链接');}};
+addEventListener('beforeunload',e=>{if(dirty||uploadAbort){e.preventDefault();e.returnValue='';}});
+authLabels();
+if(!accessToken)api('/auth/me').then(({user:account})=>account&&enter(account)).catch(e=>message('#auth-message',errorText(e),true));

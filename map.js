@@ -12,7 +12,7 @@ function disposeTree(root){
  root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)for(const m of (Array.isArray(o.material)?o.material:[o.material]))materials.add(m)});
  geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());
 }
-export async function createMap(host, labels, smokes, select, utilityIcon, config, signal) {
+export async function createMap(host, labels, smokes, select, utilityIcon, config, signal, editor={}) {
   const scene = new THREE.Scene();
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   let disposed=false,frameId,observer,curve,ball,smokeGroup,active,started=0,playing=false,resolvePlay,view='3d',level='upper',showRoofs=false;
@@ -74,7 +74,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.side=THREE.DoubleSide;m.clippingPlanes=[...perimeter,cutPlane];m.clipShadows=true;modelMaterials.add(m)}}});
   model.updateMatrixWorld(true);
   const floorLevels = new Map();
-  for(const s of smokes) for(const kind of ['origin','target'])floorLevels.set(s[kind],metadata.anchors[s.id][kind].height);
+  for(const s of smokes) for(const kind of ['origin','target'])floorLevels.set(s[kind],metadata.anchors[s.id]?.[kind]?.height??s[kind+'Height']??0);
   scene.add(model);
   await Promise.all(Object.entries(config.radars).map(async([id,url])=>{const texture=await new THREE.TextureLoader().loadAsync(url);if(disposed){texture.dispose();throw new DOMException('Map load cancelled','AbortError');}texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());radarTextures[id]=texture;}));
 
@@ -87,11 +87,11 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     const item={e,position:radarToWorld(u,v,y),baseHeight:y,level:labelLevel};projected.push(item);return item;
   }
   config.labels.forEach(args=>label(...args));
-  const levelAt = point => floorLevels.get(point);
+  const levelAt = (point,height) => floorLevels.get(point)??height??0;
   const markers=new Map();
   for(const s of smokes) {
     const e=document.createElement('button');e.className='world-label world-marker';
-    e.innerHTML=utilityIcon(s)+'<span class="marker-caption">'+s.name+'</span>';
+    e.innerHTML=utilityIcon(s);const caption=document.createElement('span');caption.className='marker-caption';caption.textContent=s.name;e.append(caption);
     e.style.setProperty('--marker-color',utilityTypes[s.type].color);
     e.setAttribute('aria-label',s.name+'：查看投掷方法');e.title=s.name;e.onclick=()=>select(s.id);labels.append(e);elements.push(e);
     const markerHeight=levelAt(s.target)+(s.targetOffset||0)+2.2;
@@ -99,6 +99,24 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     projected.push(m);markers.set(s.id,m);
   }
   const origin=label('投掷站位',0,0,2,'origin-label');
+  let picking=null,downPoint;
+  const pickRay=new THREE.Raycaster(),pickDots=new THREE.Group();scene.add(pickDots);
+  renderer.domElement.addEventListener('pointerdown',e=>{if(e.button===0)downPoint=[e.clientX,e.clientY];});
+  renderer.domElement.addEventListener('pointerup',e=>{
+   if(!picking||e.button!==0||!downPoint||Math.hypot(e.clientX-downPoint[0],e.clientY-downPoint[1])>5)return;
+   const box=renderer.domElement.getBoundingClientRect();pickRay.setFromCamera(new THREE.Vector2((e.clientX-box.left)/box.width*2-1,-(e.clientY-box.top)/box.height*2+1),camera);
+   const hit=pickRay.intersectObject(model,true).find(h=>{
+    const mat=Array.isArray(h.object.material)?h.object.material[h.face.materialIndex]:h.object.material;
+    const normal=h.face.normal.clone().transformDirection(h.object.matrixWorld);
+    // Imported double-sided floors may have reversed winding after conversion.
+    return Math.abs(normal.y)>.7&&!(mat.clippingPlanes||[]).some(p=>p.distanceToPoint(h.point)<-.001);
+   });
+   if(!hit){editor.onMiss?.();return;}const kind=picking;picking=null;editor.onPick?.(kind,hit.point.toArray());
+  });
+  function setEditorPoints(points){
+   disposeTree(pickDots);pickDots.clear();
+   for(const [kind,p] of Object.entries(points)){if(!p)continue;const dot=new THREE.Mesh(new THREE.SphereGeometry(.65,12,10),new THREE.MeshBasicMaterial({color:kind==='target'?0xe8b576:0x8ed5c1}));dot.position.set(p[0],p[1]+.7,p[2]);pickDots.add(dot);}
+  }
   const routeGroup=new THREE.Group();scene.add(routeGroup);
   const ring=new THREE.Mesh(new THREE.RingGeometry(2.3,2.45,48),new THREE.MeshBasicMaterial({color:0xf3b574,transparent:true,opacity:.8,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);
   const originRing=new THREE.Mesh(new THREE.RingGeometry(.5,.75,32),new THREE.MeshBasicMaterial({color:0x86d8c6,side:THREE.DoubleSide}));originRing.rotation.x=-Math.PI/2;scene.add(originRing);
@@ -147,7 +165,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
    referencePlane.material.map=radarTextures[level]||radarTextures.upper;referencePlane.material.needsUpdate=true;
   }
   updateSection();
-  return {dispose,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;},select:selectSmoke,play,filter:items=>{const ids=new Set(items.map(s=>s.id));markers.forEach(({e,smoke})=>e.hidden=!ids.has(smoke.id));},zoom,reset,setView:v=>{view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
+  return {dispose,setPicking:kind=>{picking=kind;},setEditorPoints,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;},select:selectSmoke,play,filter:items=>{const ids=new Set(items.map(s=>s.id));markers.forEach(({e,smoke})=>e.hidden=!ids.has(smoke.id));},zoom,reset,setView:v=>{view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
   } catch(error){dispose();throw error;}
   function cancelPlay(){playing=false;if(resolvePlay){resolvePlay();resolvePlay=null}}
   function onKey(e){const moves={ArrowLeft:[-3,0],ArrowRight:[3,0],ArrowUp:[0,-3],ArrowDown:[0,3]};if(moves[e.key]){e.preventDefault();const[x,z]=moves[e.key];const d=new THREE.Vector3(x,0,z);controls.target.add(d);camera.position.add(d)}if(e.key==='+'||e.key==='='){camera.zoom=Math.min(camera.zoom/.85,5);camera.updateProjectionMatrix();}if(e.key==='-'){camera.zoom=Math.max(camera.zoom/1.15,.65);camera.updateProjectionMatrix();}}
