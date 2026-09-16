@@ -1,5 +1,5 @@
 import {getMap} from './maps.js';
-import {createMap} from './map.js?v=4';
+import {createRadarEditor} from './radar-editor.js?v=1';
 import {api,uploadVideo} from './community.js';
 import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
 
@@ -7,7 +7,7 @@ const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const fragment=new URLSearchParams(location.hash.slice(1));
 let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.has('invite')?'register':fragment.has('setup')?'setup':'login';
 if(accessToken)history.replaceState(null,'',location.pathname+location.search);
-let user,map,mapAbort,mapGeneration=0,points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false;
+let user,map,mapAbort,mapGeneration=0,editorView='radar',points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false;
 const message=(id,text,error=false)=>{const e=$(id);e.textContent=text;e.classList.toggle('danger-message',error);};
 const errorText=e=>e instanceof TypeError?'无法连接服务，请检查网络后重试':e.message;
 function authLabels(){
@@ -26,21 +26,27 @@ function updatePoints(){
 }
 function zoneOptions(){const config=getMap($('#edit-map').value);$('#edit-zone').replaceChildren(...Object.entries(config.zones).map(([id,name])=>new Option(name,id)));$('#edit-level-row').hidden=config.id!=='nuke';}
 function cutControls(){const config=getMap($('#edit-map').value),lower=config.id==='nuke'&&$('#edit-level').value==='lower',cut=$('#editor-cut');cut.min=lower?-7:config.cut.min;cut.max=lower?-.2:config.cut.max;cut.value=lower?config.lowerCut:config.cut.default;map?.setCutHeight(Number(cut.value));}
-async function loadMap(){
- const generation=++mapGeneration;mapAbort?.abort();map?.dispose();map=null;mapAbort=new AbortController();
- $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+getMap($('#edit-map').value).name+'…';$('#editor-map-error').hidden=true;$('#pick-status').textContent='正在加载选点地图…';
+async function loadMap(view='radar'){
+ const generation=++mapGeneration;mapAbort?.abort();map?.dispose();map=null;const controller=new AbortController();mapAbort=controller;editorView=view;
+ const config=getMap($('#edit-map').value),radar=view==='radar';
+ $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+config.name+(radar?'地图…':'模型…');$('#editor-map-error').hidden=true;message('#pick-status',radar?'正在加载二维地图…':'正在加载三维模型…');
+ $('#editor-cut-control').hidden=radar;$('#editor-top').hidden=radar;
+ for(const v of ['radar','3d','top']){$('#editor-'+v).classList.toggle('active',v===view);$('#editor-'+v).setAttribute('aria-pressed',String(v===view));}
  for(const id of ['#pick-target','#pick-origin'])$(id).disabled=true;
+ const editor={
+  onPick:(kind,point)=>{points[kind]=point;if(kind==='target'&&config.id==='nuke')$('#edit-zone').value=point[1]<config.levelBoundary?'B':$('#edit-zone').value==='B'?'A':$('#edit-zone').value;dirty=true;updatePoints();message('#pick-status',kind==='target'?'落点已标记，请继续选择投掷位置':'站位已标记，可预览路线或继续填写教程');},
+  onMiss:()=>message('#pick-status',radar?'这里没有可选地面，请点击地图通道或切换立体视图确认':'这里没有可选的地面，请旋转地图或调节剖切高度后重试',true)
+ };
  try{
-  const next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',getMap($('#edit-map').value),mapAbort.signal,{
-   onPick:(kind,point)=>{points[kind]=point;if(kind==='target'&&$('#edit-map').value==='nuke'){$('#edit-zone').value=point[1]<getMap('nuke').levelBoundary?'B':$('#edit-zone').value==='B'?'A':$('#edit-zone').value;}dirty=true;updatePoints();message('#pick-status',kind==='target'?'落点已标记，请继续选择投掷位置':'站位已标记，可预览路线或继续填写教程');},
-   onMiss:()=>message('#pick-status','这里没有可选的地面，请旋转地图或调节剖切高度后重试',true)
-  });
-  if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);cutControls();updatePoints();
-  $('#editor-3d').classList.add('active');$('#editor-top').classList.remove('active');
+  let next;
+  if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
+  else {const {createMap}=await import('./map.js?v=4');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
-  message('#pick-status','选择落点或站位后，点击地图地面');
+  message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');
  }catch(e){if(generation!==mapGeneration)return;$('#map-loading').hidden=true;$('#editor-map-error').hidden=false;message('#pick-status','地图未载入，请重试',true);}
 }
+
 function collect(){
  const data={};for(const key of ['map','zone','team','type','level','name','from','method','description','tip'])data[key]=$('#edit-'+key).value;
  for(const kind of ['origin','target']){const p=points[kind];data[kind]=p?[p[0],p[2]]:null;data[kind+'Height']=p?.[1];}
@@ -57,6 +63,7 @@ function resetEditor(item=null){
 }
 async function showTab(name){
  message('#dev-message','');
+ if(name!=='compose'){++mapGeneration;mapAbort?.abort();map?.dispose();map=null;}
  for(const tab of ['compose','library','team']){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
  if(name==='library')await loadLibrary();if(name==='team')await loadTeam();
 }
@@ -74,8 +81,13 @@ $('#edit-level').onchange=()=>{map?.setLevel($('#edit-level').value);map?.setPic
 $('#edit-zone').onchange=()=>{if($('#edit-map').value==='nuke'){const next=$('#edit-zone').value==='B'?'lower':'upper';if($('#edit-level').value!==next){$('#edit-level').value=next;map?.setLevel(next);map?.setPicking(null);cutControls();updatePoints();}}};
 for(const kind of ['origin','target'])$('#pick-'+kind).onclick=()=>{map?.setPicking(kind);if(innerWidth<=640) $('.editor-map').scrollIntoView({behavior:'smooth',block:'start'});for(const k of ['origin','target'])$('#pick-'+k).classList.toggle('active',k===kind);message('#pick-status',kind==='target'?'点击地图地面，标记道具落点':'点击地图地面，标记投掷站位');};
 $('#editor-cut').oninput=e=>map?.setCutHeight(Number(e.target.value));
-$('#editor-reset').onclick=()=>map?.reset();$('#editor-retry').onclick=loadMap;
-for(const view of ['3d','top'])$('#editor-'+view).onclick=()=>{map?.setView(view);for(const v of ['3d','top'])$('#editor-'+v).classList.toggle('active',v===view);};
+$('#editor-reset').onclick=()=>map?.reset();$('#editor-retry').onclick=()=>loadMap(editorView);
+$('#editor-zoom-in').onclick=()=>map?.zoom(.8);$('#editor-zoom-out').onclick=()=>map?.zoom(1.25);
+for(const view of ['radar','3d','top'])$('#editor-'+view).onclick=()=>{
+ if(view===editorView&&map)return;
+ if(view!=='radar'&&editorView!=='radar'&&map){editorView=view;map.setView(view);for(const v of ['radar','3d','top']){$('#editor-'+v).classList.toggle('active',v===view);$('#editor-'+v).setAttribute('aria-pressed',String(v===view));}}
+ else loadMap(view);
+};
 $('#editor-preview').onclick=()=>{if(!points.target||!points.origin)return;map?.select({id:'preview',type:$('#edit-type').value,origin:[points.origin[0],points.origin[2]],originHeight:points.origin[1],target:[points.target[0],points.target[2]],targetHeight:points.target[1],targetOffset:$('#edit-type').value==='flash'?2:0});map?.play();message('#pick-status','路线仅为起终点示意，实际投掷请以视频为准');};
 $('#edit-video').onchange=async()=>{
  const file=$('#edit-video').files[0];if(!file)return;
