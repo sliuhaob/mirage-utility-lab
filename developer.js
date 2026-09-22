@@ -1,4 +1,4 @@
-import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=1';
+import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=2';
 import {confirmPointMerges} from './point-merge-dialog.js?v=1';
 import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
