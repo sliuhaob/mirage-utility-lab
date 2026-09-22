@@ -1,3 +1,4 @@
+import {setupPasswordChange} from './password.js';
 import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js';
 import {getMap} from './maps.js';
 import {createRadarEditor} from './radar-editor.js?v=1';
@@ -6,7 +7,7 @@ import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
 
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const localMode=document.body.dataset.mode==='local';
-let localVideo;
+let localVideo,passwordSaving=false;
 const fragment=new URLSearchParams(location.hash.slice(1));
 let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.has('invite')?'register':fragment.has('setup')?'setup':'login';
 if(accessToken)history.replaceState(null,'',location.pathname+location.search);
@@ -57,7 +58,7 @@ function collect(){
  data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=all('.key-options input:checked').map(e=>e.value);
  return validateSubmission(data);
 }
-function canLeave(){if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
+function canLeave(){if(uploadAbort||saving||passwordSaving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
 function resetEditor(item=null){
  releasePreview();localVideo=undefined;saved=item;videoId=item?.videoId||null;videoUrl=item?.video||null;points=item?{origin:[item.origin[0],item.originHeight,item.origin[1]],target:[item.target[0],item.targetHeight,item.target[1]]}:{};
  if(localMode)$('#view-local-map').hidden=true;
@@ -153,7 +154,8 @@ async function loadTeam(){
 }
 $('#invite-form').onsubmit=async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;try{const result=await api('/admin/invites',{method:'POST',data:{label:$('#invite-label').value}});$('#invite-result').hidden=false;$('#invite-link').value=result.link;await loadTeam();message('#dev-message','邀请链接已生成，请复制后发给受邀者。');}catch(err){message('#dev-message',errorText(err),true);}finally{b.disabled=false;}};
 $('#copy-invite').onclick=async()=>{try{await navigator.clipboard.writeText($('#invite-link').value);message('#dev-message','邀请链接已复制');}catch{$('#invite-link').select();message('#dev-message','请复制已选中的邀请链接');}};
-addEventListener('beforeunload',e=>{if(dirty||uploadAbort){e.preventDefault();e.returnValue='';}});
+addEventListener('beforeunload',e=>{if(dirty||uploadAbort||passwordSaving){e.preventDefault();e.returnValue='';}});
+if(!localMode)setupPasswordChange({getUser:()=>user,canOpen:()=>{if(uploadAbort||saving){message('#dev-message','请等待教程保存完成，或取消视频上传',true);return false;}return true;},onBusy:value=>{passwordSaving=value;}});
 if(localMode){
  $('#remove-local-video').onclick=()=>{localVideo=null;releasePreview();preview(null);dirty=true;$('#remove-local-video').hidden=true;message('#upload-status','保存后将移除此教程的视频。');};
  await enter({username:'本地',role:'local'});
