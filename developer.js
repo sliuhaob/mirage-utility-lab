@@ -137,7 +137,21 @@ function renderLibrary(){
    confirmation.append(el('span','删除道具及其视频？无法撤销。'),action('确认删除',async()=>{await deleteLocalLineup(item.id);if(saved?.id===item.id){saved=null;dirty=false;preview(null);releasePreview();}await loadLibrary();}),action('取消',()=>{confirmation.hidden=true;}));
    row.append(action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),action('删除',()=>{confirmation.hidden=false;}),confirmation);
   }
-  else if(item.canEdit){row.append(action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),action(item.status==='published'?'撤下':'发布',async()=>{await api('/dev/lineups',{method:'POST',data:{...item,status:item.status==='published'?'archived':'published'}});await loadLibrary();}));}
+  else if(item.canEdit){
+   row.append(action('编辑',async()=>{if(canLeave()){await showTab('compose');resetEditor(item);}}),action(item.status==='published'?'撤下':'发布',async()=>{await api('/dev/lineups',{method:'POST',data:{...item,status:item.status==='published'?'archived':'published'}});await loadLibrary();}));
+   const confirmation=el('div',undefined,'local-delete-confirm');confirmation.hidden=true;
+   const confirmButton=action('确认永久删除',async()=>{
+    if(saving||uploadAbort)return;saving=true;setBusy();row.inert=true;message('#dev-message','正在删除教程…');
+    try{
+     const result=await api('/dev/lineups/delete',{method:'POST',data:{id:item.id,revision:item.revision}});
+     if(saved?.id===item.id){saved=null;dirty=false;videoId=null;videoUrl=null;preview(null);releasePreview();}
+     libraryItems=libraryItems.filter(entry=>entry.id!==item.id);renderLibrary();
+     message('#dev-message',result.cleanupPending?'教程已永久删除；视频清理暂未完成，下次打开教程库时会自动重试。':'教程已永久删除，未被其他教程使用的视频已清理。');
+    }finally{saving=false;setBusy();row.inert=false;}
+   });confirmButton.className='danger-action';
+   confirmation.append(el('span','永久删除“'+item.name+'”？此操作无法撤销，同时清理未被其他教程使用的视频。'),confirmButton,action('取消',()=>{confirmation.hidden=true;}));
+   const remove=action('永久删除',()=>{confirmation.hidden=false;});remove.className='danger-action';row.append(remove,confirmation);
+  }
   row.append(action('基于此新建',async()=>{if(canLeave()){await showTab('compose');resetEditor({...item,id:undefined,revision:undefined,builtinId:null,video:null,videoId:null,hasVideo:false,status:'draft',name:item.name.slice(0,72)+' · 新投法'});saved=null;$('#editor-title').textContent='添加一种新投法';dirty=true;}}));
   $('#lineup-library').append(row);
  }

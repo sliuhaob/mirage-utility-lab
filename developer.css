@@ -13,3 +13,5 @@
 .local-delete-confirm{order:5;flex-basis:100%;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:#efb9a2;font-size:13px}[data-mode=local] .library-filters{grid-template-columns:1fr 2fr}
 
 .password-dialog{box-sizing:border-box;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:28px;border:1px solid #52695c;border-radius:8px;background:#162225;color:#dbe3da}.password-dialog::backdrop{background:#07100dcc}.password-dialog h2{margin:0 0 12px;font-size:23px}.password-dialog form{display:grid;gap:16px;margin-top:20px}.password-dialog #password-close{display:block;margin-left:auto}.password-dialog #password-status:empty{display:none}
+
+.developer-page .danger-action{color:#ffc3b9;border-color:#a96459;background:#402a29}.local-delete-confirm>span{flex-basis:100%;line-height:1.6}
