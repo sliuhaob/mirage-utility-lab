@@ -1,4 +1,4 @@
-# Mirage Utility Lab
+# CS2 Utility Lab
 
 Public website assets for the CS2 Mirage, Nuke, Ancient, Dust II, Inferno and Anubis utility maps.
 
