@@ -23,6 +23,11 @@ export function validateSubmission(value){
  if(!Array.isArray(value.keys)||value.keys.length>6||value.keys.some(k=>!allowed.includes(k)))throw Error('投掷按键无效');
  out.keys=[...new Set(value.keys)];out.en='COMMUNITY LINEUP';
  out.targetOffset=value.type==='flash'?2:0;
+ if(value.pointGroups!==undefined){
+  if(!value.pointGroups||typeof value.pointGroups!=='object'||Array.isArray(value.pointGroups)||Object.keys(value.pointGroups).some(k=>!['target','origin'].includes(k)))throw Error('点位合并设置无效');
+  out.pointGroups={};
+  for(const kind of ['target','origin']){const key=value.pointGroups[kind];if(key===undefined)continue;if(typeof key!=='string'||!/^(?:point:|record:(?:local-)?)[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(key))throw Error('点位合并设置无效');out.pointGroups[kind]=key;}
+ }
  return out;
 }
 export const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -1,4 +1,5 @@
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=2';
+import {savedPointGroups} from './lineup-groups.js?v=2';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
 
 // Keep metadata separate: opening a map must not load every saved video into memory.
 const DB_NAME='roxy-cs2-local',ID=/^local-[a-f0-9-]{36}$/;
@@ -39,7 +40,7 @@ export async function saveLocalLineup(value,video){
   request.onsuccess=()=>{
    const previous=request.result;
    if(value.id&&(!previous||previous.revision!==value.revision)){failure=Error('此道具已在其他页面修改或删除，请从“本地道具库”重新打开');tx.abort();return;}
-   item={...data,id,revision:(previous?.revision||0)+1,updated:Date.now(),hasVideo:video===undefined?!!previous?.hasVideo:!!video,status:'published'};
+   item={...data,pointGroups:savedPointGroups(data,previous),id,revision:(previous?.revision||0)+1,updated:Date.now(),hasVideo:video===undefined?!!previous?.hasVideo:!!video,status:'published'};
    items.put(item);if(video===null)videos.delete(id);else if(video!==undefined)videos.put(video,id);
   };
  });

@@ -1,4 +1,4 @@
-import {validateSubmission} from './submission-schema.js?v=2';
+import {validateSubmission} from './submission-schema.js?v=3';
 export const API_BASE=location.hostname==='127.0.0.1'||location.hostname==='localhost'?'http://127.0.0.1:8787':'https://cs2-api.roxy-design.com';
 export async function api(path,{method='GET',data,signal}={}){
  const response=await fetch(API_BASE+path,{method,credentials:'include',signal,headers:method==='GET'?{}:{'Content-Type':'application/json','X-CS2-Request':'1'},body:data===undefined?undefined:JSON.stringify(data)});

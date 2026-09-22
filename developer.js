@@ -1,10 +1,12 @@
+import {confirmPointMerges} from './point-merge-dialog.js?v=1';
+import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
-import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=2';
+import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=3';
 import {getMap} from './maps.js?v=8';
 import {createRadarEditor} from './radar-editor.js?v=1';
-import {api,uploadVideo} from './community.js?v=3';
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=2';
+import {api,uploadVideo} from './community.js?v=4';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
 
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const localMode=document.body.dataset.mode==='local';
@@ -46,7 +48,7 @@ async function loadMap(view='radar'){
  try{
   let next;
   if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
-  else {const {createMap}=await import('./map.js?v=6');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  else {const {createMap}=await import('./map.js?v=7');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
   if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
   message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');
@@ -117,8 +119,19 @@ $('#video-preview').onerror=()=>message('#upload-status','此视频无法播放�
 async function save(status){
  if(uploadAbort||saving)return;
  try{const data=collect();if(!localMode&&status==='published'&&!videoId&&!saved?.builtinId)throw Error('发布前请上传教学视频');if(status==='published'&&$('#video-preview').error)throw Error('视频无法播放，请重新上传兼容的视频');saving=true;setBusy();message('#save-status','正在保存…');
+  message('#save-status','正在检查附近落点和站位…');
+  let candidates,notice='';
+  if(localMode){
+   const [local,publicRows]=await Promise.all([listLocalLineups(data.map),loadCommunity(data.map,AbortSignal.timeout(5000)).catch(()=>{notice='公开教程暂时无法读取，本次只检查本地道具。';return [];})]);candidates=[...local,...publicRows];
+  }else{
+   candidates=[];let after='';const seen=new Set();
+   do{const page=await api('/dev/points?map='+data.map+(after?'&after='+encodeURIComponent(after):''),{signal:AbortSignal.timeout(15000)});candidates.push(...page.items);after=page.next;if(after){if(seen.has(after))throw Error('点位分页异常，请重试');seen.add(after);}}while(after);
+  }
+  const groups=await confirmPointMerges(data,candidates,saved,{notice});
+  if(!groups){message('#save-status','已取消保存，修改仍保留在编辑器中。');return;}
+  data.pointGroups=groups;message('#save-status','正在保存…');
   const result=localMode?{item:await saveLocalLineup({...data,id:saved?.id,revision:saved?.revision},localVideo)}:await api('/dev/lineups',{method:'POST',data:{...data,id:saved?.id,revision:saved?.revision,status,videoId}});saved=result.item;dirty=false;message('#save-status',status==='published'?'已发布。访客刷新地图后即可看到这条教程。':status==='draft'?'草稿已保存，仅你和管理员可见。':'已保存');$('#editor-title').textContent='编辑教程';$('#save-draft').textContent=status==='published'?'撤为草稿':'保存草稿';
-  if(localMode){localVideo=undefined;message('#save-status','已保存到当前浏览器，可返回地图查看。');$('#editor-title').textContent='编辑本地道具';$('#view-local-map').hidden=false;$('#view-local-map').href='./?map='+saved.map+'&team='+(saved.team==='ct'?'ct':'t')+'&lineup='+saved.id;navigator.storage?.persist?.().catch(()=>{});}
+  if(localMode){localVideo=undefined;message('#save-status','已保存到当前浏览器，可返回地图查看。'+notice);$('#editor-title').textContent='编辑本地道具';$('#view-local-map').hidden=false;$('#view-local-map').href='./?map='+saved.map+'&team='+(saved.team==='ct'?'ct':'t')+'&lineup='+saved.id;navigator.storage?.persist?.().catch(()=>{});}
 
  }catch(e){message('#save-status',errorText(e),true);}finally{saving=false;setBusy();}
 }

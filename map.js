@@ -4,7 +4,7 @@ import { GLTFLoader } from './vendor/loaders/GLTFLoader.js';
 import { DRACOLoader } from './vendor/loaders/DRACOLoader.js';
 import { utilityTypes } from './utility-types.js';
 import { createUtilityEffect } from './utility-effects.js';
-import {groupLineups} from './lineup-groups.js';
+import {groupLineups} from './lineup-groups.js?v=2';
 import {createRenderScheduler} from './render-scheduler.js';
 import {downloadModel} from './model-download.js';
 
@@ -116,15 +116,15 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     const m={e,position:new THREE.Vector3(s.target[0],markerHeight,s.target[1]),baseHeight:markerHeight,smoke:s,group:{items:[s]}};
     projected.push(m);markers.set(s.id,m);
   }
-  function filterMarkers(items){
+  function filterMarkers(items,kind='target'){
     invalidate();markers.forEach(m=>{m.e.hidden=true;});
-    for(const group of groupLineups(items)){
+    for(const group of groupLineups(items,kind)){
       const m=markers.get(group.id),s=group.items[0];if(!m)continue;
       m.group=group;m.e.hidden=false;m.e.querySelector('.marker-count')?.remove();
       if(group.items.length>1){const count=document.createElement('span');count.className='marker-count';count.textContent=group.items.length;m.e.append(count);}
-      const title=group.items.length>1?s.name+' · '+group.items.length+' 种投掷方法':s.name;
+      const name=kind==='origin'?s.from:s.name,title=group.items.length>1?name+' · '+group.items.length+' 种投掷方法':name;
       m.e.querySelector('.marker-caption').textContent=title;m.e.title=title;m.e.setAttribute('aria-label',title+'：查看投掷方法');
-      const height=group.items.reduce((sum,item)=>sum+levelAt(item.target)+(item.targetOffset||0)+2.2,0)/group.items.length;
+      const height=group.items.reduce((sum,item)=>sum+levelAt(item[kind],item[kind+'Height'])+(kind==='target'?(item.targetOffset||0):0)+2.2,0)/group.items.length;
       m.position.set(group.target[0],height,group.target[1]);m.baseHeight=height;
       const selected=group.items.some(item=>item.id===active?.id);m.e.classList.toggle('selected',selected);m.e.setAttribute('aria-pressed',String(selected));
     }

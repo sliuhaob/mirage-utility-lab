@@ -1,11 +1,11 @@
 import {maps,getMap,mapUtilities} from './maps.js?v=8';
 import {utilityTypes} from './utility-types.js';
-import {createMap} from './map.js?v=6';
+import {createMap} from './map.js?v=7';
 import {downloadModel} from './model-download.js';
-import {loadCommunity} from './community.js?v=3';
-import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=2';
-import {groupLineups} from './lineup-groups.js';
-import {escapeHtml} from './submission-schema.js?v=2';
+import {loadCommunity} from './community.js?v=4';
+import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=3';
+import {groupLineups} from './lineup-groups.js?v=2';
+import {escapeHtml} from './submission-schema.js?v=3';
 import {setupMobileLayout} from './mobile-layout.js';
 
 const mobileUI=setupMobileLayout();
@@ -13,6 +13,7 @@ const mobileUI=setupMobileLayout();
 let config=getMap(new URLSearchParams(location.search).get('map'));
 let team=new URLSearchParams(location.search).get('team')==='ct'?'ct':'t';
 let utilities=[],type='smoke',filter='all',level='upper',current=null,map,loadController,loadGeneration=0;
+let pointMode='target';
 let view='3d',sourceFilter='all',localVideoUrl=null,detailGeneration=0;
 const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
@@ -31,11 +32,11 @@ const icon=s=>utilityTypes[s.type].icon;
 const pad=n=>String(n).padStart(2,'0');
 
 function renderList(){
- const items=visible(),groups=groupLineups(items);
- $('#library-heading').textContent=utilityTypes[type].targetLabel;
+ const items=visible(),groups=groupLineups(items,pointMode);
+ $('#library-heading').textContent=pointMode==='origin'?'投掷站位':utilityTypes[type].targetLabel;
  $('#point-count').textContent=pad(groups.length);
- $('#point-count').title=groups.length+' 个落点 · '+items.length+' 条教程';
- $('#point-list').innerHTML=items.length?groups.map(g=>{const s=g.items.find(s=>s.id===current?.id)||g.items[0],active=g.items.some(s=>s.id===current?.id);return '<button class="point-item '+(active?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+active+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+escapeHtml(s.name)+'</strong><small>'+escapeHtml(g.items.length>1?g.items.length+' 种投掷方法':s.en)+'</small></span><span class="zone-tag">'+(g.items.length>1?'×'+g.items.length:({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone))+'</span></button>';}).join(''):'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
+ $('#point-count').title=groups.length+(pointMode==='origin'?' 个站位 · ':' 个落点 · ')+items.length+' 条教程';
+ $('#point-list').innerHTML=items.length?groups.map(g=>{const s=g.items.find(s=>s.id===current?.id)||g.items[0],active=g.items.some(s=>s.id===current?.id);return '<button class="point-item '+(active?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+active+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+escapeHtml(pointMode==='origin'?s.from:s.name)+'</strong><small>'+escapeHtml(g.items.length>1?g.items.length+' 种投掷方法':pointMode==='origin'?s.name:s.en)+'</small></span><span class="zone-tag">'+(g.items.length>1?'×'+g.items.length:({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone))+'</span></button>';}).join(''):'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
@@ -45,8 +46,8 @@ function renderDetail(){
  const items=visible(),raw=current,s=raw?{...raw,...Object.fromEntries(['name','en','description','from','method','tip','sourceName'].map(k=>[k,escapeHtml(raw[k])])),steps:raw.steps.map(escapeHtml),keys:raw.keys.map(escapeHtml)}:null;
  $('#detail-number').textContent=pad(s?items.findIndex(x=>x.id===s.id)+1:0)+' / '+pad(items.length);
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
- const group=groupLineups(items).find(g=>g.items.some(item=>item.id===s.id));
- const methods=group?.items.length>1?'<section class="landing-methods"><h3>此落点 · '+group.items.length+' 种投掷方法</h3><p>选择站位查看对应教程</p>'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</section>':'';
+ const group=groupLineups(items,pointMode).find(g=>g.items.some(item=>item.id===s.id));
+ const methods=group?.items.length>1?'<section class="landing-methods"><h3>'+(pointMode==='origin'?'此站位':'此落点')+' · '+group.items.length+' 种投掷方法</h3><p>'+(pointMode==='origin'?'选择落点查看对应教程':'选择站位查看对应教程')+'</p>'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</section>':'';
  $('#detail-content').innerHTML=methods+'<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p>'+(s.video?'<video class="tutorial-video" controls playsinline preload="metadata" src="'+escapeHtml(s.video)+'" aria-label="投掷教学视频"></video>':'<div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div>')+'<div class="route-info"><div class="route-row"><span>投掷位置</span><span><i class="origin-swatch">◉</i>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><div class="key-row">'+s.keys.map(k=>'<kbd>'+k+'</kbd>').join('<span>+</span>')+'</div><button class="trajectory-button" id="play-route">⌁ <span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p>'+(s.custom?'<p class="source-link">'+s.sourceName+'</p>':'<a class="source-link" href="'+s.source+'" target="_blank" rel="noopener noreferrer">图文来源：'+s.sourceName+' ↗</a>');
  document.querySelectorAll('[data-method-id]').forEach(b=>b.onclick=()=>select(b.dataset.methodId));
  if(raw.local){
@@ -71,10 +72,10 @@ function syncFilters(){
  document.documentElement.style.setProperty('--utility-color',info.color);
  document.querySelectorAll('[data-type]').forEach(b=>{const active=b.dataset.type===type;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
  document.querySelectorAll('[data-filter]').forEach(b=>{const active=b.dataset.filter===filter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
- $('#legend-target').textContent=info.targetLabel;
- $('.sidebar-hint').textContent=type==='flash'?'选择你想投闪的位置':'选择你想投掷到的位置';
+ $('#legend-target').textContent=pointMode==='origin'?'可选站位':info.targetLabel;
+ $('.sidebar-hint').textContent=pointMode==='origin'?'选择站位，查看可投落点':type==='flash'?'选择你想投闪的位置':'选择你想投掷到的位置';
  document.querySelectorAll('[data-team]').forEach(b=>{const active=b.dataset.team===team;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
- map?.filter(visible());
+ map?.filter(visible(),pointMode);
 }
 function select(id){
  const next=utilities.find(s=>s.id===id);
@@ -93,6 +94,7 @@ function changeFilters(nextType,nextZone){
  current=items.find(s=>s.id===current?.id)||items[0]||null;
  syncFilters();map?.select(current);renderList();renderDetail();
 }
+$('#point-mode').onchange=()=>{pointMode=$('#point-mode').value;syncFilters();map?.select(current);renderList();renderDetail();};
 $('#utility-switch').innerHTML=Object.entries(utilityTypes).map(([id,t])=>'<button data-type="'+id+'" aria-label="'+t.label+'" title="'+t.label+'" aria-pressed="'+(id===type)+'" class="'+(id===type?'active':'')+'" style="--type-color:'+t.color+'">'+t.icon+'<span>'+t.short+'</span></button>').join('');
 document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>changeFilters(b.dataset.type,filter));
 document.querySelectorAll('[data-team]').forEach(b=>b.onclick=()=>changeTeam(b.dataset.team));
@@ -142,7 +144,7 @@ async function switchMap(id,updateUrl=true){
  ]);
  if(generation!==loadGeneration)return;
  config={...config,utilities:[...communityResult.items,...localResult.items]};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
- $('#community-status').textContent=(communityResult.error?'公开教程暂时无法加载；':`公开教程 ${communityResult.items.length} 条；`)+(localResult.error?localError(localResult.error):`本地 ${localResult.items.length} 条，相近落点自动合并`);
+ $('#community-status').textContent=(communityResult.error?'公开教程暂时无法加载；':`公开教程 ${communityResult.items.length} 条；`)+(localResult.error?localError(localResult.error):`本地 ${localResult.items.length} 条，点位仅在确认后合并`);
  const selectedId=new URLSearchParams(location.search).get('lineup');
  if(utilities.some(item=>item.id===selectedId))select(selectedId);
  syncFilters();renderList();renderDetail();
