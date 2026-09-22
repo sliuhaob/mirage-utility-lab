@@ -3,6 +3,7 @@ import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=6';
 import {downloadModel} from './model-download.js';
 import {loadCommunity} from './community.js?v=2';
+import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js';
 import {groupLineups} from './lineup-groups.js';
 import {escapeHtml} from './submission-schema.js';
 import {setupMobileLayout} from './mobile-layout.js';
@@ -12,14 +13,14 @@ const mobileUI=setupMobileLayout();
 let config=getMap(new URLSearchParams(location.search).get('map'));
 let team=new URLSearchParams(location.search).get('team')==='ct'?'ct':'t';
 let utilities=[],type='smoke',filter='all',level='upper',current=null,map,loadController,loadGeneration=0;
-let view='3d';
+let view='3d',sourceFilter='all',localVideoUrl=null,detailGeneration=0;
 const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
-const visible=()=>mapUtilities(config,type,filter,level,team);
+const visible=()=>mapUtilities(config,type,filter,level,team).filter(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local));
 const teamName=value=>({t:'匪方',ct:'警方',any:'双方通用'}[value]);
 function syncUrl(){const url=new URL(location.href);url.searchParams.set('map',config.id);url.searchParams.set('team',team);history.replaceState(null,'',url);}
 function ensureTeamType(){
- if(!visible().length)type=Object.keys(utilityTypes).find(t=>mapUtilities(config,t,filter,level,team).length)||type;
+ if(!visible().length)type=Object.keys(utilityTypes).find(t=>mapUtilities(config,t,filter,level,team).some(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local)))||type;
 }
 function changeTeam(next){
  team=next;filter='all';ensureTeamType();syncUrl();
@@ -38,6 +39,9 @@ function renderList(){
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
+ const detailVersion=++detailGeneration;
+ if(localVideoUrl){URL.revokeObjectURL(localVideoUrl);localVideoUrl=null;}
+
  const items=visible(),raw=current,s=raw?{...raw,...Object.fromEntries(['name','en','description','from','method','tip','sourceName'].map(k=>[k,escapeHtml(raw[k])])),steps:raw.steps.map(escapeHtml),keys:raw.keys.map(escapeHtml)}:null;
  $('#detail-number').textContent=pad(s?items.findIndex(x=>x.id===s.id)+1:0)+' / '+pad(items.length);
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
@@ -45,6 +49,13 @@ function renderDetail(){
  const methods=group?.items.length>1?'<section class="landing-methods"><h3>此落点 · '+group.items.length+' 种投掷方法</h3><p>选择站位查看对应教程</p>'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</section>':'';
  $('#detail-content').innerHTML=methods+'<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p>'+(s.video?'<video class="tutorial-video" controls playsinline preload="metadata" src="'+escapeHtml(s.video)+'" aria-label="投掷教学视频"></video>':'<div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div>')+'<div class="route-info"><div class="route-row"><span>投掷位置</span><span><i class="origin-swatch">◉</i>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><div class="key-row">'+s.keys.map(k=>'<kbd>'+k+'</kbd>').join('<span>+</span>')+'</div><button class="trajectory-button" id="play-route">⌁ <span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p>'+(s.custom?'<p class="source-link">'+s.sourceName+'</p>':'<a class="source-link" href="'+s.source+'" target="_blank" rel="noopener noreferrer">图文来源：'+s.sourceName+' ↗</a>');
  document.querySelectorAll('[data-method-id]').forEach(b=>b.onclick=()=>select(b.dataset.methodId));
+ if(raw.local){
+  const link=document.createElement('a');link.className='source-link';link.href='./local.html?edit='+raw.id;link.textContent='编辑本地道具 ↗';$('#detail-content').append(link);
+  if(raw.hasVideo){
+   const placeholder=$('.video-placeholder');placeholder.textContent='正在读取本地视频…';
+   readLocalVideo(raw.id).then(blob=>{if(detailVersion!==detailGeneration)return;if(!blob)throw Error('本地视频未找到，请重新添加');localVideoUrl=URL.createObjectURL(blob);const video=document.createElement('video');video.className='tutorial-video';video.controls=true;video.playsInline=true;video.preload='metadata';video.src=localVideoUrl;video.setAttribute('aria-label','本地投掷教学视频');placeholder.replaceWith(video);}).catch(error=>{if(detailVersion===detailGeneration)placeholder.textContent=localError(error);});
+  }
+ }
  const b=$('#play-route');
  b.disabled=!map;
  if(!map)b.querySelector('span').textContent=$('#map-error').hidden?'地图加载中…':'3D 地图不可用';
@@ -67,6 +78,7 @@ function syncFilters(){
 }
 function select(id){
  const next=utilities.find(s=>s.id===id);
+ if(next&&(sourceFilter==='local'&&!next.local||sourceFilter==='public'&&next.local)){sourceFilter='all';$('#lineup-source').value='all';}
  if(next){if(next.team!=='any'&&next.team!==team){team=next.team;syncUrl();}type=next.type;if(config.levelBoundary&&next.level!==level){level=next.level;map?.setLevel(level);syncLevelControls();resetCutControl();}if(filter!=='all'&&filter!==next.zone)filter='all';}
  current=next||null;
  syncFilters();map?.select(current);renderList();renderDetail();mobileUI.showDetails();
@@ -108,6 +120,8 @@ async function switchMap(id,updateUrl=true){
  const generation=++loadGeneration;loadController?.abort();map?.dispose();map=undefined;
  loadController=new AbortController();config={...getMap(id),utilities:[]};utilities=[];filter='all';level='upper';
  const modelDownload=downloadModel(config.model,loadController.signal);
+ const localItems=listLocalLineups(config.id).then(items=>({items}),error=>({items:[],error}));
+ $('#local-entry').href='./local.html?map='+config.id;
  $('#community-status').textContent='正在读取教程…';
  ensureTeamType();
  current=visible()[0]||null;
@@ -123,12 +137,14 @@ async function switchMap(id,updateUrl=true){
  roofButton.setAttribute('aria-pressed','false');roofButton.classList.remove('active');roofButton.textContent='完整建筑';
  $('.map-disclaimer').innerHTML=config.en+' / 游戏几何 · 简化材质 · 示意弹道 <a class="map-source" href="'+config.reference+'" target="_blank" rel="noopener noreferrer">地图参考 ↗</a>';
  syncLevelControls();syncFilters();renderList();renderDetail();
- try{
-  const community=await loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)]));
-  if(generation!==loadGeneration)return;
-  config={...config,utilities:community};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
-  $('#community-status').textContent='已载入 '+community.length+' 条教程，相近落点自动合并';
- }catch(error){if(generation!==loadGeneration)return;$('#community-status').textContent='教程暂时无法加载，请重新加载页面后重试。';}
+ const [communityResult,localResult]=await Promise.all([
+  loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)])).then(items=>({items}),error=>({items:[],error})),localItems
+ ]);
+ if(generation!==loadGeneration)return;
+ config={...config,utilities:[...communityResult.items,...localResult.items]};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
+ $('#community-status').textContent=(communityResult.error?'公开教程暂时无法加载；':`公开教程 ${communityResult.items.length} 条；`)+(localResult.error?localError(localResult.error):`本地 ${localResult.items.length} 条，相近落点自动合并`);
+ const selectedId=new URLSearchParams(location.search).get('lineup');
+ if(utilities.some(item=>item.id===selectedId))select(selectedId);
  syncFilters();renderList();renderDetail();
  try{
   const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal,{modelDownload});
@@ -137,9 +153,10 @@ async function switchMap(id,updateUrl=true){
  }catch(error){if(generation!==loadGeneration||error.name==='AbortError')return;console.error('3D map initialization failed',error);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
  renderDetail();
 }
+$('#lineup-source').onchange=e=>{sourceFilter=e.target.value;ensureTeamType();changeFilters(type,filter);};
 $('#map-picker').onchange=e=>switchMap(e.target.value);
 $('#retry-map').onclick=()=>switchMap(config.id,false);
-addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();});
+addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();++detailGeneration;if(localVideoUrl)URL.revokeObjectURL(localVideoUrl);});
 await switchMap(config.id,false);
 
 // Preserve existing map integrations and expose one utility tool per new map.
@@ -150,3 +167,6 @@ if(document.modelContext?.registerTool){
   try{Promise.resolve(document.modelContext.registerTool({name,title:'查看'+target.name+'道具教程',description:'切换地图并显示道具落点、站位与投掷方法。',inputSchema:{type:'object',properties:{id:{type:'string',enum:items.map(s=>s.id)}},required:['id'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},async execute(input){if(!input||typeof input!=='object'||Object.keys(input).some(k=>k!=='id')||!items.some(s=>s.id===input.id))throw new Error('请选择有效的道具点位');if(config.id!==mapId)await switchMap(mapId);if(!utilities.some(s=>s.id===input.id))throw Error('教程已撤下或暂时无法加载');filter='all';select(input.id);return {id:current.id,map:config.id,team:current.team,type:current.type,name:current.name,from:current.from,method:current.method,steps:current.steps,videoAvailable:!!current.video};}},{signal:lifecycle.signal})).catch(e=>console.warn('Optional WebMCP registration unavailable',e));}catch(e){console.warn('Optional WebMCP unavailable',e);}
  }
 }
+
+// Recreate disposed renderers when returning through the browser's back/forward cache.
+addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

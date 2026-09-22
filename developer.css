@@ -9,3 +9,5 @@
 .radar-editor{display:block;width:100%;height:100%;touch-action:none;user-select:none;cursor:grab}.radar-editor image{pointer-events:none}.radar-labels,.radar-point-label{pointer-events:none}.radar-callout,.radar-site,.radar-point-label{text-anchor:middle;fill:#edf2e9;paint-order:stroke;stroke:#111d1f;stroke-width:4px;stroke-linejoin:round;font-size:20px}.radar-site{font-size:34px;fill:#e8b576}.radar-point-label{font-size:22px;font-weight:600}.editor-zoom{position:absolute;right:18px;bottom:76px;z-index:40;display:flex;flex-direction:column;gap:5px}.editor-zoom button{font-size:20px;padding:4px 10px;background:#162725e8}
 
 .library-filters{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;margin-top:24px}@media(max-width:640px){.library-filters{grid-template-columns:1fr 1fr}.library-filters label:last-child{grid-column:1 / -1}}
+
+.local-delete-confirm{order:5;flex-basis:100%;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:#efb9a2;font-size:13px}[data-mode=local] .library-filters{grid-template-columns:1fr 2fr}
