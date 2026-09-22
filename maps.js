@@ -5,6 +5,8 @@ import {dust2Utilities} from './dust2-data.js?v=2';
 import {infernoUtilities} from './inferno-data.js?v=2';
 import {anubisUtilities} from './anubis-data.js?v=2';
 
+import {cacheUtilities} from './cache-data.js?v=1';
+
 export const maps={
  mirage:{id:'mirage',name:'荒漠迷城',en:'MIRAGE',utilities:mirageUtilities,
   model:'./assets/mirage-native.glb?v=7',metadata:'./assets/mirage-native.json?v=7',
@@ -44,5 +46,11 @@ maps.anubis={id:'anubis',name:'阿努比斯',en:'ANUBIS',utilities:anubisUtiliti
  cut:{min:-4,max:16,default:3.6},zones:{A:'A 区',mid:'中路',water:'水下',B:'B 区'},
  reference:'https://csnades.gg/anubis',
  labels:[['A',755,273,-2.8,'site-label'],['B',322,536,.7,'site-label'],['T 出生点',486,926,.4],['CT 出生点',433,236,.9],['中 路',585,424,.7],['中路桥',518,606,.7],['VIP',526,488,.7],['匪 中',507,709,1],['水 下',589,616,-2.7,'area-label lower-label'],['船 位',726,543,-2.4],['A 大',874,445,-2.2],['A 天堂',729,200,-.1],['A 平台',722,365,-1],['A 小',650,385,-.8],['喷 泉',890,261,-2.7],['黑 屋',405,620,-1.4],['B 门',222,574,.6],['B 一柱',300,577,.7],['B 死点',408,546,1.2],['B 连接',374,427,1.2],['B 后巷',287,402,.7],['B 外',273,661,.7],['遗 迹',356,802,.7],['侧 巷',650,781,.7]]};
+maps.cache={id:'cache',name:'死城之谜',en:'CACHE',utilities:cacheUtilities,
+ model:'./assets/cache-native.glb?v=1',metadata:'./assets/cache-native.json?v=1',
+ radars:{upper:'./assets/cache-radar.png'},center:[0,0,2],gridHeight:-5,defaultZoom:1.02,
+ cut:{min:-2,max:18,default:5.4},zones:{A:'A 区',mid:'中路',B:'B 区'},
+ reference:'https://www.cs2util.com/cache',
+ labels:[['A',325,275,1.8,'site-label'],['B',354,831,.4,'site-label'],['T 出生点',903,596,.5],['CT 出生点',93,463,.5],['中 路',413,556,.5],['匪 中 / 车库',591,556,.5],['警 中',267,548,.5],['白 箱',356,527,1.2],['沙 袋',365,611,1.2],['A 小',329,460,1.7],['A 门',484,341,.6],['A 二楼',392,350,4.9],['蓝 门',436,201,1.9],['叉 车',415,322,1],['卡 车',213,418,1.5],['B 厅',549,740,.5],['B 门',446,743,.5],['阳光房',522,831,.5],['B 二楼',280,723,3.7],['B1 / 树房',181,735,.5],['管 道',447,642,1.5],['B 死点',387,843,.5]]};
 export const getMap=id=>maps[id]||maps.mirage;
 export const mapUtilities=(config,type,zone='all',level='upper',team='all')=>config.utilities.filter(s=>s.type===type&&(zone==='all'||s.zone===zone)&&(!config.levelBoundary||s.level===level)&&(team==='all'||s.team==='any'||s.team===team));

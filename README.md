@@ -1,6 +1,6 @@
 # CS2 Utility Lab
 
-Public website assets for the CS2 Mirage, Nuke, Ancient, Dust II, Inferno and Anubis utility maps.
+Public website assets for the CS2 Mirage, Nuke, Ancient, Dust II, Inferno, Anubis and Cache utility maps.
 
 Website: https://cs2.roxy-design.com
 

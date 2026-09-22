@@ -1,10 +1,10 @@
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
-import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js';
-import {getMap} from './maps.js';
+import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=2';
+import {getMap} from './maps.js?v=8';
 import {createRadarEditor} from './radar-editor.js?v=1';
-import {api,uploadVideo} from './community.js?v=2';
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
+import {api,uploadVideo} from './community.js?v=3';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=2';
 
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const localMode=document.body.dataset.mode==='local';

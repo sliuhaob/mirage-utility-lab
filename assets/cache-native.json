@@ -1,0 +1,873 @@
+{
+  "model": "Native CS2 Cache",
+  "source": "Local CS2 game/csgo/maps/de_cache.vpk",
+  "sourceSha256": "958bfb79888c33704ba3582253bb1244d13ab5a89aa29d1b7842fa0ac0855305",
+  "units": {
+    "sourceToWebScale": 0.01818181818181818,
+    "sourceToWebOffset": [
+      -14.836363636363636,
+      -29.09090909090909,
+      7.890909090909091
+    ],
+    "sourceToWebAxes": [
+      "x",
+      "z",
+      "-y"
+    ]
+  },
+  "anchors": {
+    "cache-garage-smoke-from-ct-spawn": {
+      "origin": {
+        "x": -44.6097,
+        "z": 2.5867,
+        "height": 0.25454,
+        "surfaces": [
+          {
+            "height": 0.25454,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.009"
+          }
+        ]
+      },
+      "target": {
+        "x": 0.01033,
+        "z": 3.07442,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 4.95682,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.061"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concretefloor_03_0.005"
+          }
+        ]
+      }
+    },
+    "cache-smoking-mid-for-vent": {
+      "origin": {
+        "x": 34.16816,
+        "z": 5.98239,
+        "height": 0.14545,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_path_gravel_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": -14.55082,
+        "z": 3.0756,
+        "height": 0.14545,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.001"
+          }
+        ]
+      }
+    },
+    "cache-ct-smoke-from-sun-room2": {
+      "origin": {
+        "x": -4.6232,
+        "z": 34.25398,
+        "height": 0.87272,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.023"
+          }
+        ],
+        "support": [
+          -4.6232,
+          34.53398
+        ],
+        "heightNote": "Player hull supported by adjacent ledge"
+      },
+      "target": {
+        "x": -24.69632,
+        "z": 24.69983,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.007"
+          }
+        ]
+      }
+    },
+    "cache-highway-smoke-from-t-truck": {
+      "origin": {
+        "x": 13.20981,
+        "z": -7.26078,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_gravel_grass_001_0.027"
+          }
+        ]
+      },
+      "target": {
+        "x": -17.63695,
+        "z": -10.93475,
+        "height": 1.52727,
+        "surfaces": [
+          {
+            "height": 1.52727,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.022"
+          }
+        ]
+      }
+    },
+    "cache-left-side-mid-smoke-for-vent": {
+      "origin": {
+        "x": 34.16816,
+        "z": 5.98239,
+        "height": 0.14545,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_path_gravel_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": -13.55391,
+        "z": 5.82828,
+        "height": 0.21818,
+        "surfaces": [
+          {
+            "height": 0.21818,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.012"
+          }
+        ]
+      }
+    },
+    "cache-a-main-smoke-from-ct-spawn": {
+      "origin": {
+        "x": -35.78125,
+        "z": 2.23715,
+        "height": 0.25454,
+        "surfaces": [
+          {
+            "height": 0.25454,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.009"
+          }
+        ]
+      },
+      "target": {
+        "x": -5.62068,
+        "z": -22.74412,
+        "height": 1.81817,
+        "surfaces": [
+          {
+            "height": 9.30908,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.091"
+          },
+          {
+            "height": 1.81817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concretefloor_03_0.002"
+          }
+        ]
+      }
+    },
+    "cache-a-main-smoke-from-truck": {
+      "origin": {
+        "x": -31.49235,
+        "z": -11.5946,
+        "height": 1.56903,
+        "surfaces": [
+          {
+            "height": 1.56903,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0"
+          }
+        ]
+      },
+      "target": {
+        "x": -5.62068,
+        "z": -22.74412,
+        "height": 1.81817,
+        "surfaces": [
+          {
+            "height": 9.30908,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.091"
+          },
+          {
+            "height": 1.81817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concretefloor_03_0.002"
+          }
+        ]
+      }
+    },
+    "cache-b-main-smoke-from-b-halls": {
+      "origin": {
+        "x": 9.72112,
+        "z": 18.7642,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 7.19999,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.060"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.006"
+          }
+        ]
+      },
+      "target": {
+        "x": -10.24948,
+        "z": 19.62029,
+        "height": 0.16363,
+        "surfaces": [
+          {
+            "height": 14.36362,
+            "object": "n0_lr0_agg_merge_ch2_curb_001_blend_1.003"
+          },
+          {
+            "height": 10.79999,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_8.008"
+          },
+          {
+            "height": 10.76362,
+            "object": "n0_lr0_agg_merge_ch2_concrete_siding_002_blend_0.004"
+          },
+          {
+            "height": 8.47272,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_8.008"
+          },
+          {
+            "height": 8.43635,
+            "object": "n0_lr0_agg_merge_ch2_concrete_siding_002_blend_0.007"
+          },
+          {
+            "height": 0.16363,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.011"
+          }
+        ]
+      }
+    },
+    "cache-heaven-smoke-from-sun-room": {
+      "origin": {
+        "x": -4.6116,
+        "z": 34.25398,
+        "height": 0.87272,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.023"
+          }
+        ],
+        "support": [
+          -4.6116,
+          34.53398
+        ],
+        "heightNote": "Player hull supported by adjacent ledge"
+      },
+      "target": {
+        "x": -22.49438,
+        "z": 21.27294,
+        "height": 3.54544,
+        "surfaces": [
+          {
+            "height": 16.17833,
+            "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1.001"
+          },
+          {
+            "height": 14.36362,
+            "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1.006"
+          },
+          {
+            "height": 12.81816,
+            "object": "reactor_scaffolding_ceiling_01.reactor_scaffolding_ceiling_01"
+          },
+          {
+            "height": 12.43635,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.004"
+          },
+          {
+            "height": 12.07271,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.004"
+          },
+          {
+            "height": 10.32726,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.001"
+          },
+          {
+            "height": 7.99999,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.002"
+          },
+          {
+            "height": 3.54544,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.003"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.007"
+          }
+        ]
+      }
+    },
+    "cache-ct-smoke-from-sun-room": {
+      "origin": {
+        "x": 0.14493,
+        "z": 33.99948,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.023"
+          }
+        ]
+      },
+      "target": {
+        "x": -24.69632,
+        "z": 24.69983,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.007"
+          }
+        ]
+      }
+    },
+    "cache-back-a-site-smoke-from-a-long": {
+      "origin": {
+        "x": 4.93455,
+        "z": -20.83492,
+        "height": 1.8909,
+        "surfaces": [
+          {
+            "height": 1.8909,
+            "object": "n0_lr0_agg_merge_ch2_curb_001_blend_0.035"
+          }
+        ]
+      },
+      "target": {
+        "x": -21.06441,
+        "z": -20.20843,
+        "height": 1.52727,
+        "surfaces": [
+          {
+            "height": 1.52727,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_asphalt_gravel_001_0"
+          }
+        ]
+      }
+    },
+    "cache-balcony-smoke-from-a-long": {
+      "origin": {
+        "x": 9.08873,
+        "z": -20.98064,
+        "height": 1.8909,
+        "surfaces": [
+          {
+            "height": 1.8909,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.038"
+          }
+        ]
+      },
+      "target": {
+        "x": -15.76746,
+        "z": -17.00996,
+        "height": 4.83999,
+        "surfaces": [
+          {
+            "height": 4.83999,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.014"
+          },
+          {
+            "height": 1.52727,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.005"
+          }
+        ]
+      }
+    },
+    "cache-b-halls-smoke-from-b-main": {
+      "origin": {
+        "x": -10.60944,
+        "z": 20.76307,
+        "height": 0.16363,
+        "surfaces": [
+          {
+            "height": 15.86397,
+            "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1"
+          },
+          {
+            "height": 15.73632,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_0.001"
+          },
+          {
+            "height": 14.54542,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_0.008"
+          },
+          {
+            "height": 14.36362,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.009"
+          },
+          {
+            "height": 12.81817,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.004"
+          },
+          {
+            "height": 12.61817,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.004"
+          },
+          {
+            "height": 10.32726,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.001"
+          },
+          {
+            "height": 7.99999,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_1"
+          },
+          {
+            "height": 6.10908,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.064"
+          },
+          {
+            "height": 0.16363,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.011"
+          }
+        ]
+      },
+      "target": {
+        "x": 3.42919,
+        "z": 23.25473,
+        "height": 0.16362,
+        "surfaces": [
+          {
+            "height": 9.25754,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.096"
+          },
+          {
+            "height": 0.16362,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.030"
+          }
+        ]
+      }
+    },
+    "cache-connector-smoke-from-t-spawn": {
+      "origin": {
+        "x": 27.38953,
+        "z": 5.98296,
+        "height": 0.14545,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.015"
+          }
+        ]
+      },
+      "target": {
+        "x": -21.39434,
+        "z": 8.14503,
+        "height": 1.16363,
+        "surfaces": [
+          {
+            "height": 10.10908,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.075"
+          },
+          {
+            "height": 1.16363,
+            "object": "n0_lr0_agg_merge_ch2_blend_concretefloor_03_0.011"
+          }
+        ]
+      }
+    },
+    "cache-a-site-flash": {
+      "origin": {
+        "x": 9.08977,
+        "z": -16.51702,
+        "height": 1.8909,
+        "surfaces": [
+          {
+            "height": 1.8909,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.038"
+          }
+        ]
+      },
+      "target": {
+        "x": -7.49067,
+        "z": -22.96229,
+        "height": 1.54346,
+        "surfaces": [
+          {
+            "height": 1.54346,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_path_gravel_001_0.003"
+          }
+        ]
+      }
+    },
+    "cache-b-site-pop-flash": {
+      "origin": {
+        "x": 5.41755,
+        "z": 29.2358,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 7.19999,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.115"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.017"
+          }
+        ]
+      },
+      "target": {
+        "x": -11.23667,
+        "z": 19.73428,
+        "height": 0.16363,
+        "surfaces": [
+          {
+            "height": 14.36362,
+            "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1.003"
+          },
+          {
+            "height": 10.99999,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_8.001"
+          },
+          {
+            "height": 10.32726,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.001"
+          },
+          {
+            "height": 7.99999,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_1"
+          },
+          {
+            "height": 0.16363,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.011"
+          }
+        ]
+      }
+    },
+    "cache-b-main-pop-flash": {
+      "origin": {
+        "x": 5.41665,
+        "z": 23.76395,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 9.19692,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.098"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_grass_blend_0"
+          }
+        ]
+      },
+      "target": {
+        "x": -5.61695,
+        "z": 23.25546,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 9.25745,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.081"
+          },
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_curb_002_0"
+          }
+        ]
+      }
+    },
+    "cache-squeaky-self-flash": {
+      "origin": {
+        "x": -11.89041,
+        "z": -29.8551,
+        "height": 1.59999,
+        "surfaces": [
+          {
+            "height": 9.30908,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.068"
+          },
+          {
+            "height": 1.59999,
+            "object": "n0_lr0_agg_merge_ch2_floor_vinyl_01_0.004"
+          }
+        ]
+      },
+      "target": {
+        "x": -10.58557,
+        "z": -28.04041,
+        "height": 1.59999,
+        "surfaces": [
+          {
+            "height": 1.59999,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_path_gravel_001_0.003"
+          }
+        ]
+      }
+    },
+    "cache-mid-flash-from-truck": {
+      "origin": {
+        "x": 18.55092,
+        "z": -2.98124,
+        "height": 0.82224,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.009"
+          }
+        ],
+        "support": [
+          18.75092,
+          -3.1812400000000003
+        ],
+        "heightNote": "Player hull supported by adjacent ledge"
+      },
+      "target": {
+        "x": -2.41994,
+        "z": -0.01986,
+        "height": 0.18801,
+        "surfaces": [
+          {
+            "height": 0.18801,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.001"
+          }
+        ]
+      }
+    },
+    "cache-white-box-molotov-from-truck": {
+      "origin": {
+        "x": 17.96304,
+        "z": -3.97699,
+        "height": 0.14545,
+        "surfaces": [
+          {
+            "height": 0.14545,
+            "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.009"
+          }
+        ]
+      },
+      "target": {
+        "x": -15.76607,
+        "z": 0.09512,
+        "height": 0.21817,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.036"
+          }
+        ]
+      }
+    },
+    "cache-default-molotov-from-sun-room": {
+      "origin": {
+        "x": -4.62506,
+        "z": 34.25398,
+        "height": 0.87271,
+        "surfaces": [
+          {
+            "height": 0.21817,
+            "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.023"
+          }
+        ],
+        "support": [
+          -4.62506,
+          34.53398
+        ],
+        "heightNote": "Player hull supported by adjacent ledge"
+      },
+      "target": {
+        "x": -20.61423,
+        "z": 29.66396,
+        "height": 0.76363,
+        "surfaces": [
+          {
+            "height": 17.47271,
+            "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1.001"
+          },
+          {
+            "height": 1.30908,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.039"
+          },
+          {
+            "height": 1.12726,
+            "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_1.039"
+          },
+          {
+            "height": 0.76363,
+            "object": "n0_lr0_agg_merge_ch2_trim_concrete_beams_01c_0"
+          }
+        ]
+      }
+    }
+  },
+  "perimeterTrim": {
+    "objectsRemoved": 508,
+    "objectsCut": 679,
+    "trianglesBefore": 2702192,
+    "trianglesAfter": 2240555
+  },
+  "geometryPolicy": "Original geometry and elevation retained inside the competitive radar exterior plus 0.8 wall margin; non-playable exterior removed. Height rebased by 1600 Source units. Helper geometry, glass/effect cards and peripheral scenery removed. Simplified materials; no ratio decimation.",
+  "probes": {
+    "A site": {
+      "x": -20.2,
+      "z": -24.2,
+      "surfaces": [
+        {
+          "height": 1.52727,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_asphalt_gravel_001_0"
+        }
+      ]
+    },
+    "B site": {
+      "x": -16.7,
+      "z": 29.8,
+      "surfaces": [
+        {
+          "height": 17.47271,
+          "object": "n0_lr0_agg_merge_ch2_shifer_corrugated_roof_tile_blend_b_1"
+        },
+        {
+          "height": 15.72583,
+          "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_blend_01d_0"
+        },
+        {
+          "height": 1.0909,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.037"
+        }
+      ]
+    },
+    "Mid": {
+      "x": -10.6,
+      "z": 2.8,
+      "surfaces": [
+        {
+          "height": 0.14544,
+          "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.001"
+        }
+      ]
+    },
+    "CT Spawn": {
+      "x": -41.2,
+      "z": -4.4,
+      "surfaces": [
+        {
+          "height": 8.14544,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_1.002"
+        },
+        {
+          "height": 0.25454,
+          "object": "n0_lr0_agg_merge_ch2_floor_vinyl_01_0.003"
+        }
+      ]
+    },
+    "T Spawn": {
+      "x": 38.8,
+      "z": 7.8,
+      "surfaces": [
+        {
+          "height": 0.14544,
+          "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.014"
+        }
+      ]
+    },
+    "A catwalk": {
+      "x": -14.2,
+      "z": -16.3,
+      "surfaces": [
+        {
+          "height": 4.89795,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.014"
+        },
+        {
+          "height": 1.59999,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.042"
+        }
+      ]
+    },
+    "Highway": {
+      "x": -18.7,
+      "z": -10.2,
+      "surfaces": [
+        {
+          "height": 1.52727,
+          "object": "n0_lr0_agg_merge_ch2_blend_asphalt_gravel_grass_001_0.022"
+        }
+      ]
+    },
+    "B Heaven": {
+      "x": -23.3,
+      "z": 21.1,
+      "surfaces": [
+        {
+          "height": 14.36362,
+          "object": "n0_lr0_agg_merge_ch2_curb_001_blend_1.003"
+        },
+        {
+          "height": 8.36362,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_1.010"
+        },
+        {
+          "height": 3.56362,
+          "object": "n0_lr0_agg_merge_ch2_metal_diamondplate_rust_dust_blend_0.006"
+        }
+      ]
+    },
+    "B Tree": {
+      "x": -32.2,
+      "z": 22.2,
+      "surfaces": [
+        {
+          "height": 4.93096,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.001"
+        },
+        {
+          "height": 0.21817,
+          "object": "n0_lr0_agg_merge_ch2_floor_busstation_01_0"
+        }
+      ]
+    },
+    "B Halls": {
+      "x": 3.7,
+      "z": 23.8,
+      "surfaces": [
+        {
+          "height": 9.19263,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.096"
+        },
+        {
+          "height": 0.16363,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.006"
+        }
+      ]
+    },
+    "Sunroom": {
+      "x": 2.8,
+      "z": 32.7,
+      "surfaces": [
+        {
+          "height": 0.21817,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.017"
+        }
+      ]
+    },
+    "Vent": {
+      "x": -6.5,
+      "z": 13.0,
+      "surfaces": [
+        {
+          "height": 7.19999,
+          "object": "n0_lr0_agg_merge_ch2_blend_concrete_panel_gravel_grass_001_0.082"
+        },
+        {
+          "height": 2.67272,
+          "object": "n0_lr0_agg_merge_ch2_trim_metal_painted_wear_blend_02a_0.107"
+        },
+        {
+          "height": 0.21817,
+          "object": "n0_lr0_agg_merge_ch2_floor_vinyl_blend_01_0.001"
+        }
+      ]
+    }
+  }
+}

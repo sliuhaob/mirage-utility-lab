@@ -1,4 +1,4 @@
-export const submissionZones={mirage:['A','mid','B'],nuke:['A','outside','ramp','B'],ancient:['A','mid','B'],dust2:['A','mid','B'],inferno:['A','mid','banana','B'],anubis:['A','mid','water','B']};
+export const submissionZones={mirage:['A','mid','B'],nuke:['A','outside','ramp','B'],ancient:['A','mid','B'],dust2:['A','mid','B'],inferno:['A','mid','banana','B'],anubis:['A','mid','water','B'],cache:['A','mid','B']};
 export const MAX_VIDEO_BYTES=40*1024*1024;
 export function validateSubmission(value){
  if(!value||typeof value!=='object')throw Error('教程内容不完整');

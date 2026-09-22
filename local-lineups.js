@@ -1,4 +1,4 @@
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=2';
 
 // Keep metadata separate: opening a map must not load every saved video into memory.
 const DB_NAME='roxy-cs2-local',ID=/^local-[a-f0-9-]{36}$/;
