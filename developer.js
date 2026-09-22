@@ -1,3 +1,4 @@
+import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
 import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js';
 import {getMap} from './maps.js';
@@ -13,6 +14,7 @@ let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.
 if(accessToken)history.replaceState(null,'',location.pathname+location.search);
 let user,map,mapAbort,mapGeneration=0,editorView='radar',points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false,libraryItems=[];
 const message=(id,text,error=false)=>{const e=$(id);e.textContent=text;e.classList.toggle('danger-message',error);};
+const storageMonitor=localMode?null:createStorageMonitor({onManageVideo:async id=>{try{await showTab('library');$('#library-search').value=id;renderLibrary();}catch(e){message('#dev-message',errorText(e),true);}}});
 const errorText=e=>localMode?localError(e):e instanceof TypeError?'无法连接服务，请检查网络后重试':e.message;
 function authLabels(){
  const setup=authMode==='setup',invite=authMode==='register';
@@ -75,17 +77,18 @@ function resetEditor(item=null){
 async function showTab(name){
  message('#dev-message','');
  if(name!=='compose'){++mapGeneration;mapAbort?.abort();map?.dispose();map=null;}
- for(const tab of ['compose','library','team']){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
+ for(const tab of (localMode?['compose','library','team']:['compose','library','team','storage'])){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
+ if(name==='storage')storageMonitor?.activate();else storageMonitor?.deactivate();
  if(name==='library')await loadLibrary();if(name==='team')await loadTeam();
 }
 async function enter(account){
- user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';$('#tab-library').textContent=localMode?'本地道具库':user.role==='admin'?'全部教程':'我的教程与原有教程';if(localMode)$('#dev-account').hidden=true;
+ user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';if(!localMode)$('#tab-storage').hidden=user.role!=='admin';$('#tab-library').textContent=localMode?'本地道具库':user.role==='admin'?'全部教程':'我的教程与原有教程';if(localMode)$('#dev-account').hidden=true;
  await showTab('compose');resetEditor();
 }
 $('#auth-form').onsubmit=async e=>{e.preventDefault();$('#auth-submit').disabled=true;message('#auth-message','正在验证…');try{const result=await api('/auth/'+authMode,{method:'POST',data:{username:$('#auth-username').value,password:$('#auth-password').value,token:accessToken}});$('#auth-password').value='';accessToken=null;authMode='login';authLabels();message('#auth-message','');await enter(result.user);}catch(err){message('#auth-message',errorText(err),true);}finally{$('#auth-submit').disabled=false;}};
-$('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/logout',{method:'POST'});mapAbort?.abort();map?.dispose();map=null;dirty=false;releasePreview();preview(null);user=null;$('#creator').hidden=true;$('#dev-account').hidden=true;$('#auth-panel').hidden=false;authLabels();}catch(e){message('#dev-message',errorText(e),true);}};
+$('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/logout',{method:'POST'});mapAbort?.abort();map?.dispose();map=null;dirty=false;releasePreview();preview(null);storageMonitor?.clear();user=null;$('#creator').hidden=true;$('#dev-account').hidden=true;$('#auth-panel').hidden=false;authLabels();}catch(e){message('#dev-message',errorText(e),true);}};
 $('#tab-compose').onclick=()=>{if(canLeave()){showTab('compose');resetEditor();}};
-for(const tab of ['library','team'])$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
+for(const tab of (localMode?['library','team']:['library','team','storage']))$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
 $('#lineup-form').addEventListener('input',()=>{dirty=true;});
 $('#edit-map').onchange=()=>{points={};$('#edit-level').value='upper';zoneOptions();updatePoints();loadMap();};
 $('#edit-level').onchange=()=>{map?.setLevel($('#edit-level').value);map?.setPicking(null);cutControls();updatePoints();};
@@ -128,7 +131,7 @@ async function loadLibrary(){
 }
 function renderLibrary(){
  const mapId=$('#library-map').value,status=$('#library-status').value,search=$('#library-search').value.trim().toLowerCase();
- const items=libraryItems.filter(item=>(!mapId||item.map===mapId)&&(!status||item.status===status)&&(!search||[item.name,item.from,item.author].some(t=>String(t).toLowerCase().includes(search))));
+ const items=libraryItems.filter(item=>(!mapId||item.map===mapId)&&(!status||item.status===status)&&(!search||[item.name,item.from,item.author,item.videoId].some(t=>String(t).toLowerCase().includes(search))));
  $('#library-count').textContent=`${items.length} / ${libraryItems.length} 条教程`;$('#lineup-library').replaceChildren();
  for(const item of items){
   const row=el('article',undefined,'library-row'),info=el('div');info.append(el('strong',item.name),el('small',`${getMap(item.map).name} · ${teamName[item.team]} · ${localMode?'仅本地':statusName[item.status]} · ${item.builtinId?'原有教程':item.author}`));row.append(info);
@@ -181,7 +184,7 @@ if(localMode){
 
 }
 
-addEventListener('pagehide',()=>{++mapGeneration;mapAbort?.abort();map?.dispose();preview(null);releasePreview();});
+addEventListener('pagehide',()=>{storageMonitor?.deactivate();++mapGeneration;mapAbort?.abort();map?.dispose();preview(null);releasePreview();});
 
 // Recreate disposed renderers when returning through the browser's back/forward cache.
 addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
