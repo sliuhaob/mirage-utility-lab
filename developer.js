@@ -1,3 +1,4 @@
+import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=1';
 import {confirmPointMerges} from './point-merge-dialog.js?v=1';
 import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
@@ -10,7 +11,7 @@ import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
 
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const localMode=document.body.dataset.mode==='local';
-let localVideo,passwordSaving=false;
+let localVideo,passwordSaving=false,spawnPicking=false;
 const fragment=new URLSearchParams(location.hash.slice(1));
 let accessToken=fragment.get('invite')||fragment.get('setup'),authMode=fragment.has('invite')?'register':fragment.has('setup')?'setup':'login';
 if(accessToken)history.replaceState(null,'',location.pathname+location.search);
@@ -28,6 +29,7 @@ function authLabels(){
 function setBusy(){for(const id of ['#save-draft','#publish-lineup','#edit-video'])$(id).disabled=!!uploadAbort||saving;$('#lineup-form').inert=saving;}
 function preview(url){const v=$('#video-preview');v.pause();v.hidden=!url;if(url){if(localMode)v.removeAttribute('crossorigin');else v.crossOrigin='use-credentials';v.src=url;}else v.removeAttribute('src');v.load();}
 function releasePreview(){if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}}
+function clearSpawnDescription(){if(/^(?:T|CT) 出生点 · \d+ 号（本站）$/.test($('#edit-from').value))$('#edit-from').value='';}
 function updatePoints(){
  for(const kind of ['origin','target']){$('#'+kind+'-value').textContent=points[kind]?`X ${points[kind][0].toFixed(2)} · Y ${points[kind][2].toFixed(2)} · 高度 ${points[kind][1].toFixed(2)}`:'尚未选择';$('#pick-'+kind).classList.remove('active');}
  map?.setEditorPoints(points);map?.select(null);$('#editor-preview').disabled=!points.origin||!points.target;
@@ -42,7 +44,7 @@ async function loadMap(view='radar'){
  for(const v of ['radar','3d','top']){$('#editor-'+v).classList.toggle('active',v===view);$('#editor-'+v).setAttribute('aria-pressed',String(v===view));}
  for(const id of ['#pick-target','#pick-origin'])$(id).disabled=true;
  const editor={
-  onPick:(kind,point)=>{points[kind]=point;if(kind==='target'&&config.id==='nuke')$('#edit-zone').value=point[1]<config.levelBoundary?'B':$('#edit-zone').value==='B'?'A':$('#edit-zone').value;dirty=true;updatePoints();message('#pick-status',kind==='target'?'落点已标记，请继续选择投掷位置':'站位已标记，可预览路线或继续填写教程');},
+  onPick:(kind,point)=>{if(kind==='origin')clearSpawnDescription();points[kind]=point;if(kind==='target'&&config.id==='nuke')$('#edit-zone').value=point[1]<config.levelBoundary?'B':$('#edit-zone').value==='B'?'A':$('#edit-zone').value;dirty=true;updatePoints();message('#pick-status',kind==='target'?'落点已标记，请继续选择投掷位置':'站位已标记，可预览路线或继续填写教程');},
   onMiss:()=>message('#pick-status',radar?'这里没有可选地面，请点击地图通道或切换立体视图确认':'这里没有可选的地面，请旋转地图或调节剖切高度后重试',true)
  };
  try{
@@ -62,7 +64,7 @@ function collect(){
  data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=all('.key-options input:checked').map(e=>e.value);
  return validateSubmission(data);
 }
-function canLeave(){if(uploadAbort||saving||passwordSaving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
+function canLeave(){if(uploadAbort||saving||passwordSaving||spawnPicking){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
 function resetEditor(item=null){
  releasePreview();localVideo=undefined;saved=item;videoId=item?.videoId||null;videoUrl=item?.video||null;points=item?{origin:[item.origin[0],item.originHeight,item.origin[1]],target:[item.target[0],item.targetHeight,item.target[1]]}:{};
  if(localMode)$('#view-local-map').hidden=true;
@@ -92,9 +94,16 @@ $('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/lo
 $('#tab-compose').onclick=()=>{if(canLeave()){showTab('compose');resetEditor();}};
 for(const tab of (localMode?['library','team']:['library','team','storage']))$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
 $('#lineup-form').addEventListener('input',()=>{dirty=true;});
-$('#edit-map').onchange=()=>{points={};$('#edit-level').value='upper';zoneOptions();updatePoints();loadMap();};
+$('#edit-map').onchange=()=>{clearSpawnDescription();points={};$('#edit-level').value='upper';zoneOptions();updatePoints();loadMap();};
 $('#edit-level').onchange=()=>{map?.setLevel($('#edit-level').value);map?.setPicking(null);cutControls();updatePoints();};
 $('#edit-zone').onchange=()=>{if($('#edit-map').value==='nuke'){const next=$('#edit-zone').value==='B'?'lower':'upper';if($('#edit-level').value!==next){$('#edit-level').value=next;map?.setLevel(next);map?.setPicking(null);cutControls();updatePoints();}}};
+$('#pick-spawn').onclick=async()=>{
+ if(spawnPicking||saving)return;spawnPicking=true;
+ const config=getMap($('#edit-map').value);map?.setPicking(null);
+ try{const point=await chooseSpawn(config,$('#edit-team').value,points.origin);if(!point)return;
+ points.origin=[...point.position];$('#edit-team').value=point.team;$('#edit-from').value=spawnLabel(point);dirty=true;updatePoints();message('#pick-status','已选择 '+spawnLabel(point)+'，可继续选择落点或填写教程。');
+ }finally{spawnPicking=false;}
+};
 for(const kind of ['origin','target'])$('#pick-'+kind).onclick=()=>{map?.setPicking(kind);if(innerWidth<=640) $('.editor-map').scrollIntoView({behavior:'smooth',block:'start'});for(const k of ['origin','target'])$('#pick-'+k).classList.toggle('active',k===kind);message('#pick-status',kind==='target'?'点击地图地面，标记道具落点':'点击地图地面，标记投掷站位');};
 $('#editor-cut').oninput=e=>map?.setCutHeight(Number(e.target.value));
 $('#editor-reset').onclick=()=>map?.reset();$('#editor-retry').onclick=()=>loadMap(editorView);
