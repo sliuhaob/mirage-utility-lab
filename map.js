@@ -5,6 +5,8 @@ import { DRACOLoader } from './vendor/loaders/DRACOLoader.js';
 import { utilityTypes } from './utility-types.js';
 import { createUtilityEffect } from './utility-effects.js';
 import {groupLineups} from './lineup-groups.js';
+import {createRenderScheduler} from './render-scheduler.js';
+import {downloadModel} from './model-download.js';
 
 // Native geometry is transformed once in Blender into this radar-aligned frame.
 export const radarToWorld = (u, v, height = 0) => new THREE.Vector3((u - 512) / 10, height, (v - 512) / 10);
@@ -15,13 +17,19 @@ function disposeTree(root){
 }
 export async function createMap(host, labels, smokes, select, utilityIcon, config, signal, editor={}) {
   const scene = new THREE.Scene();
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  let disposed=false,frameId,observer,curve,ball,smokeGroup,active,started=0,playing=false,resolvePlay,view='3d',level='upper',showRoofs=false;
+  const modest=matchMedia('(pointer: coarse)').matches||(navigator.deviceMemory||8)<=4;
+  const renderer = new THREE.WebGLRenderer({ antialias: !modest, alpha: true });
+  let disposed=false,loop,ready=false,labelsDirty=true,viewportWidth=0,viewportHeight=0,decoder,observer,curve,ball,smokeGroup,active,started=0,playing=false,resolvePlay,view='3d',level='upper',showRoofs=false;
   const radarTextures={},elements=[];
-  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frameId);observer?.disconnect();cancelPlay();controls.dispose();host.removeEventListener('keydown',onKey);elements.forEach(e=>e.remove());disposeTree(scene);scene.traverse(o=>o.shadow?.dispose());Object.values(radarTextures).forEach(t=>t.dispose());renderer.dispose();renderer.domElement.remove();signal?.removeEventListener('abort',dispose);}
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  function dispose(){if(disposed)return;disposed=true;loop?.dispose();decoder?.dispose();observer?.disconnect();document.removeEventListener('visibilitychange',visibilityChanged);cancelPlay();controls.dispose();host.removeEventListener('keydown',onKey);elements.forEach(e=>e.remove());disposeTree(scene);scene.traverse(o=>o.shadow?.dispose());Object.values(radarTextures).forEach(t=>t.dispose());renderer.dispose();renderer.domElement.remove();signal?.removeEventListener('abort',dispose);}
+  function invalidate(){labelsDirty=true;if(ready)loop.invalidate();}
+  function visibilityChanged(){if(document.hidden){loop?.pause();cancelPlay();}else invalidate();}
+  document.addEventListener('visibilitychange',visibilityChanged);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,modest?1:1.25));
   renderer.localClippingEnabled = true;
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = !modest;
+  renderer.shadowMap.autoUpdate = false;
+  renderer.shadowMap.needsUpdate = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setClearColor(0x000000, 0);
@@ -33,6 +41,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   controls.target.copy(center);
   controls.enableDamping = true;
   controls.dampingFactor = .09;
+  controls.addEventListener('change',invalidate);
   controls.minZoom = .65;
   controls.maxZoom = 5;
   controls.maxPolarAngle = Math.PI / 2.25;
@@ -57,14 +66,22 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   grid.material.transparent = true;
   grid.material.opacity = .09;
   scene.add(grid);
-  const decoder = new DRACOLoader().setDecoderPath('./vendor/draco/').setDecoderConfig({type:'wasm'}).setWorkerLimit(2);
+  decoder = new DRACOLoader().setDecoderPath('./vendor/draco/').setDecoderConfig({type:'wasm'}).setWorkerLimit(2);
   const loader = new GLTFLoader().setDRACOLoader(decoder);
-  const loadingText=document.querySelector('#map-loading span');
-  const [native,metadata] = await Promise.all([
-    loader.loadAsync(config.model,event=>{if(!disposed&&loadingText)loadingText.textContent=event.total?`正在加载${config.name} ${Math.round(event.loaded/event.total*100)}%`:`正在加载${config.name}…`}).then(asset=>{decoder.dispose();if(disposed){disposeTree(asset.scene);throw new DOMException('Map load cancelled','AbortError');}scene.add(asset.scene);return asset;},error=>{decoder.dispose();throw error;}),
-    fetch(config.metadata,{signal}).then(r=>{if(!r.ok)throw new Error('Map metadata unavailable');return r.json()})
-  ]);
-  decoder.dispose();
+  const cancelled=()=>new DOMException('Map load cancelled','AbortError');
+  let rejectLoad;const abortLoading=new Promise((_,reject)=>{rejectLoad=()=>reject(cancelled());});
+  signal?.addEventListener('abort',rejectLoad,{once:true});
+  let native,metadata;
+  try{
+    [native,metadata]=await Promise.race([Promise.all([
+      (async()=>{const result=await (editor.modelDownload||downloadModel(config.model,signal));if(disposed||signal?.aborted)throw cancelled();if(result.error)throw result.error;
+        const parsed=loader.parseAsync(result.buffer,new URL('.',new URL(config.model,location.href)).href);result.buffer=null;
+        const asset=await parsed;
+        if(disposed){disposeTree(asset.scene);throw cancelled();}scene.add(asset.scene);return asset;
+      })(),
+      fetch(config.metadata,{signal}).then(r=>{if(!r.ok)throw new Error('Map metadata unavailable');return r.json()})
+    ]),abortLoading]);
+  }finally{signal?.removeEventListener('abort',rejectLoad);decoder.dispose();}
   const model=native.scene;model.name='Native '+config.en;
   const cutPlane=new THREE.Plane(new THREE.Vector3(0,-1,0),config.cut.default);
   const lowerCeiling=new THREE.Plane(new THREE.Vector3(0,-1,0),config.lowerCut||0);
@@ -100,7 +117,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     projected.push(m);markers.set(s.id,m);
   }
   function filterMarkers(items){
-    markers.forEach(m=>{m.e.hidden=true;});
+    invalidate();markers.forEach(m=>{m.e.hidden=true;});
     for(const group of groupLineups(items)){
       const m=markers.get(group.id),s=group.items[0];if(!m)continue;
       m.group=group;m.e.hidden=false;m.e.querySelector('.marker-count')?.remove();
@@ -128,6 +145,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
    if(!hit){editor.onMiss?.();return;}const kind=picking;picking=null;editor.onPick?.(kind,hit.point.toArray());
   });
   function setEditorPoints(points){
+   invalidate();
    disposeTree(pickDots);pickDots.clear();
    for(const [kind,p] of Object.entries(points)){if(!p)continue;const dot=new THREE.Mesh(new THREE.SphereGeometry(.65,12,10),new THREE.MeshBasicMaterial({color:kind==='target'?0xe8b576:0x8ed5c1}));dot.position.set(p[0],p[1]+.7,p[2]);pickDots.add(dot);}
   }
@@ -136,7 +154,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   const originRing=new THREE.Mesh(new THREE.RingGeometry(.5,.75,32),new THREE.MeshBasicMaterial({color:0x86d8c6,side:THREE.DoubleSide}));originRing.rotation.x=-Math.PI/2;scene.add(originRing);
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function selectSmoke(s) {
-    cancelPlay();active=s;
+    cancelPlay();active=s;invalidate();
     while(routeGroup.children.length){const c=routeGroup.children[0];c.traverse(o=>{o.geometry?.dispose();if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())});routeGroup.remove(c)}
     ring.visible=originRing.visible=!!s;origin.e.hidden=!s;
     if(!s){markers.forEach(m=>{m.e.classList.remove('selected');m.e.setAttribute('aria-pressed','false')});return;}
@@ -154,33 +172,40 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     smokeGroup=createUtilityEffect(s.type);
     smokeGroup.position.set(b.x,ty+(s.targetOffset||0),b.z);smokeGroup.visible=false;routeGroup.add(smokeGroup);
   }
-  function play(){cancelPlay();if(!active)return Promise.resolve();started=performance.now();playing=true;ball.visible=true;smokeGroup.visible=false;return new Promise(r=>resolvePlay=r)}
-  function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;const aspect=width/height;const halfHeight=Math.max(53,64/aspect);camera.left=-halfHeight*aspect;camera.right=halfHeight*aspect;camera.top=halfHeight;camera.bottom=-halfHeight;camera.updateProjectionMatrix();renderer.setSize(width,height)}
+  function play(){cancelPlay();if(!active)return Promise.resolve();started=performance.now();playing=true;invalidate();ball.visible=true;smokeGroup.visible=false;return new Promise(r=>resolvePlay=r)}
+  function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;viewportWidth=width;viewportHeight=height;invalidate();const aspect=width/height;const halfHeight=Math.max(53,64/aspect);camera.left=-halfHeight*aspect;camera.right=halfHeight*aspect;camera.top=halfHeight;camera.bottom=-halfHeight;camera.updateProjectionMatrix();renderer.setSize(width,height)}
   observer=new ResizeObserver(resize);observer.observe(host);resize();
-  function reset(){controls.target.copy(center);if(level==='lower')controls.target.set(9,-4,2);camera.zoom=level==='lower'?2.1:(config.defaultZoom||1);camera.position.copy(controls.target).add(view==='3d'?new THREE.Vector3(60,108,90):new THREE.Vector3(0,150,.01));camera.updateProjectionMatrix();controls.update()}
-  function zoom(f){camera.zoom=THREE.MathUtils.clamp(camera.zoom/f,controls.minZoom,controls.maxZoom);camera.updateProjectionMatrix()}
+  function reset(){controls.target.copy(center);if(level==='lower')controls.target.set(9,-4,2);camera.zoom=level==='lower'?2.1:(config.defaultZoom||1);camera.position.copy(controls.target).add(view==='3d'?new THREE.Vector3(60,108,90):new THREE.Vector3(0,150,.01));camera.updateProjectionMatrix();controls.update();invalidate()}
+  function zoom(f){camera.zoom=THREE.MathUtils.clamp(camera.zoom/f,controls.minZoom,controls.maxZoom);camera.updateProjectionMatrix();invalidate()}
   host.addEventListener('keydown',onKey);
   reset();
-  const temp=new THREE.Vector3();
+  const temp=new THREE.Vector3(),north=document.querySelector('.compass svg');
   function frame(now){
-    if(disposed)return;frameId=requestAnimationFrame(frame);controls.update();renderer.render(scene,camera);
-    const w=host.clientWidth,h=host.clientHeight;
-    for(const {e,position,smoke} of projected){if(e.hidden)continue;temp.copy(position);if(view==='radar')temp.y=.3;temp.project(camera);e.style.left=((temp.x*.5+.5)*w)+'px';e.style.top=((-temp.y*.5+.5)*h)+'px';e.style.visibility=temp.z>1||temp.z< -1?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;}
-    // North rotates with the camera; its initial orientation matches the radar.
-    const north=document.querySelector('.compass svg');if(north)north.style.transform=`rotate(${controls.getAzimuthalAngle()*180/Math.PI}deg)`;
-    if(active&&!reduce)ring.scale.setScalar(1+Math.sin(now*.002)*.035);
+    if(disposed)return false;controls.update();
     if(playing){const t=reduce?1:(now-started)/2200;ball.position.copy(curve.getPoint(Math.min(t,1)));if(t>=1){ball.visible=false;smokeGroup.visible=true;smokeGroup.scale.setScalar(Math.max(.02,reduce?1:Math.min((t-1)*2,1)));if(t>=1.6||reduce){playing=false;resolvePlay?.();resolvePlay=null}}}
+    renderer.render(scene,camera);
+    if(labelsDirty){
+      labelsDirty=false;
+      for(const item of projected){const {e,position}=item;if(e.hidden)continue;temp.copy(position);if(view==='radar')temp.y=.3;temp.project(camera);
+        const x=Math.round((temp.x*.5+.5)*viewportWidth),y=Math.round((-temp.y*.5+.5)*viewportHeight);
+        if(item.screenX!==x){e.style.left=x+'px';item.screenX=x;}if(item.screenY!==y){e.style.top=y+'px';item.screenY=y;}
+        e.style.visibility=temp.z>1||temp.z< -1?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;
+      }
+      if(north)north.style.transform=`rotate(${controls.getAzimuthalAngle()*180/Math.PI}deg)`;
+    }
+    return playing;
   }
-  frameId=requestAnimationFrame(frame);
+  loop=createRenderScheduler(frame);ready=true;invalidate();
   document.querySelector('#map-loading').hidden=true;
   function updateSection(){
+   renderer.shadowMap.needsUpdate=true;invalidate();
    modelMaterials.forEach(m=>{m.clippingPlanes=config.levelBoundary?(level==='lower'?[lowerCeiling]:showRoofs?[]:[upperFloor,cutPlane]):showRoofs?perimeter:[...perimeter,cutPlane];m.needsUpdate=true;});
    projected.forEach(item=>{if(item.level)item.e.hidden=item.level!==level;});
    referencePlane.material.map=radarTextures[level]||radarTextures.upper;referencePlane.material.needsUpdate=true;
   }
   updateSection();
-  return {dispose,setPicking:kind=>{picking=kind;},setEditorPoints,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;},select:selectSmoke,play,filter:filterMarkers,zoom,reset,setView:v=>{view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
+  return {dispose,setPicking:kind=>{picking=kind;},setEditorPoints,setLevel:next=>{level=next;updateSection();reset();},setRoofs:enabled=>{showRoofs=enabled;updateSection();},setCutHeight:height=>{if(level==='lower')lowerCeiling.constant=height;else cutPlane.constant=height;renderer.shadowMap.needsUpdate=true;invalidate();},select:selectSmoke,play,filter:filterMarkers,zoom,reset,setView:v=>{if(view!==v)renderer.shadowMap.needsUpdate=true;view=v;model.visible=v!=='radar';referencePlane.visible=v==='radar';controls.enableRotate=v==='3d';controls.mouseButtons.LEFT=v==='3d'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;controls.touches.ONE=v==='3d'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;reset();if(active)selectSmoke(active)}};
   } catch(error){dispose();throw error;}
-  function cancelPlay(){playing=false;if(resolvePlay){resolvePlay();resolvePlay=null}}
-  function onKey(e){const moves={ArrowLeft:[-3,0],ArrowRight:[3,0],ArrowUp:[0,-3],ArrowDown:[0,3]};if(moves[e.key]){e.preventDefault();const[x,z]=moves[e.key];const d=new THREE.Vector3(x,0,z);controls.target.add(d);camera.position.add(d)}if(e.key==='+'||e.key==='='){camera.zoom=Math.min(camera.zoom/.85,5);camera.updateProjectionMatrix();}if(e.key==='-'){camera.zoom=Math.max(camera.zoom/1.15,.65);camera.updateProjectionMatrix();}}
+  function cancelPlay(){playing=false;if(ball)ball.visible=false;if(resolvePlay){resolvePlay();resolvePlay=null}}
+  function onKey(e){if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(e.key))invalidate();const moves={ArrowLeft:[-3,0],ArrowRight:[3,0],ArrowUp:[0,-3],ArrowDown:[0,3]};if(moves[e.key]){e.preventDefault();const[x,z]=moves[e.key];const d=new THREE.Vector3(x,0,z);controls.target.add(d);camera.position.add(d)}if(e.key==='+'||e.key==='='){camera.zoom=Math.min(camera.zoom/.85,5);camera.updateProjectionMatrix();}if(e.key==='-'){camera.zoom=Math.max(camera.zoom/1.15,.65);camera.updateProjectionMatrix();}}
 }

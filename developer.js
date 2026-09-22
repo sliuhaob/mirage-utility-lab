@@ -40,7 +40,7 @@ async function loadMap(view='radar'){
  try{
   let next;
   if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
-  else {const {createMap}=await import('./map.js?v=5');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  else {const {createMap}=await import('./map.js?v=6');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
   if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
   message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');

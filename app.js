@@ -1,6 +1,7 @@
 import {maps,getMap,mapUtilities} from './maps.js?v=7';
 import {utilityTypes} from './utility-types.js';
-import {createMap} from './map.js?v=5';
+import {createMap} from './map.js?v=6';
+import {downloadModel} from './model-download.js';
 import {loadCommunity} from './community.js?v=2';
 import {groupLineups} from './lineup-groups.js';
 import {escapeHtml} from './submission-schema.js';
@@ -106,6 +107,7 @@ document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>chooseLevel(b
 async function switchMap(id,updateUrl=true){
  const generation=++loadGeneration;loadController?.abort();map?.dispose();map=undefined;
  loadController=new AbortController();config={...getMap(id),utilities:[]};utilities=[];filter='all';level='upper';
+ const modelDownload=downloadModel(config.model,loadController.signal);
  $('#community-status').textContent='正在读取教程…';
  ensureTeamType();
  current=visible()[0]||null;
@@ -129,7 +131,7 @@ async function switchMap(id,updateUrl=true){
  }catch(error){if(generation!==loadGeneration)return;$('#community-status').textContent='教程暂时无法加载，请重新加载页面后重试。';}
  syncFilters();renderList();renderDetail();
  try{
-  const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal);
+  const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal,{modelDownload});
   if(generation!==loadGeneration){loaded.dispose();return;}
   map=loaded;map.setLevel(level);map.setRoofs(roofButton.getAttribute('aria-pressed')==='true');map.setCutHeight(Number(cut.value));map.setView(view);syncFilters();map.select(current);
  }catch(error){if(generation!==loadGeneration||error.name==='AbortError')return;console.error('3D map initialization failed',error);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
