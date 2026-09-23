@@ -70,3 +70,6 @@
 @media(max-width:700px){.topbar{padding-inline:12px;gap:10px}.topbar .brand small{display:none}.topbar>.map-picker select{max-width:145px}.header-actions{gap:6px}.header-actions>.developer-entry{font-size:11px;padding:6px}}
 @media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){.topbar{display:flex}.topbar>.map-picker{margin-inline:auto}.header-actions{gap:6px}.header-actions .mobile-actions{margin-left:0}}
 @media (pointer:coarse) and (max-width:600px) and (orientation:portrait), (pointer:coarse) and (max-height:600px) and (orientation:portrait){.topbar{display:none}}
+.point-name-toggle{position:absolute;left:18px;bottom:116px;z-index:5;padding:8px 12px;border:1px solid #43534e;border-radius:5px;background:#111b1eee;color:#9eada7;font-size:13px;line-height:1.4}.point-name-toggle.active{background:#365058;color:#d7f3f3}.point-name-toggle:focus-visible{outline:2px solid #f2bc7d;outline-offset:3px}
+#map-labels.point-names-hidden .world-label:not(.world-marker),#map-labels.point-names-hidden .marker-caption{display:none}
+@media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){.point-name-toggle{left:10px;bottom:40px;z-index:40;min-height:40px;font-size:14px}}

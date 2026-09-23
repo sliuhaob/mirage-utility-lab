@@ -101,6 +101,14 @@ document.querySelectorAll('[data-team]').forEach(b=>b.onclick=()=>changeTeam(b.d
 function bindZones(){document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>changeFilters(type,b.dataset.filter));}
 $('#zoom-in').onclick=()=>map?.zoom(.83);$('#zoom-out').onclick=()=>map?.zoom(1.2);$('#reset-view').onclick=()=>map?.reset();
 for(const nextView of ['3d','top','radar'])$('#view-'+nextView).onclick=()=>{view=nextView;map?.setView(view);$('.touch-gesture').textContent=view==='3d'?'单指旋转 · 双指平移与缩放':'单指平移 · 双指平移与缩放';for(const v of ['3d','top','radar']){const b=$('#view-'+v);b.classList.toggle('active',v===view);b.setAttribute('aria-pressed',String(v===view));}};
+const pointNamesButton=$('#toggle-point-names');
+let pointNamesVisible=true;try{pointNamesVisible=localStorage.getItem('roxy-cs2-point-names')!=='hidden';}catch{}
+function syncPointNames(){
+ $('#map-labels').classList.toggle('point-names-hidden',!pointNamesVisible);
+ pointNamesButton.classList.toggle('active',pointNamesVisible);pointNamesButton.setAttribute('aria-pressed',String(pointNamesVisible));
+}
+pointNamesButton.onclick=()=>{pointNamesVisible=!pointNamesVisible;syncPointNames();try{localStorage.setItem('roxy-cs2-point-names',pointNamesVisible?'visible':'hidden');}catch{}};
+syncPointNames();
 const roofButton=$('#toggle-roofs');
 roofButton.onclick=()=>{const enabled=roofButton.getAttribute('aria-pressed')!=='true';map?.setRoofs(enabled);roofButton.setAttribute('aria-pressed',String(enabled));roofButton.classList.toggle('active',enabled);roofButton.textContent=enabled?'返回剖切':'完整建筑';$('#cut-height').disabled=enabled;};
 $('#cut-height').oninput=e=>map?.setCutHeight(Number(e.target.value));
