@@ -106,13 +106,14 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   }
   config.labels.forEach(args=>label(...args));
   const levelAt = (point,height) => floorLevels.get(point)??height??0;
+  const markerLift=item=>item.type==='smoke'?.45:2.2;
   const markers=new Map();
   for(const s of smokes) {
     const e=document.createElement('button');e.className='world-label world-marker';
     e.innerHTML=utilityIcon(s);const caption=document.createElement('span');caption.className='marker-caption';caption.textContent=s.name;e.append(caption);
     e.style.setProperty('--marker-color',utilityTypes[s.type].color);
     e.setAttribute('aria-label',s.name+'：查看投掷方法');e.title=s.name;e.onclick=()=>select(m.group?.items.find(item=>item.id===active?.id)?.id||m.group?.items[0].id||s.id);labels.append(e);elements.push(e);
-    const markerHeight=levelAt(s.target)+(s.targetOffset||0)+2.2;
+    const markerHeight=levelAt(s.target)+(s.targetOffset||0)+markerLift(s);
     const m={e,position:new THREE.Vector3(s.target[0],markerHeight,s.target[1]),baseHeight:markerHeight,smoke:s,group:{items:[s]}};
     projected.push(m);markers.set(s.id,m);
   }
@@ -124,7 +125,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
       if(group.items.length>1){const count=document.createElement('span');count.className='marker-count';count.textContent=group.items.length;m.e.append(count);}
       const name=kind==='origin'?s.from:s.name,title=group.items.length>1?name+' · '+group.items.length+' 种投掷方法':name;
       m.e.querySelector('.marker-caption').textContent=title;m.e.title=title;m.e.setAttribute('aria-label',title+'：查看投掷方法');
-      const height=group.items.reduce((sum,item)=>sum+levelAt(item[kind],item[kind+'Height'])+(kind==='target'?(item.targetOffset||0):0)+2.2,0)/group.items.length;
+      const height=group.items.reduce((sum,item)=>sum+levelAt(item[kind],item[kind+'Height'])+(kind==='target'?(item.targetOffset||0):0)+markerLift(item),0)/group.items.length;
       m.position.set(group.target[0],height,group.target[1]);m.baseHeight=height;
       const selected=group.items.some(item=>item.id===active?.id);m.e.classList.toggle('selected',selected);m.e.setAttribute('aria-pressed',String(selected));
     }
