@@ -5,7 +5,7 @@ import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
 import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=3';
-import {getMap} from './maps.js?v=10';
+import {getMap} from './maps.js?v=11';
 import {createRadarEditor} from './radar-editor.js?v=2';
 import {api,uploadVideo} from './community.js?v=4';
 import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
