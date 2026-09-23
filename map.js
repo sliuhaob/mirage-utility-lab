@@ -180,7 +180,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   function zoom(f){camera.zoom=THREE.MathUtils.clamp(camera.zoom/f,controls.minZoom,controls.maxZoom);camera.updateProjectionMatrix();invalidate()}
   host.addEventListener('keydown',onKey);
   reset();
-  const temp=new THREE.Vector3(),north=document.querySelector('.compass svg');
+  const temp=new THREE.Vector3();
   function frame(now){
     if(disposed)return false;controls.update();
     if(playing){const t=reduce?1:(now-started)/2200;ball.position.copy(curve.getPoint(Math.min(t,1)));if(t>=1){ball.visible=false;smokeGroup.visible=true;smokeGroup.scale.setScalar(Math.max(.02,reduce?1:Math.min((t-1)*2,1)));if(t>=1.6||reduce){playing=false;resolvePlay?.();resolvePlay=null}}}
@@ -192,7 +192,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
         if(item.screenX!==x){e.style.left=x+'px';item.screenX=x;}if(item.screenY!==y){e.style.top=y+'px';item.screenY=y;}
         e.style.visibility=temp.z>1||temp.z< -1||(e.classList.contains('detail-label')&&camera.zoom<1.7)?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;
       }
-      if(north)north.style.transform=`rotate(${controls.getAzimuthalAngle()*180/Math.PI}deg)`;
+      
     }
     return playing;
   }
