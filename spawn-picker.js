@@ -36,7 +36,7 @@ export async function chooseSpawn(config,team,current){
  }
  side.onchange=extra.onchange=render;select.onchange=()=>choose(select.value);
  try{
-  if(!catalog){const response=await fetch('./assets/spawn-points.json?v=5',{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(10000)])});if(!response.ok)throw Error('出生点读取失败');const data=await response.json();if(!data.maps?.[config.id]?.length)throw Error('出生点数据无效');catalog=data;}
+  if(!catalog){const response=await fetch('./assets/spawn-points.json?v=6',{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(10000)])});if(!response.ok)throw Error('出生点读取失败');const data=await response.json();if(!data.maps?.[config.id]?.length)throw Error('出生点数据无效');catalog=data;}
   if(!closed){select.disabled=side.disabled=extra.disabled=false;extra.checked=(catalog.maps[config.id]||[]).some(p=>p.team===side.value&&!p.primary&&current&&p.position.every((n,i)=>Math.abs(n-current[i])<.00001));render();const match=items.find(p=>current&&p.position.every((n,i)=>Math.abs(n-current[i])<.00001));if(match)choose(match.id);}
  }catch(error){if(!closed){detail.textContent='出生点暂时无法读取，请关闭后重试。';select.disabled=side.disabled=extra.disabled=true;}}
  return result;

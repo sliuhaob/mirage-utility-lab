@@ -1,4 +1,4 @@
-import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=2';
+import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=3';
 import {maps,getMap,mapUtilities} from './maps.js?v=8';
 import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=7';
