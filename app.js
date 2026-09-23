@@ -137,7 +137,7 @@ async function switchMap(id,updateUrl=true){
  $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+config.name+'…';$('#map-error').hidden=true;
  const cut=$('#cut-height');cut.min=config.cut.min;cut.max=config.cut.max;cut.value=config.cut.default;
  roofButton.setAttribute('aria-pressed','false');roofButton.classList.remove('active');roofButton.textContent='完整建筑';
- $('.map-disclaimer').innerHTML=config.en+' / 游戏几何 · 简化材质 · 示意弹道 <a class="map-source" href="'+config.reference+'" target="_blank" rel="noopener noreferrer">地图参考 ↗</a>';
+ $('.map-disclaimer').textContent=config.en+' / 游戏几何 · 简化材质 · 示意弹道';
  syncLevelControls();syncFilters();renderList();renderDetail();
  const [communityResult,localResult]=await Promise.all([
   loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)])).then(items=>({items}),error=>({items:[],error})),localItems
