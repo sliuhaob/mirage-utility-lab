@@ -92,9 +92,59 @@ export const mirageTSpawns=[
  }
 ];
 
+export const nukeCtSpawns=[
+ {
+  "entityId": "2:47509",
+  "number": 1,
+  "position": [
+   33.9,
+   0.914565,
+   -5.042857
+  ]
+ },
+ {
+  "entityId": "2:47511",
+  "number": 2,
+  "position": [
+   34.585714,
+   0.914565,
+   -3.9
+  ]
+ },
+ {
+  "entityId": "2:47512",
+  "number": 3,
+  "position": [
+   34.014286,
+   0.914565,
+   -2.757143
+  ]
+ },
+ {
+  "entityId": "2:47520",
+  "number": 4,
+  "position": [
+   35.057143,
+   0.914565,
+   -5.042857
+  ]
+ },
+ {
+  "entityId": "2:47523",
+  "number": 5,
+  "position": [
+   35.042857,
+   0.914565,
+   -2.757143
+  ]
+ }
+];
+
 // Resolve generated station labels by coordinates so repeated reads are idempotent.
 export function currentSpawnLabel(item){
- if(item.map!=='mirage'||!/^T 出生点 · \d+ 号（本站）$/.test(item.from)||!Array.isArray(item.origin))return item;
- const point=mirageTSpawns.find(p=>Math.abs(p.position[0]-item.origin[0])<.00001&&Math.abs(p.position[2]-item.origin[1])<.00001&&Math.abs(p.position[1]-item.originHeight)<.00001);
- return point?{...item,from:'T 出生点 · '+point.number+' 号（本站）'}:item;
+ const label=/^(T|CT) 出生点 · \d+ 号（本站）$/.exec(item.from);
+ const spawns=item.map==='mirage'&&label?.[1]==='T'?mirageTSpawns:item.map==='nuke'&&label?.[1]==='CT'?nukeCtSpawns:null;
+ if(!spawns||!Array.isArray(item.origin))return item;
+ const point=spawns.find(p=>Math.abs(p.position[0]-item.origin[0])<.00001&&Math.abs(p.position[2]-item.origin[1])<.00001&&Math.abs(p.position[1]-item.originHeight)<.00001);
+ return point?{...item,from:label[1]+' 出生点 · '+point.number+' 号（本站）'}:item;
 }
