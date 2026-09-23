@@ -129,7 +129,6 @@ async function switchMap(id,updateUrl=true){
  current=visible()[0]||null;
  if(updateUrl)syncUrl();
  $('#map-picker').value=config.id;document.title='CS2 道具地图 · '+config.name;
- $('.top-title').textContent=config.name+' / 互动道具地图';
  $('.map-card h1').innerHTML=config.name+'<span>'+config.en+'</span>';
  $('.map-card .eyebrow').textContent='ACTIVE MAP / '+String(Object.keys(maps).indexOf(config.id)+1).padStart(2,'0');
  $('.filters').innerHTML=Object.entries({all:'全部',...config.zones}).map(([zone,name])=>'<button data-filter="'+zone+'" aria-pressed="false">'+name+'</button>').join('');bindZones();

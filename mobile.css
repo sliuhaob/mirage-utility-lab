@@ -62,3 +62,11 @@
  .team-switch{right:10px;top:59px;padding:2px;z-index:40}.team-switch button{min-width:89px;min-height:40px;padding:6px 10px;font-size:14px}
  .compass{top:118px}.level-switch{left:10px;right:auto;top:113px}
 }
+/* Keep the map selector centered while the two editor links stay together. */
+.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.topbar>.brand{justify-self:start}.topbar>.map-picker{justify-self:center;margin:0}
+.header-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;justify-self:end}
+.header-actions>.developer-entry{padding:6px 9px;line-height:1.5}
+@media(max-width:700px){.topbar{padding-inline:12px;gap:10px}.topbar .brand small{display:none}.topbar>.map-picker select{max-width:145px}.header-actions{gap:6px}.header-actions>.developer-entry{font-size:11px;padding:6px}}
+@media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){.topbar{display:flex}.topbar>.map-picker{margin-inline:auto}.header-actions{gap:6px}.header-actions .mobile-actions{margin-left:0}}
+@media (pointer:coarse) and (max-width:600px) and (orientation:portrait), (pointer:coarse) and (max-height:600px) and (orientation:portrait){.topbar{display:none}}
