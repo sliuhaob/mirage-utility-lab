@@ -2,7 +2,7 @@ const NS='http://www.w3.org/2000/svg';
 let catalog;
 const el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 const svg=(tag,attrs)=>{const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);return e;};
-export const spawnLabel=point=>(point.team==='ct'?'CT':'T')+' 出生点 · '+point.number+' 号（本站）';
+export const spawnLabel=point=>(point.team==='ct'?'CT':'T')+' 出生点 · '+point.number+' 号';
 export async function chooseSpawn(config,team,current){
  const dialog=el('dialog');dialog.className='spawn-dialog';dialog.setAttribute('aria-labelledby','spawn-title');
  const title=el('h2','选择具体出生点');title.id='spawn-title';

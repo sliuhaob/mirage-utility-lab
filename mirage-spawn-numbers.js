@@ -217,9 +217,9 @@ export const nukeTSpawns=[
 
 // Resolve generated station labels by coordinates so repeated reads are idempotent.
 export function currentSpawnLabel(item){
- const label=/^(T|CT) 出生点 · \d+ 号（本站）$/.exec(item.from);
+ const label=/^(T|CT) 出生点 · (\d+) 号(?:（本站）)?$/.exec(item.from);
+ if(!label)return item;
  const spawns=item.map==='mirage'&&label?.[1]==='T'?mirageTSpawns:item.map==='nuke'&&label?.[1]==='CT'?nukeCtSpawns:item.map==='nuke'&&label?.[1]==='T'?nukeTSpawns:null;
- if(!spawns||!Array.isArray(item.origin))return item;
- const point=spawns.find(p=>Math.abs(p.position[0]-item.origin[0])<.00001&&Math.abs(p.position[2]-item.origin[1])<.00001&&Math.abs(p.position[1]-item.originHeight)<.00001);
- return point?{...item,from:label[1]+' 出生点 · '+point.number+' 号（本站）'}:item;
+ const point=Array.isArray(item.origin)?spawns?.find(p=>Math.abs(p.position[0]-item.origin[0])<.00001&&Math.abs(p.position[2]-item.origin[1])<.00001&&Math.abs(p.position[1]-item.originHeight)<.00001):null;
+ return {...item,from:label[1]+' 出生点 · '+(point?.number??label[2])+' 号'};
 }

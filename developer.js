@@ -1,5 +1,5 @@
-import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=3';
-import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=6';
+import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=4';
+import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=7';
 import {confirmPointMerges} from './point-merge-dialog.js?v=2';
 import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
@@ -30,7 +30,7 @@ function authLabels(){
 function setBusy(){for(const id of ['#save-draft','#publish-lineup','#edit-video'])$(id).disabled=!!uploadAbort||saving;$('#lineup-form').inert=saving;}
 function preview(url){const v=$('#video-preview');v.pause();v.hidden=!url;if(url){if(localMode)v.removeAttribute('crossorigin');else v.crossOrigin='use-credentials';v.src=url;}else v.removeAttribute('src');v.load();}
 function releasePreview(){if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}}
-function clearSpawnDescription(){if(/^(?:T|CT) 出生点 · \d+ 号（本站）$/.test($('#edit-from').value))$('#edit-from').value='';}
+function clearSpawnDescription(){if(/^(?:T|CT) 出生点 · \d+ 号(?:（本站）)?$/.test($('#edit-from').value))$('#edit-from').value='';}
 function updatePoints(){
  for(const kind of ['origin','target']){$('#'+kind+'-value').textContent=points[kind]?`X ${points[kind][0].toFixed(2)} · Y ${points[kind][2].toFixed(2)} · 高度 ${points[kind][1].toFixed(2)}`:'尚未选择';$('#pick-'+kind).classList.remove('active');}
  map?.setEditorPoints(points);map?.select(null);$('#editor-preview').disabled=!points.origin||!points.target;
