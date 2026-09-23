@@ -10,7 +10,7 @@ import {createRadarEditor} from './radar-editor.js?v=1';
 import {api,uploadVideo} from './community.js?v=4';
 import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
 
-const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s);
 const localMode=document.body.dataset.mode==='local';
 let localVideo,passwordSaving=false,spawnPicking=false;
 const fragment=new URLSearchParams(location.hash.slice(1));
@@ -62,7 +62,7 @@ function collect(){
  const data={};for(const key of ['map','zone','team','type','level','name','from','method','description','tip'])data[key]=$('#edit-'+key).value;
  for(const kind of ['origin','target']){const p=points[kind];data[kind]=p?[p[0],p[2]]:null;data[kind+'Height']=p?.[1];}
  if(data.map==='nuke')data.level=data.targetHeight<getMap('nuke').levelBoundary?'lower':'upper';
- data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=all('.key-options input:checked').map(e=>e.value);
+ data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=[...(saved?.keys||[])];
  return validateSubmission(data);
 }
 function canLeave(){if(uploadAbort||saving||passwordSaving||spawnPicking){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
@@ -70,7 +70,7 @@ function resetEditor(item=null){
  releasePreview();localVideo=undefined;saved=item;videoId=item?.videoId||null;videoUrl=item?.video||null;points=item?{origin:[item.origin[0],item.originHeight,item.origin[1]],target:[item.target[0],item.targetHeight,item.target[1]]}:{};
  if(localMode)$('#view-local-map').hidden=true;
  $('#lineup-form').reset();$('#lineup-form').scrollTop=0;$('#edit-map').value=item?.map||getMap(new URLSearchParams(location.search).get('map')).id;zoneOptions();
- if(item){for(const key of ['zone','team','type','level','name','from','method','description','tip'])$('#edit-'+key).value=item[key];$('#edit-steps').value=item.steps.join('\n');all('.key-options input').forEach(e=>e.checked=item.keys.includes(e.value));}
+ if(item){for(const key of ['zone','team','type','level','name','from','method','description','tip'])$('#edit-'+key).value=item[key];$('#edit-steps').value=item.steps.join('\n');}
  $('#editor-title').textContent=item?'编辑教程':'把你的投掷分享出来';$('#save-draft').textContent=item?.status==='published'?'撤为草稿':'保存草稿';message('#save-status','');message('#upload-status',videoId?'已载入保存的视频':'');preview(videoUrl);$('#video-help').textContent=item?.builtinId?'原有图文教程可以直接保存或发布，教学视频可稍后补充。单个 MP4 / WebM 不超过 40 MB。':'MP4 / WebM，单个不超过 40 MB。发布前需要视频，草稿可暂不上传。';$('#publish-lineup').textContent=item?.status==='published'?'更新发布':'发布教程';if(localMode){
   $('#editor-title').textContent=item?'编辑本地道具':'添加本地道具';$('#publish-lineup').textContent='保存到本地';
   $('#video-help').textContent='可选 MP4 / WebM，单个不超过 40 MB。视频保存在当前浏览器，不会上传。';
