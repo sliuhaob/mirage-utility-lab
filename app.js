@@ -109,14 +109,11 @@ function syncPointNames(){
 }
 pointNamesButton.onclick=()=>{pointNamesVisible=!pointNamesVisible;syncPointNames();try{localStorage.setItem('roxy-cs2-point-names',pointNamesVisible?'visible':'hidden');}catch{}};
 syncPointNames();
-const roofButton=$('#toggle-roofs');
-roofButton.onclick=()=>{const enabled=roofButton.getAttribute('aria-pressed')!=='true';map?.setRoofs(enabled);roofButton.setAttribute('aria-pressed',String(enabled));roofButton.classList.toggle('active',enabled);roofButton.textContent=enabled?'返回剖切':'完整建筑';$('#cut-height').disabled=enabled;};
 $('#cut-height').oninput=e=>map?.setCutHeight(Number(e.target.value));
 function syncLevelControls(){
  $('#level-switch').hidden=!config.levelBoundary;
  document.querySelectorAll('[data-level]').forEach(b=>{b.classList.toggle('active',b.dataset.level===level);b.setAttribute('aria-pressed',String(b.dataset.level===level));});
- $('#cut-height').disabled=roofButton.getAttribute('aria-pressed')==='true'&&level!=='lower';
- roofButton.disabled=level==='lower';
+ $('#cut-height').disabled=false;
  $('#level-note').textContent=level==='lower'?'下层 / B 区与地下通道':'上层 / A 区、外场与铁板';
 }
 function chooseLevel(next){
@@ -143,7 +140,6 @@ async function switchMap(id,updateUrl=true){
  $('.map-stage').setAttribute('aria-label',config.name+'三维互动地图');
  $('#map-loading').hidden=false;$('#map-loading span').textContent='正在加载'+config.name+'…';$('#map-error').hidden=true;
  const cut=$('#cut-height');cut.min=config.cut.min;cut.max=config.cut.max;cut.value=config.cut.default;
- roofButton.setAttribute('aria-pressed','false');roofButton.classList.remove('active');roofButton.textContent='完整建筑';
  $('.map-disclaimer').textContent=config.en+' / 游戏几何 · 简化材质 · 示意弹道';
  syncLevelControls();syncFilters();renderList();renderDetail();
  const [communityResult,localResult]=await Promise.all([
@@ -158,7 +154,7 @@ async function switchMap(id,updateUrl=true){
  try{
   const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal,{modelDownload});
   if(generation!==loadGeneration){loaded.dispose();return;}
-  map=loaded;map.setLevel(level);map.setRoofs(roofButton.getAttribute('aria-pressed')==='true');map.setCutHeight(Number(cut.value));map.setView(view);syncFilters();map.select(current);
+  map=loaded;map.setLevel(level);map.setRoofs(false);map.setCutHeight(Number(cut.value));map.setView(view);syncFilters();map.select(current);
  }catch(error){if(generation!==loadGeneration||error.name==='AbortError')return;console.error('3D map initialization failed',error);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
  renderDetail();
 }
