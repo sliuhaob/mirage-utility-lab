@@ -1,5 +1,5 @@
 import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=4';
-import {maps,getMap,mapUtilities} from './maps.js?v=9';
+import {maps,getMap,mapUtilities} from './maps.js?v=10';
 import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=9';
 import {downloadModel} from './model-download.js';
