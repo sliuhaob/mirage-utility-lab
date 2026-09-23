@@ -1,3 +1,4 @@
+import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=1';
 import {maps,getMap,mapUtilities} from './maps.js?v=8';
 import {utilityTypes} from './utility-types.js';
 import {createMap} from './map.js?v=7';
@@ -146,7 +147,7 @@ async function switchMap(id,updateUrl=true){
   loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)])).then(items=>({items}),error=>({items:[],error})),localItems
  ]);
  if(generation!==loadGeneration)return;
- config={...config,utilities:[...communityResult.items,...localResult.items]};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
+ config={...config,utilities:[...communityResult.items,...localResult.items].map(currentSpawnLabel)};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
  $('#community-status').textContent=(communityResult.error?'公开教程暂时无法加载；':`公开教程 ${communityResult.items.length} 条；`)+(localResult.error?localError(localResult.error):`本地 ${localResult.items.length} 条，点位仅在确认后合并`);
  const selectedId=new URLSearchParams(location.search).get('lineup');
  if(utilities.some(item=>item.id===selectedId))select(selectedId);

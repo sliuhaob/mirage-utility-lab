@@ -1,4 +1,5 @@
-import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=3';
+import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=1';
+import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=4';
 import {confirmPointMerges} from './point-merge-dialog.js?v=1';
 import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
@@ -136,7 +137,7 @@ async function save(status){
    candidates=[];let after='';const seen=new Set();
    do{const page=await api('/dev/points?map='+data.map+(after?'&after='+encodeURIComponent(after):''),{signal:AbortSignal.timeout(15000)});candidates.push(...page.items);after=page.next;if(after){if(seen.has(after))throw Error('点位分页异常，请重试');seen.add(after);}}while(after);
   }
-  const groups=await confirmPointMerges(data,candidates,saved,{notice});
+  const groups=await confirmPointMerges(data,candidates.map(currentSpawnLabel),saved,{notice});
   if(!groups){message('#save-status','已取消保存，修改仍保留在编辑器中。');return;}
   data.pointGroups=groups;message('#save-status','正在保存…');
   const result=localMode?{item:await saveLocalLineup({...data,id:saved?.id,revision:saved?.revision},localVideo)}:await api('/dev/lineups',{method:'POST',data:{...data,id:saved?.id,revision:saved?.revision,status,videoId}});saved=result.item;dirty=false;message('#save-status',status==='published'?'已发布。访客刷新地图后即可看到这条教程。':status==='draft'?'草稿已保存，仅你和管理员可见。':'已保存');$('#editor-title').textContent='编辑教程';$('#save-draft').textContent=status==='published'?'撤为草稿':'保存草稿';
@@ -149,7 +150,7 @@ function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefine
 function action(label,fn){const b=el('button',label);b.type='button';b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){message('#dev-message',errorText(e),true);}finally{b.disabled=false;}};return b;}
 const statusName={draft:'草稿',published:'已发布',archived:'已撤下'},teamName={t:'匪方 T',ct:'警方 CT',any:'双方通用'};
 async function loadLibrary(){
- message('#dev-message','正在读取教程…');const {items}=localMode?{items:await listLocalLineups()}:await api('/dev/lineups');libraryItems=items;renderLibrary();message('#dev-message','');
+ message('#dev-message','正在读取教程…');const {items}=localMode?{items:await listLocalLineups()}:await api('/dev/lineups');libraryItems=items.map(currentSpawnLabel);renderLibrary();message('#dev-message','');
 }
 function renderLibrary(){
  const mapId=$('#library-map').value,status=$('#library-status').value,search=$('#library-search').value.trim().toLowerCase();
