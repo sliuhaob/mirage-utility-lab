@@ -190,7 +190,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
       for(const item of projected){const {e,position}=item;if(e.hidden)continue;temp.copy(position);if(view==='radar')temp.y=.3;temp.project(camera);
         const x=Math.round((temp.x*.5+.5)*viewportWidth),y=Math.round((-temp.y*.5+.5)*viewportHeight);
         if(item.screenX!==x){e.style.left=x+'px';item.screenX=x;}if(item.screenY!==y){e.style.top=y+'px';item.screenY=y;}
-        e.style.visibility=temp.z>1||temp.z< -1?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;
+        e.style.visibility=temp.z>1||temp.z< -1||(e.classList.contains('detail-label')&&camera.zoom<1.7)?'hidden':'visible';e.style.zIndex=e.classList.contains('selected')?25:10;
       }
       if(north)north.style.transform=`rotate(${controls.getAzimuthalAngle()*180/Math.PI}deg)`;
     }

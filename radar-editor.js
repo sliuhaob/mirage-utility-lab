@@ -19,11 +19,11 @@ export async function createRadarEditor(host,config,signal,editor){
  const labels=svgNode('g',{class:'radar-labels'}),route=svgNode('g'),dots=svgNode('g');root.append(raster,labels,route,dots);host.append(root);
  const dispose=()=>{if(disposed)return;disposed=true;animation?.cancel();root.remove();signal?.removeEventListener('abort',dispose);};
  signal?.addEventListener('abort',dispose,{once:true});
- const setViewBox=()=>root.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);setViewBox();
+ const setViewBox=()=>{root.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);root.classList.toggle('show-detail-labels',view.w<=760);};setViewBox();
  const coordinate=e=>{const m=root.getScreenCTM();return m?new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse()):null;};
  function draw(){
   dots.replaceChildren();labels.replaceChildren();
-  for(const [name,u,v,,cls,labelLevel] of config.labels){if(labelLevel&&labelLevel!==level)continue;const t=svgNode('text',{x:u,y:v,class:cls==='site-label'?'radar-site':'radar-callout'});t.textContent=name;labels.append(t);}
+  for(const [name,u,v,,cls,labelLevel] of config.labels){if(labelLevel&&labelLevel!==level)continue;const t=svgNode('text',{x:u,y:v,class:cls==='site-label'?'radar-site':'radar-callout'+(cls?.includes('detail-label')?' radar-callout-detail':'')});t.textContent=name;labels.append(t);}
   for(const [kind,p] of Object.entries(points)){if(!p)continue;const other=config.levelBoundary&&(p[1]<config.levelBoundary)!==(level==='lower'),g=svgNode('g',{opacity:other?0.35:1,'data-point':kind});g.append(svgNode('circle',{cx:p[0]*10+512,cy:p[2]*10+512,r:11,fill:kind==='target'?'#e8b576':'#8ed5c1',stroke:'#111d1f','stroke-width':4}));const t=svgNode('text',{x:p[0]*10+512,y:p[2]*10+487,class:'radar-point-label'});t.textContent=(kind==='target'?'落点':'站位')+(other?' · 另一层':'');g.append(t);dots.append(g);}
  }
  function clearRoute(){animation?.cancel();animation=null;route.replaceChildren();selected=null;}

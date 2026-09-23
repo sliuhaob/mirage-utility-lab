@@ -5,8 +5,8 @@ import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
 import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=3';
-import {getMap} from './maps.js?v=8';
-import {createRadarEditor} from './radar-editor.js?v=1';
+import {getMap} from './maps.js?v=9';
+import {createRadarEditor} from './radar-editor.js?v=2';
 import {api,uploadVideo} from './community.js?v=4';
 import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
 
@@ -51,7 +51,7 @@ async function loadMap(view='radar'){
  try{
   let next;
   if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
-  else {const {createMap}=await import('./map.js?v=8');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  else {const {createMap}=await import('./map.js?v=9');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
   if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
   message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');

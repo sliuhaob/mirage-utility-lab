@@ -23,3 +23,5 @@
 @media(max-height:500px) and (min-width:601px){.spawn-dialog{padding:12px}.spawn-dialog h2{font-size:19px;margin-bottom:6px}.spawn-dialog p{font-size:11px;line-height:1.45;margin:6px 0}.spawn-controls{margin:8px 0;gap:16px}.spawn-controls label{font-size:11px;gap:4px}.spawn-map{height:max(130px,calc(100dvh - 220px));aspect-ratio:auto}.spawn-actions{bottom:-12px;padding:10px 0}.spawn-body{gap:16px}}
 
 .merge-dialog .merge-previous{padding:9px 12px;margin:4px 0 8px;border-left:3px solid #e9bf85;background:#25332e;color:#dbe3da}.merge-choice-previous{background:#25332e;border-radius:4px}.merge-choice .merge-previous-badge{color:#e9bf85;font-weight:600}
+
+.radar-callout-detail{display:none}.show-detail-labels .radar-callout-detail{display:block}
