@@ -11,7 +11,7 @@
 <label id="edit-level-row" hidden>选点视图楼层<select id="edit-level"><option value="upper">上层 A</option><option value="lower">下层 B</option></select></label>
 <label>教程名称<input id="edit-name" required maxlength="80" placeholder="例如：A 区警家烟"></label>
 <div class="point-fields"><div><button type="button" id="pick-target">① 选择道具落点</button><output id="target-value">尚未选择</output></div><div><button type="button" id="pick-origin">② 选择投掷位置</button><button type="button" id="pick-spawn" class="spawn-entry">选择出生点</button><output id="origin-value">尚未选择</output></div></div>
-<p class="field-help">相近落点和站位将在保存时分别询问是否合并。默认使用二维地图选点，拖动可平移、滚轮可缩放。需要查看建筑时再切换立体。核子危机可切换楼层分别选点。</p>
+
 <label>站位说明<input id="edit-from" required maxlength="120" placeholder="例如：T 出生点 · 木板旁"></label><label>投掷方式<input id="edit-method" required maxlength="120" placeholder="例如：站立左键跳投"></label>
 <label>投掷步骤<textarea id="edit-steps" required rows="4" maxlength="3200" placeholder="每行一个步骤：&#10;1. 在墙角站定&#10;2. 对准屋顶边缘&#10;3. 起跳时释放左键"></textarea></label><label>用途说明<textarea id="edit-description" rows="2" maxlength="600" placeholder="这颗道具解决什么问题？"></textarea></label><label>实战提示<textarea id="edit-tip" rows="2" maxlength="600" placeholder="例如：提醒队友背闪"></textarea></label>
 <section class="video-upload"><label for="edit-video">③ 上传教学视频</label><input id="edit-video" type="file" accept="video/mp4,video/webm"><p id="video-help">MP4 / WebM，单个不超过 40 MB。发布前需要视频，草稿可暂不上传。</p><video id="video-preview" controls playsinline preload="metadata" hidden></video><div id="upload-status" role="status"></div><progress id="upload-progress" max="100" value="0" hidden></progress><button type="button" id="upload-cancel" hidden>取消上传</button></section>
