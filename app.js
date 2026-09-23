@@ -7,7 +7,7 @@ import {loadCommunity} from './community.js?v=4';
 import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=3';
 import {groupLineups} from './lineup-groups.js?v=2';
 import {escapeHtml} from './submission-schema.js?v=3';
-import {setupMobileLayout} from './mobile-layout.js';
+import {setupMobileLayout} from './mobile-layout.js?v=2';
 
 const mobileUI=setupMobileLayout();
 
@@ -15,7 +15,7 @@ let config=getMap(new URLSearchParams(location.search).get('map'));
 let team=new URLSearchParams(location.search).get('team')==='ct'?'ct':'t';
 let utilities=[],type='smoke',filter='all',level='upper',current=null,map,loadController,loadGeneration=0;
 let pointMode='target';
-let view='3d',sourceFilter='all',localVideoUrl=null,detailGeneration=0;
+let view=mobileUI.initialView,sourceFilter='all',localVideoUrl=null,detailGeneration=0;
 const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
 const visible=()=>mapUtilities(config,type,filter,level,team).filter(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local));
@@ -101,7 +101,9 @@ document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>changeFilters(
 document.querySelectorAll('[data-team]').forEach(b=>b.onclick=()=>changeTeam(b.dataset.team));
 function bindZones(){document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>changeFilters(type,b.dataset.filter));}
 $('#zoom-in').onclick=()=>map?.zoom(.83);$('#zoom-out').onclick=()=>map?.zoom(1.2);$('#reset-view').onclick=()=>map?.reset();
-for(const nextView of ['3d','top','radar'])$('#view-'+nextView).onclick=()=>{view=nextView;map?.setView(view);$('.touch-gesture').textContent=view==='3d'?'单指旋转 · 双指平移与缩放':'单指平移 · 双指平移与缩放';for(const v of ['3d','top','radar']){const b=$('#view-'+v);b.classList.toggle('active',v===view);b.setAttribute('aria-pressed',String(v===view));}};
+function setView(nextView){view=nextView;map?.setView(view);$('.touch-gesture').textContent=view==='3d'?'单指旋转 · 双指平移与缩放':'单指平移 · 双指平移与缩放';for(const v of ['3d','top','radar']){const b=$('#view-'+v);b.classList.toggle('active',v===view);b.setAttribute('aria-pressed',String(v===view));}}
+for(const nextView of ['3d','top','radar'])$('#view-'+nextView).onclick=()=>setView(nextView);
+setView(view);
 const pointNamesButton=$('#toggle-point-names');
 let pointNamesVisible=true;try{pointNamesVisible=localStorage.getItem('roxy-cs2-point-names')!=='hidden';}catch{}
 function syncPointNames(){

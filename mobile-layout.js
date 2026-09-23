@@ -62,5 +62,5 @@ export function setupMobileLayout(){
  phone.addEventListener('change',refresh);portrait.addEventListener('change',refresh);
  document.addEventListener('fullscreenchange',refresh);
  refresh();
- return {showDetails(){if(isLandscape())setPanel('guide',true);}};
+ return {initialView:phone.matches?'radar':'3d',showDetails(){if(isLandscape())setPanel('guide',true);}};
 }
