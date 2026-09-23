@@ -1,6 +1,6 @@
 import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=3';
 import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=6';
-import {confirmPointMerges} from './point-merge-dialog.js?v=1';
+import {confirmPointMerges} from './point-merge-dialog.js?v=2';
 import {loadCommunity} from './community.js?v=4';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
