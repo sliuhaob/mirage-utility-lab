@@ -45,7 +45,7 @@ function renderDetail(){
  if(localVideoUrl){URL.revokeObjectURL(localVideoUrl);localVideoUrl=null;}
 
  const items=visible(),raw=current,s=raw?{...raw,...Object.fromEntries(['name','en','description','from','method','tip','sourceName'].map(k=>[k,escapeHtml(raw[k])])),steps:raw.steps.map(escapeHtml)}:null;
- $('#detail-number').textContent=pad(s?items.findIndex(x=>x.id===s.id)+1:0)+' / '+pad(items.length);
+
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
  const group=groupLineups(items,pointMode).find(g=>g.items.some(item=>item.id===s.id));
  const methods=group?.items.length>1?'<section class="landing-methods"><h3>'+(pointMode==='origin'?'此站位':'此落点')+' · '+group.items.length+' 种投掷方法</h3><p>'+(pointMode==='origin'?'选择落点查看对应教程':'选择站位查看对应教程')+'</p>'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</section>':'';

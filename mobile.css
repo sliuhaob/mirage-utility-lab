@@ -1,3 +1,4 @@
+.detail-top{display:none}
 .mobile-actions,.mobile-panel-head,.mobile-dismiss,.rotate-prompt,.touch-gesture{display:none}
 .detail-top>span:last-of-type{font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;color:#798884}
 
@@ -21,7 +22,7 @@
  .mobile-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#bbc9be;font-size:14px}
  .mobile-dismiss{display:inline-flex;align-items:center;justify-content:center;flex:none}
  .mobile-panel-head,.detail-top{position:sticky;top:-10px;padding:6px 0;background:#141e20;z-index:2}
- .detail-top{gap:8px;margin-bottom:14px}.detail-top .eyebrow{font-size:12px;letter-spacing:1px}.detail-top>span:last-of-type{margin-left:auto;font-size:14px}
+ .detail-top{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px}.detail-top .eyebrow{font-size:12px;letter-spacing:1px}.detail-top>span:last-of-type{margin-left:auto;font-size:14px}
  .library-title{margin:0 0 10px}.library-title h2{font-size:16px}
  .filters{width:100%;margin:0 0 10px}.filters button{min-height:38px;font-size:14px}
  #point-list{display:block;overflow:visible;padding-bottom:0}.point-item{width:100%;min-width:0;margin:0 0 5px;padding:10px 7px;gap:8px}.point-item strong{font-size:14px}.point-item small{font-size:12px;letter-spacing:0}.point-item .zone-tag{display:none}
