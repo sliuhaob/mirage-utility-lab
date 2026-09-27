@@ -106,7 +106,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
   }
   config.labels.forEach(args=>label(...args));
   const levelAt = (point,height) => floorLevels.get(point)??height??0;
-  const markerLift=item=>item.type==='smoke'?.45:2.2;
+  const markerLift=item=>['smoke','he','molotov'].includes(item.type)?.45:2.2;
   const markers=new Map();
   for(const s of smokes) {
     const e=document.createElement('button');e.className='world-label world-marker';
