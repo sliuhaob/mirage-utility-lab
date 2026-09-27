@@ -1,14 +1,14 @@
 import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=4';
 import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=7';
 import {confirmPointMerges} from './point-merge-dialog.js?v=2';
-import {loadCommunity} from './community.js?v=4';
+import {loadCommunity} from './community.js?v=5';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
-import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=3';
+import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=4';
 import {getMap} from './maps.js?v=13';
 import {createRadarEditor} from './radar-editor.js?v=2';
-import {api,uploadVideo} from './community.js?v=4';
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
+import {api,uploadVideo} from './community.js?v=5';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=4';
 
 const $=s=>document.querySelector(s);
 const localMode=document.body.dataset.mode==='local';
@@ -51,7 +51,7 @@ async function loadMap(view='radar'){
  try{
   let next;
   if(radar)next=await createRadarEditor($('#map-canvas'),config,controller.signal,editor);
-  else {const {createMap}=await import('./map.js?v=11');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
+  else {const {createMap}=await import('./map.js?v=12');if(generation!==mapGeneration)return;next=await createMap($('#map-canvas'),$('#map-labels'),[],()=>{},()=>'',config,controller.signal,editor);}
   if(generation!==mapGeneration){next.dispose();return;}map=next;map.setLevel($('#edit-level').value);if(!radar)map.setView(view);cutControls();updatePoints();$('#map-loading').hidden=true;
   for(const id of ['#pick-target','#pick-origin'])$(id).disabled=false;
   message('#pick-status',radar?'选择落点或站位后点击地图 · 拖动平移，滚轮缩放':'选择落点或站位后，点击地图地面');
@@ -63,6 +63,7 @@ function collect(){
  for(const kind of ['origin','target']){const p=points[kind];data[kind]=p?[p[0],p[2]]:null;data[kind+'Height']=p?.[1];}
  if(data.map==='nuke')data.level=data.targetHeight<getMap('nuke').levelBoundary?'lower':'upper';
  data.steps=$('#edit-steps').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/^\d+[.、)]\s*/,''));data.keys=[...(saved?.keys||[])];
+ data.arcHeight=$('#edit-arc-height').value===''?null:Number($('#edit-arc-height').value);
  return validateSubmission(data);
 }
 function canLeave(){if(uploadAbort||saving||passwordSaving||spawnPicking){message('#dev-message','请先等待保存完成，或取消视频上传',true);return false;}return !dirty||confirm('当前修改尚未保存，确定放弃这些修改吗？');}
@@ -71,6 +72,7 @@ function resetEditor(item=null){
  if(localMode)$('#view-local-map').hidden=true;
  $('#lineup-form').reset();$('#lineup-form').scrollTop=0;$('#edit-map').value=item?.map||getMap(new URLSearchParams(location.search).get('map')).id;zoneOptions();
  if(item){for(const key of ['zone','team','type','level','name','from','method','description','tip'])$('#edit-'+key).value=item[key];$('#edit-steps').value=item.steps.join('\n');}
+ $('#edit-arc-height').value=item?.arcHeight??'';
  $('#editor-title').textContent=item?'编辑教程':'把你的投掷分享出来';$('#save-draft').textContent=item?.status==='published'?'撤为草稿':'保存草稿';message('#save-status','');message('#upload-status',videoId?'已载入保存的视频':'');preview(videoUrl);$('#video-help').textContent=item?.builtinId?'原有图文教程可以直接保存或发布，教学视频可稍后补充。单个 MP4 / WebM 不超过 40 MB。':'MP4 / WebM，单个不超过 40 MB。发布前需要视频，草稿可暂不上传。';$('#publish-lineup').textContent=item?.status==='published'?'更新发布':'发布教程';if(localMode){
   $('#editor-title').textContent=item?'编辑本地道具':'添加本地道具';$('#publish-lineup').textContent='保存到本地';
   $('#video-help').textContent='可选 MP4 / WebM，单个不超过 40 MB。视频保存在当前浏览器，不会上传。';
@@ -114,7 +116,9 @@ for(const view of ['radar','3d','top'])$('#editor-'+view).onclick=()=>{
  if(view!=='radar'&&editorView!=='radar'&&map){editorView=view;map.setView(view);for(const v of ['radar','3d','top']){$('#editor-'+v).classList.toggle('active',v===view);$('#editor-'+v).setAttribute('aria-pressed',String(v===view));}}
  else loadMap(view);
 };
-$('#editor-preview').onclick=()=>{if(!points.target||!points.origin)return;map?.select({id:'preview',type:$('#edit-type').value,origin:[points.origin[0],points.origin[2]],originHeight:points.origin[1],target:[points.target[0],points.target[2]],targetHeight:points.target[1],targetOffset:$('#edit-type').value==='flash'?2:0});map?.play();message('#pick-status','路线仅为起终点示意，实际投掷请以视频为准');};
+function previewRoute(play=true){if(!points.target||!points.origin||!$('#edit-arc-height').reportValidity())return;map?.select({id:'preview',arcHeight:$('#edit-arc-height').value===''?null:Number($('#edit-arc-height').value),type:$('#edit-type').value,origin:[points.origin[0],points.origin[2]],originHeight:points.origin[1],target:[points.target[0],points.target[2]],targetHeight:points.target[1],targetOffset:$('#edit-type').value==='flash'?2:0});if(play)map?.play();message('#pick-status',editorView==='radar'?'切换立体可查看弧线高度':'路线仅为起终点示意，实际投掷请以视频为准');}
+$('#editor-preview').onclick=()=>previewRoute();
+$('#edit-arc-height').oninput=()=>{if(editorView!=='radar'&&$('#edit-arc-height').validity.valid)previewRoute(false);};
 $('#edit-video').onchange=async()=>{
  const file=$('#edit-video').files[0];if(!file)return;
  if(!['video/mp4','video/webm'].includes(file.type)||file.size>MAX_VIDEO_BYTES||!file.size){message('#upload-status','请选择不超过 40 MB 的 MP4 或 WebM 视频',true);$('#edit-video').value='';return;}

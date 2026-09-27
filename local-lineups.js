@@ -1,5 +1,5 @@
 import {savedPointGroups} from './lineup-groups.js?v=2';
-import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=3';
+import {validateSubmission,MAX_VIDEO_BYTES} from './submission-schema.js?v=4';
 
 // Keep metadata separate: opening a map must not load every saved video into memory.
 const DB_NAME='roxy-cs2-local',ID=/^local-[a-f0-9-]{36}$/;

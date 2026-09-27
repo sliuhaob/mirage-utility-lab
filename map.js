@@ -166,7 +166,7 @@ export async function createMap(host, labels, smokes, select, utilityIcon, confi
     origin.position.set(s.origin[0],oy+2,s.origin[1]);origin.baseHeight=oy+2;
     originRing.position.set(s.origin[0],oy+.1,s.origin[1]);ring.position.set(s.target[0],ty+.15,s.target[1]);
     const a=new THREE.Vector3(s.origin[0],oy+1.7,s.origin[1]),b=new THREE.Vector3(s.target[0],ty+(s.targetOffset||.5),s.target[1]);
-    const arc=config.id==='nuke'?Math.min(10,Math.max(2,a.distanceTo(b)*.3)):20;
+    const arc=Number.isFinite(s.arcHeight)?s.arcHeight:(config.id==='nuke'?Math.min(10,Math.max(2,a.distanceTo(b)*.3)):20);
     curve=new THREE.QuadraticBezierCurve3(a,new THREE.Vector3((a.x+b.x)/2,Math.max(oy,ty)+arc,(a.z+b.z)/2),b);
     const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(90)),new THREE.LineDashedMaterial({color,dashSize:.7,gapSize:.45,transparent:true,opacity:.8}));line.computeLineDistances();routeGroup.add(line);
     ball=new THREE.Mesh(new THREE.SphereGeometry(.36,12,12),new THREE.MeshBasicMaterial({color:0xffe0a1}));ball.visible=false;routeGroup.add(ball);

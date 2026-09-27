@@ -1,12 +1,12 @@
 import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=4';
 import {maps,getMap,mapUtilities} from './maps.js?v=13';
 import {utilityTypes} from './utility-types.js';
-import {createMap} from './map.js?v=11';
+import {createMap} from './map.js?v=12';
 import {downloadModel} from './model-download.js';
-import {loadCommunity} from './community.js?v=4';
-import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=3';
+import {loadCommunity} from './community.js?v=5';
+import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=4';
 import {groupLineups} from './lineup-groups.js?v=2';
-import {escapeHtml} from './submission-schema.js?v=3';
+import {escapeHtml} from './submission-schema.js?v=4';
 import {setupMobileLayout} from './mobile-layout.js?v=2';
 
 const mobileUI=setupMobileLayout();

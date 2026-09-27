@@ -19,6 +19,8 @@ export function validateSubmission(value){
  if(out.map==='nuke'&&(out.level!==(out.targetHeight< -1.12857?'lower':'upper')||(out.zone==='B')!==(out.level==='lower')))throw Error('请按落点所在楼层选择区域：下层落点请选择 B 区');
  if(!Array.isArray(value.steps)||!value.steps.length||value.steps.length>8||value.steps.some(s=>typeof s!=='string'||!s.trim()||s.length>400))throw Error('请填写 1～8 条投掷步骤');
  out.steps=value.steps.map(s=>s.trim());
+ if(value.arcHeight!==undefined&&value.arcHeight!==null&&(!Number.isFinite(value.arcHeight)||value.arcHeight<0||value.arcHeight>60))throw Error('路线弧线高度须为 0～60');
+ out.arcHeight=value.arcHeight==null?null:+value.arcHeight.toFixed(2);
  const allowed=['左键','右键','跳跃','蹲下','W','Shift'];
  if(!Array.isArray(value.keys)||value.keys.length>6||value.keys.some(k=>!allowed.includes(k)))throw Error('投掷按键无效');
  out.keys=[...new Set(value.keys)];out.en='COMMUNITY LINEUP';
