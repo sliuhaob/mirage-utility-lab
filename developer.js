@@ -2,6 +2,7 @@ import {currentSpawnLabel} from './mirage-spawn-numbers.js?v=4';
 import {chooseSpawn,spawnLabel} from './spawn-picker.js?v=7';
 import {confirmPointMerges} from './point-merge-dialog.js?v=2';
 import {loadCommunity} from './community.js?v=5';
+import {createVisitAnalytics} from './visit-analytics.js?v=1';
 import {createStorageMonitor} from './storage-monitor.js';
 import {setupPasswordChange} from './password.js';
 import {listLocalLineups,saveLocalLineup,readLocalVideo,deleteLocalLineup,localError} from './local-lineups.js?v=4';
@@ -19,6 +20,7 @@ if(accessToken)history.replaceState(null,'',location.pathname+location.search);
 let user,map,mapAbort,mapGeneration=0,editorView='radar',points={},saved=null,videoId=null,videoUrl=null,objectUrl=null,uploadAbort=null,dirty=false,saving=false,libraryItems=[];
 const message=(id,text,error=false)=>{const e=$(id);e.textContent=text;e.classList.toggle('danger-message',error);};
 const storageMonitor=localMode?null:createStorageMonitor({onManageVideo:async id=>{try{await showTab('library');$('#library-search').value=id;renderLibrary();}catch(e){message('#dev-message',errorText(e),true);}}});
+const visitAnalytics=localMode?null:createVisitAnalytics();
 const errorText=e=>localMode?localError(e):e instanceof TypeError?'无法连接服务，请检查网络后重试':e.message;
 function authLabels(){
  const setup=authMode==='setup',invite=authMode==='register';
@@ -84,18 +86,19 @@ function resetEditor(item=null){
 async function showTab(name){
  message('#dev-message','');
  if(name!=='compose'){++mapGeneration;mapAbort?.abort();map?.dispose();map=null;}
- for(const tab of (localMode?['compose','library','team']:['compose','library','team','storage'])){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
+ for(const tab of (localMode?['compose','library','team']:['compose','library','team','storage','visits'])){$('#'+tab+'-panel').hidden=tab!==name;$('#tab-'+tab).setAttribute('aria-pressed',String(tab===name));}
  if(name==='storage')storageMonitor?.activate();else storageMonitor?.deactivate();
+ if(name==='visits')visitAnalytics?.activate();else visitAnalytics?.deactivate();
  if(name==='library')await loadLibrary();if(name==='team')await loadTeam();
 }
 async function enter(account){
- user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';if(!localMode)$('#tab-storage').hidden=user.role!=='admin';$('#tab-library').textContent=localMode?'本地道具库':user.role==='admin'?'全部教程':'我的教程与原有教程';if(localMode)$('#dev-account').hidden=true;
+ user=account;$('#auth-panel').hidden=true;$('#creator').hidden=false;$('#dev-account').hidden=false;$('#dev-username').textContent=user.username+(user.role==='admin'?' · 管理员':'');$('#tab-team').hidden=user.role!=='admin';if(!localMode){$('#tab-storage').hidden=user.role!=='admin';$('#tab-visits').hidden=user.role!=='admin';}$('#tab-library').textContent=localMode?'本地道具库':user.role==='admin'?'全部教程':'我的教程与原有教程';if(localMode)$('#dev-account').hidden=true;
  await showTab('compose');resetEditor();
 }
 $('#auth-form').onsubmit=async e=>{e.preventDefault();$('#auth-submit').disabled=true;message('#auth-message','正在验证…');try{const result=await api('/auth/'+authMode,{method:'POST',data:{username:$('#auth-username').value,password:$('#auth-password').value,token:accessToken}});$('#auth-password').value='';accessToken=null;authMode='login';authLabels();message('#auth-message','');await enter(result.user);}catch(err){message('#auth-message',errorText(err),true);}finally{$('#auth-submit').disabled=false;}};
-$('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/logout',{method:'POST'});mapAbort?.abort();map?.dispose();map=null;dirty=false;releasePreview();preview(null);storageMonitor?.clear();user=null;$('#creator').hidden=true;$('#dev-account').hidden=true;$('#auth-panel').hidden=false;authLabels();}catch(e){message('#dev-message',errorText(e),true);}};
+$('#dev-logout').onclick=async()=>{if(!canLeave())return;try{await api('/auth/logout',{method:'POST'});mapAbort?.abort();map?.dispose();map=null;dirty=false;releasePreview();preview(null);storageMonitor?.clear();visitAnalytics?.clear();user=null;$('#creator').hidden=true;$('#dev-account').hidden=true;$('#auth-panel').hidden=false;authLabels();}catch(e){message('#dev-message',errorText(e),true);}};
 $('#tab-compose').onclick=()=>{if(canLeave()){showTab('compose');resetEditor();}};
-for(const tab of (localMode?['library','team']:['library','team','storage']))$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
+for(const tab of (localMode?['library','team']:['library','team','storage','visits']))$('#tab-'+tab).onclick=()=>{if(uploadAbort||saving){message('#dev-message','请先等待保存完成，或取消视频上传',true);return;}showTab(tab).catch(e=>message('#dev-message',errorText(e),true));};
 $('#lineup-form').addEventListener('input',()=>{dirty=true;});
 $('#edit-map').onchange=()=>{clearSpawnDescription();points={};$('#edit-level').value='upper';zoneOptions();updatePoints();loadMap();};
 $('#edit-level').onchange=()=>{map?.setLevel($('#edit-level').value);map?.setPicking(null);cutControls();updatePoints();};
@@ -211,7 +214,7 @@ if(localMode){
 
 }
 
-addEventListener('pagehide',()=>{storageMonitor?.deactivate();++mapGeneration;mapAbort?.abort();map?.dispose();preview(null);releasePreview();});
+addEventListener('pagehide',()=>{storageMonitor?.deactivate();visitAnalytics?.deactivate();++mapGeneration;mapAbort?.abort();map?.dispose();preview(null);releasePreview();});
 
 // Recreate disposed renderers when returning through the browser's back/forward cache.
 addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

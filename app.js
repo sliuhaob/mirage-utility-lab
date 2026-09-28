@@ -9,6 +9,8 @@ import {groupLineups} from './lineup-groups.js?v=2';
 import {escapeHtml} from './submission-schema.js?v=4';
 import {setupMobileLayout} from './mobile-layout.js?v=2';
 
+import {setupVisitTracking} from './visit-tracker.js?v=1';
+setupVisitTracking();
 const mobileUI=setupMobileLayout();
 
 let config=getMap(new URLSearchParams(location.search).get('map'));
