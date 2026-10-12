@@ -7,6 +7,8 @@ import {loadCommunity} from './community.js?v=5';
 import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=4';
 import {groupLineups} from './lineup-groups.js?v=2';
 import {escapeHtml} from './submission-schema.js?v=4';
+import {setupTactics} from './tactics.js?v=1';
+import {tacticItems} from './tactics-store.js?v=1';
 import {setupMobileLayout} from './mobile-layout.js?v=2';
 
 import {setupVisitTracking} from './visit-tracker.js?v=1';
@@ -17,13 +19,15 @@ let config=getMap(new URLSearchParams(location.search).get('map'));
 let team=new URLSearchParams(location.search).get('team')==='ct'?'ct':'t';
 let utilities=[],type='smoke',filter='all',level='upper',current=null,map,loadController,loadGeneration=0;
 let pointMode='target';
+let activeTactic=null,tacticsUI,tutorialsReady=false,tutorialLoadError=false;
 let view=mobileUI.initialView,sourceFilter='all',localVideoUrl=null,detailGeneration=0;
 const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
-const visible=()=>mapUtilities(config,type,filter,level,team).filter(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local));
+const visible=()=>activeTactic?tacticItems(activeTactic,utilities).filter(item=>!config.levelBoundary||item.level===level):mapUtilities(config,type,filter,level,team).filter(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local));
 const teamName=value=>({t:'匪方',ct:'警方',any:'双方通用'}[value]);
 function syncUrl(){const url=new URL(location.href);url.searchParams.set('map',config.id);url.searchParams.set('team',team);history.replaceState(null,'',url);}
 function ensureTeamType(){
+ if(activeTactic)return;
  if(!visible().length)type=Object.keys(utilityTypes).find(t=>mapUtilities(config,t,filter,level,team).some(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local)))||type;
 }
 function changeTeam(next){
@@ -35,11 +39,12 @@ const icon=s=>utilityTypes[s.type].icon;
 const pad=n=>String(n).padStart(2,'0');
 
 function renderList(){
+ syncTacticStatus();
  const items=visible(),groups=groupLineups(items,pointMode);
- $('#library-heading').textContent=pointMode==='origin'?'投掷站位':utilityTypes[type].targetLabel;
+ $('#library-heading').textContent=activeTactic?'战术道具':pointMode==='origin'?'投掷站位':utilityTypes[type].targetLabel;
  $('#point-count').textContent=pad(groups.length);
  $('#point-count').title=groups.length+(pointMode==='origin'?' 个站位 · ':' 个落点 · ')+items.length+' 条教程';
- $('#point-list').innerHTML=items.length?groups.map(g=>{const s=g.items.find(s=>s.id===current?.id)||g.items[0],active=g.items.some(s=>s.id===current?.id);return '<button class="point-item '+(active?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+active+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+escapeHtml(pointMode==='origin'?s.from:s.name)+'</strong><small>'+escapeHtml(g.items.length>1?g.items.length+' 种投掷方法':pointMode==='origin'?s.name:s.en)+'</small></span><span class="zone-tag">'+(g.items.length>1?'×'+g.items.length:({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone))+'</span></button>';}).join(''):'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
+ $('#point-list').innerHTML=items.length?groups.map(g=>{const s=g.items.find(s=>s.id===current?.id)||g.items[0],active=g.items.some(s=>s.id===current?.id);return '<button class="point-item '+(active?'active':'')+'" data-id="'+s.id+'" aria-pressed="'+active+'"><span class="smoke-icon">'+icon(s)+'</span><span><strong>'+escapeHtml(pointMode==='origin'?s.from:s.name)+'</strong><small>'+escapeHtml(g.items.length>1?g.items.length+' 种投掷方法':pointMode==='origin'?s.name:s.en)+'</small></span><span class="zone-tag">'+(g.items.length>1?'×'+g.items.length:({mid:'M',outside:'Y',ramp:'R',banana:'蕉',water:'水'}[s.zone]||s.zone))+'</span></button>';}).join(''):activeTactic?'<p class="empty-points">'+(tutorialsReady?'此战术在当前楼层没有可显示的道具。可切换楼层或编辑战术。':'正在读取战术道具…')+'</p>':'<p class="empty-points">'+teamName(team)+' · '+zoneName(filter)+'暂无'+utilityTypes[type].label+'点位。<br>可切换道具、区域或阵营查看已有教程。</p>';
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
@@ -49,6 +54,7 @@ function renderDetail(){
 
  const items=visible(),raw=current,s=raw?{...raw,...Object.fromEntries(['name','en','description','from','method','tip','sourceName'].map(k=>[k,escapeHtml(raw[k])])),steps:raw.steps.map(escapeHtml)}:null;
 
+ if(!s&&activeTactic){$('#detail-content').innerHTML='<div class="empty-detail"><h2>暂无可显示的战术道具</h2><p>可切换楼层或打开战术本调整选择。未能读取的教程会保留在战术中。</p></div>';return;}
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
  const group=groupLineups(items,pointMode).find(g=>g.items.some(item=>item.id===s.id));
  const methods=group?.items.length>1?'<section class="landing-methods"><h3>'+(pointMode==='origin'?'此站位':'此落点')+' · '+group.items.length+' 种投掷方法</h3><p>'+(pointMode==='origin'?'选择落点查看对应教程':'选择站位查看对应教程')+'</p><div class="landing-method-list" role="group" aria-label="投掷方法">'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</div></section>':'';
@@ -86,13 +92,14 @@ function syncFilters(){
  document.documentElement.style.setProperty('--utility-color',info.color);
  document.querySelectorAll('[data-type]').forEach(b=>{const active=b.dataset.type===type;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
  document.querySelectorAll('[data-filter]').forEach(b=>{const active=b.dataset.filter===filter;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
- $('#legend-target').textContent=pointMode==='origin'?'可选站位':info.targetLabel;
- $('.sidebar-hint').textContent=pointMode==='origin'?'选择站位，查看可投落点':type==='flash'?'选择你想投闪的位置':'选择你想投掷到的位置';
+ $('#legend-target').textContent=activeTactic?'战术道具':pointMode==='origin'?'可选站位':info.targetLabel;
+ $('.sidebar-hint').textContent=activeTactic?'仅显示此战术选中的道具，点击查看教程':pointMode==='origin'?'选择站位，查看可投落点':type==='flash'?'选择你想投闪的位置':'选择你想投掷到的位置';
  document.querySelectorAll('[data-team]').forEach(b=>{const active=b.dataset.team===team;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
  map?.filter(visible(),pointMode);
 }
 function select(id){
  const next=utilities.find(s=>s.id===id);
+ if(next&&activeTactic&&!tacticItems(activeTactic,[next]).length)activeTactic=null;
  if(next&&(sourceFilter==='local'&&!next.local||sourceFilter==='public'&&next.local)){sourceFilter='all';$('#lineup-source').value='all';}
  if(next){if(next.team!=='any'&&next.team!==team){team=next.team;syncUrl();}type=next.type;if(config.levelBoundary&&next.level!==level){level=next.level;map?.setLevel(level);syncLevelControls();resetCutControl();}if(filter!=='all'&&filter!==next.zone)filter='all';}
  current=next||null;
@@ -135,11 +142,13 @@ function syncLevelControls(){
 function chooseLevel(next){
  level=next;filter='all';map?.setLevel(level);syncLevelControls();
  resetCutControl();
- const items=visible();current=items[0]||null;syncFilters();map?.select(current);renderList();renderDetail();
+ const items=visible();current=items[0]||null;if(activeTactic&&current)type=current.type;syncFilters();map?.select(current);renderList();renderDetail();
 }
 function resetCutControl(){const cut=$('#cut-height');cut.min=level==='lower'?-4.8:config.cut.min;cut.max=level==='lower'?-1.2:config.cut.max;cut.value=level==='lower'?config.lowerCut:config.cut.default;map?.setCutHeight(Number(cut.value));}
 document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>chooseLevel(b.dataset.level));
 async function switchMap(id,updateUrl=true){
+ if(activeTactic&&activeTactic.map!==id)activeTactic=null;
+ tutorialsReady=false;tutorialLoadError=false;
  const generation=++loadGeneration;loadController?.abort();map?.dispose();map=undefined;
  loadController=new AbortController();config={...getMap(id),utilities:[]};utilities=[];filter='all';level='upper';
  const modelDownload=downloadModel(config.model,loadController.signal);
@@ -162,10 +171,12 @@ async function switchMap(id,updateUrl=true){
   loadCommunity(config.id,AbortSignal.any([loadController.signal,AbortSignal.timeout(5000)])).then(items=>({items}),error=>({items:[],error})),localItems
  ]);
  if(generation!==loadGeneration)return;
- config={...config,utilities:[...communityResult.items,...localResult.items].map(currentSpawnLabel)};utilities=config.utilities;ensureTeamType();current=visible()[0]||null;
+ config={...config,utilities:[...communityResult.items,...localResult.items].map(currentSpawnLabel)};utilities=config.utilities;tutorialsReady=true;tutorialLoadError=!!(communityResult.error||localResult.error);
+ if(activeTactic&&config.levelBoundary&&!visible().length){level=tacticItems(activeTactic,utilities)[0]?.level||'upper';syncLevelControls();resetCutControl();}
+ ensureTeamType();current=visible()[0]||null;if(activeTactic&&current)type=current.type;tacticsUI?.refresh();
  $('#community-status').textContent=(communityResult.error?'公开教程暂时无法加载；':`公开教程 ${communityResult.items.length} 条；`)+(localResult.error?localError(localResult.error):`本地 ${localResult.items.length} 条，点位仅在确认后合并`);
  const selectedId=new URLSearchParams(location.search).get('lineup');
- if(utilities.some(item=>item.id===selectedId))select(selectedId);
+ if(utilities.some(item=>item.id===selectedId)&&(!activeTactic||visible().some(item=>item.id===selectedId)))select(selectedId);
  syncFilters();renderList();renderDetail();
  try{
   const loaded=await createMap($('#map-canvas'),$('#map-labels'),utilities,select,icon,config,loadController.signal,{modelDownload});
@@ -178,6 +189,24 @@ $('#lineup-source').onchange=e=>{sourceFilter=e.target.value;ensureTeamType();ch
 $('#map-picker').onchange=e=>switchMap(e.target.value);
 $('#retry-map').onclick=()=>switchMap(config.id,false);
 addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();++detailGeneration;if(localVideoUrl)URL.revokeObjectURL(localVideoUrl);});
+function syncTacticStatus(){
+ document.body.classList.toggle('tactic-active',!!activeTactic);$('#tactic-status').hidden=!activeTactic;
+ $('#tactics-entry').setAttribute('aria-pressed',String(!!activeTactic));
+ if(!activeTactic)return;
+ const found=tacticItems(activeTactic,utilities),missing=activeTactic.entries.length-found.length;
+ $('#tactic-name').textContent=activeTactic.name;
+ $('#tactic-info').textContent=tutorialsReady?'已选 '+activeTactic.entries.length+' 条 · 当前显示 '+visible().length+' 条'+(config.levelBoundary?'（当前楼层）':'')+(missing?' · '+missing+' 条暂未读取到':''):'正在读取战术道具…';
+}
+async function activateTactic(book){
+ activeTactic=book;
+ if(book&&book.map!==config.id){await switchMap(book.map);return;}
+ filter='all';sourceFilter='all';$('#lineup-source').value='all';
+ if(book&&config.levelBoundary&&!visible().length){level=tacticItems(book,utilities)[0]?.level||'upper';map?.setLevel(level);syncLevelControls();resetCutControl();}
+ ensureTeamType();current=visible()[0]||null;if(current)type=current.type;
+ syncFilters();map?.select(current);renderList();renderDetail();
+}
+tacticsUI=setupTactics({maps,getContext:()=>({map:config.id,items:utilities,ready:tutorialsReady,error:tutorialLoadError}),onMap:async id=>{if(id!==config.id)await switchMap(id);},onActivate:activateTactic,getActive:()=>activeTactic});
+$('#tactic-exit').onclick=()=>activateTactic(null);
 await switchMap(config.id,false);
 
 // Preserve existing map integrations and expose one utility tool per new map.
