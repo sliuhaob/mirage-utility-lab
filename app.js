@@ -7,7 +7,7 @@ import {loadCommunity} from './community.js?v=5';
 import {listLocalLineups,readLocalVideo,localError} from './local-lineups.js?v=4';
 import {groupLineups} from './lineup-groups.js?v=2';
 import {escapeHtml} from './submission-schema.js?v=4';
-import {setupTactics} from './tactics.js?v=1';
+import {setupTactics} from './tactics.js?v=2';
 import {tacticItems} from './tactics-store.js?v=1';
 import {setupMobileLayout} from './mobile-layout.js?v=2';
 

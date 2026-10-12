@@ -12,20 +12,25 @@ export function setupTactics({maps,getContext,onMap,onActivate,getActive}){
  function canLeave(){return !dirty||confirm('战术修改尚未保存，确定放弃吗？');}
  function close(){if(busy||!canLeave())return;dialog.close();}
  $('#tactics-close').onclick=close;dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
+ function showLibrary(){
+  editing=null;dirty=false;selected=new Map();$('#tactics-form').hidden=true;$('.tactics-library').hidden=false;
+  message('');
+ }
  function renderBooks(){
   $('#tactics-books').replaceChildren(...books.map(book=>{
    const row=el('article',undefined,'tactic-book');
-   const view=button(book.name,async()=>{if(!canLeave())return;await onActivate(book);dirty=false;dialog.close();});view.className='tactic-open';view.setAttribute('aria-pressed',String(getActive()?.id===book.id));
-   row.append(view,el('small',maps[book.map].name+' · '+book.entries.length+' 条道具'));
+   const active=getActive()?.id===book.id;row.classList.toggle('active',active);
+   const view=button('',async()=>{if(!canLeave())return;await onActivate(book);dirty=false;dialog.close();});view.className='tactic-open';view.setAttribute('aria-pressed',String(active));
+   view.append(el('strong',book.name),el('small',maps[book.map].name+' · '+book.entries.length+' 条道具'));row.append(view);
    const actions=el('div',undefined,'tactic-book-actions');actions.append(button('编辑',()=>edit(book)),button('删除',async()=>{
     if(editing?.id===book.id&&!canLeave())return;
     if(!confirm('删除战术“'+book.name+'”？道具教程和视频会保留。'))return;
     await deleteTactic(book);if(getActive()?.id===book.id)await onActivate(null);
-    if(editing?.id===book.id){$('#tactics-form').hidden=true;editing=null;dirty=false;}
+    if(editing?.id===book.id)showLibrary();
     books=await listTactics();renderBooks();message('战术已删除');
    }));row.append(actions);return row;
   }));
-  if(!books.length)$('#tactics-books').append(el('p','还没有战术，先为当前地图创建一个。'));
+  if(!books.length)$('#tactics-books').append(el('p','还没有保存的战术，点击右上角“新建战术”开始。','tactics-empty'));
  }
  function renderChoices(){
   const context=getContext(),query=$('#tactics-search').value.trim().toLowerCase(),type=$('#tactics-type').value,team=$('#tactics-team').value;
@@ -48,12 +53,12 @@ export function setupTactics({maps,getContext,onMap,onActivate,getActive}){
   if(!canLeave())return;
   if(book&&book.map!==getContext().map)await onMap(book.map);
   editing=book;selected=new Map((book?.entries||[]).map(e=>[e.key,e]));dirty=false;
-  $('#tactics-form').reset();$('#tactics-form').hidden=false;
+  $('#tactics-form').reset();$('.tactics-library').hidden=true;$('#tactics-form').hidden=false;
   $('#tactics-name').value=book?.name||'';$('#tactics-editor-title').textContent=(book?'编辑战术':'新建战术')+' · '+maps[getContext().map].name;
   message('');renderChoices();$('#tactics-choices').scrollTop=0;$('#tactics-name').focus();
  }
  $('#tactics-new').onclick=()=>run(()=>edit());
- $('#tactics-all').onclick=()=>run(async()=>{if(!canLeave())return;await onActivate(null);dirty=false;dialog.close();});
+ $('#tactics-back').onclick=()=>run(()=>{if(!canLeave())return;showLibrary();renderBooks();$('#tactics-new').focus();});
  $('#tactics-search').oninput=renderChoices;$('#tactics-type').onchange=renderChoices;$('#tactics-team').onchange=renderChoices;
  $('#tactics-name').oninput=()=>{dirty=true;};
  $('#tactics-form').onsubmit=e=>{e.preventDefault();run(async()=>{
@@ -64,7 +69,7 @@ export function setupTactics({maps,getContext,onMap,onActivate,getActive}){
   }finally{$('#tactics-form').inert=false;}
  });};
  $('#tactics-entry').onclick=()=>{
-  if(dialog.open)return;editing=null;dirty=false;$('#tactics-form').hidden=true;dialog.showModal();message('正在读取本地战术…');
+  if(dialog.open)return;showLibrary();dialog.showModal();message('正在读取本地战术…');
   $('#tactics-books').replaceChildren();run(async()=>{books=await listTactics();renderBooks();message('');});
  };
  return {refresh(){if(dialog.open&&!$('#tactics-form').hidden)renderChoices();}};
