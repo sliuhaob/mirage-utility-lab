@@ -10,6 +10,7 @@ import {escapeHtml} from './submission-schema.js?v=4';
 import {setupTactics} from './tactics.js?v=2';
 import {tacticItems} from './tactics-store.js?v=1';
 import {setupMobileLayout} from './mobile-layout.js?v=2';
+import {setupInlineVideo} from './inline-video.js?v=1';
 
 import {setupVisitTracking} from './visit-tracker.js?v=1';
 setupVisitTracking();
@@ -20,7 +21,7 @@ let team=new URLSearchParams(location.search).get('team')==='ct'?'ct':'t';
 let utilities=[],type='smoke',filter='all',level='upper',current=null,map,loadController,loadGeneration=0;
 let pointMode='target';
 let activeTactic=null,tacticsUI,tutorialsReady=false,tutorialLoadError=false;
-let view=mobileUI.initialView,sourceFilter='all',localVideoUrl=null,detailGeneration=0;
+let view=mobileUI.initialView,sourceFilter='all',localVideoUrl=null,detailGeneration=0,disposeVideo;
 const zoneName=z=>z==='all'?'全部区域':config.zones[z]||z;
 const $=selector=>document.querySelector(selector);
 const visible=()=>activeTactic?tacticItems(activeTactic,utilities).filter(item=>!config.levelBoundary||item.level===level):mapUtilities(config,type,filter,level,team).filter(item=>sourceFilter==='all'||(sourceFilter==='local'?item.local:!item.local));
@@ -48,6 +49,7 @@ function renderList(){
  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>select(b.dataset.id));
 }
 function renderDetail(){
+ disposeVideo?.();disposeVideo=null;
  const detailVersion=++detailGeneration;
  const methodsScroll=$('.landing-method-list')?.scrollTop||0;
  if(localVideoUrl){URL.revokeObjectURL(localVideoUrl);localVideoUrl=null;}
@@ -58,7 +60,7 @@ function renderDetail(){
  if(!s){$('#detail-content').innerHTML='<div class="empty-detail"><span>'+utilityTypes[type].icon+'</span><h2>暂无对应点位</h2><p>当前阵营暂无这类点位，可切换道具、区域或阵营。</p></div>';return;}
  const group=groupLineups(items,pointMode).find(g=>g.items.some(item=>item.id===s.id));
  const methods=group?.items.length>1?'<section class="landing-methods"><h3>'+(pointMode==='origin'?'此站位':'此落点')+' · '+group.items.length+' 种投掷方法</h3><p>'+(pointMode==='origin'?'选择落点查看对应教程':'选择站位查看对应教程')+'</p><div class="landing-method-list" role="group" aria-label="投掷方法">'+group.items.map(item=>'<button data-method-id="'+item.id+'" aria-pressed="'+(item.id===s.id)+'"><strong>'+escapeHtml(item.name)+'</strong><span>'+escapeHtml(item.from)+' · '+escapeHtml(item.method)+'</span></button>').join('')+'</div></section>':'';
- $('#detail-content').innerHTML=methods+'<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p>'+(s.video?'<video class="tutorial-video" controls playsinline preload="metadata" src="'+escapeHtml(s.video)+'" aria-label="投掷教学视频"></video>':'<div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div>')+'<div class="route-info"><div class="route-row"><span>投掷位置</span><span>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><button class="trajectory-button" id="play-route"><span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p>'+(s.custom?'<p class="source-link">'+s.sourceName+'</p>':'');
+ $('#detail-content').innerHTML=methods+'<span class="detail-zone">'+teamName(s.team)+' · '+zoneName(s.zone)+' · '+utilityTypes[type].label+'</span><h2 class="detail-heading">'+s.name+'</h2><div class="detail-en">'+s.en+'</div><p class="detail-description">'+s.description+'</p>'+(s.video?'<video class="tutorial-video" controls playsinline webkit-playsinline x5-video-player-type="h5-page" preload="metadata" src="'+escapeHtml(s.video)+'" aria-label="投掷教学视频"></video>':'<div class="video-placeholder" role="img" aria-label="视频教学暂未加入"><span class="video-format">LINEUP / VIDEO</span><span class="play">▷</span><strong>教学视频，待加入</strong><small>先通过下方步骤了解投掷方法</small></div>')+'<div class="route-info"><div class="route-row"><span>投掷位置</span><span>'+s.from+'</span></div><div class="route-row"><span>投掷方式</span><span>'+s.method+'</span></div></div><h3 class="steps-title">投掷步骤</h3><ol class="steps">'+s.steps.map(t=>'<li>'+t+'</li>').join('')+'</ol><button class="trajectory-button" id="play-route"><span>演示投掷路线</span></button><p class="tip"><strong>实战提示 / </strong>'+s.tip+'</p>'+(s.custom?'<p class="source-link">'+s.sourceName+'</p>':'');
  const methodList=$('.landing-method-list');
  if(methodList){
   methodList.scrollTop=methodsScroll;
@@ -70,22 +72,27 @@ function renderDetail(){
   }
  }
  document.querySelectorAll('[data-method-id]').forEach(b=>b.onclick=()=>select(b.dataset.methodId));
+ if($('.tutorial-video'))disposeVideo=setupInlineVideo($('.tutorial-video'));
  if(raw.local){
   const link=document.createElement('a');link.className='source-link';link.href='./local.html?edit='+raw.id;link.textContent='编辑本地道具 ↗';$('#detail-content').append(link);
   if(raw.hasVideo){
    const placeholder=$('.video-placeholder');placeholder.textContent='正在读取本地视频…';
-   readLocalVideo(raw.id).then(blob=>{if(detailVersion!==detailGeneration)return;if(!blob)throw Error('本地视频未找到，请重新添加');localVideoUrl=URL.createObjectURL(blob);const video=document.createElement('video');video.className='tutorial-video';video.controls=true;video.playsInline=true;video.preload='metadata';video.src=localVideoUrl;video.setAttribute('aria-label','本地投掷教学视频');placeholder.replaceWith(video);}).catch(error=>{if(detailVersion===detailGeneration)placeholder.textContent=localError(error);});
+   readLocalVideo(raw.id).then(blob=>{if(detailVersion!==detailGeneration)return;if(!blob)throw Error('本地视频未找到，请重新添加');localVideoUrl=URL.createObjectURL(blob);const video=document.createElement('video');video.className='tutorial-video';video.controls=true;video.playsInline=true;video.preload='metadata';disposeVideo=setupInlineVideo(video);video.src=localVideoUrl;video.setAttribute('aria-label','本地投掷教学视频');placeholder.replaceWith(video);}).catch(error=>{if(detailVersion===detailGeneration)placeholder.textContent=localError(error);});
   }
  }
  const b=$('#play-route');
- b.disabled=!map;
- if(!map)b.querySelector('span').textContent=$('#map-error').hidden?'地图加载中…':'3D 地图不可用';
+ syncRouteButton();
  b.onclick=async()=>{
   if(!map)return;
   b.disabled=true;b.querySelector('span').textContent='正在演示…';
   await map.play();
   if(b.isConnected){b.disabled=false;b.querySelector('span').textContent='再次演示投掷路线';}
  };
+}
+function syncRouteButton(){
+ const button=$('#play-route');if(!button)return;
+ button.disabled=!map;
+ button.querySelector('span').textContent=map?'演示投掷路线':$('#map-error').hidden?'地图加载中…':'3D 地图不可用';
 }
 function syncFilters(){
  const info=utilityTypes[type];
@@ -103,7 +110,7 @@ function select(id){
  if(next&&(sourceFilter==='local'&&!next.local||sourceFilter==='public'&&next.local)){sourceFilter='all';$('#lineup-source').value='all';}
  if(next){if(next.team!=='any'&&next.team!==team){team=next.team;syncUrl();}type=next.type;if(config.levelBoundary&&next.level!==level){level=next.level;map?.setLevel(level);syncLevelControls();resetCutControl();}if(filter!=='all'&&filter!==next.zone)filter='all';}
  current=next||null;
- syncFilters();map?.select(current);renderList();renderDetail();mobileUI.showDetails();
+ mobileUI.showDetails();syncFilters();map?.select(current);renderList();renderDetail();
 }
 function changeFilters(nextType,nextZone){
  if(config.levelBoundary&&nextZone!=='all'){
@@ -183,12 +190,13 @@ async function switchMap(id,updateUrl=true){
   if(generation!==loadGeneration){loaded.dispose();return;}
   map=loaded;map.setLevel(level);map.setRoofs(false);map.setCutHeight(Number(cut.value));map.setView(view);syncFilters();map.select(current);
  }catch(error){if(generation!==loadGeneration||error.name==='AbortError')return;console.error('3D map initialization failed',error);$('#map-error').hidden=false;$('#map-loading').hidden=true;}
- renderDetail();
+ // A completed model load must not replace an already-playing video element.
+ syncRouteButton();
 }
 $('#lineup-source').onchange=e=>{sourceFilter=e.target.value;ensureTeamType();changeFilters(type,filter);};
 $('#map-picker').onchange=e=>switchMap(e.target.value);
 $('#retry-map').onclick=()=>switchMap(config.id,false);
-addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();++detailGeneration;if(localVideoUrl)URL.revokeObjectURL(localVideoUrl);});
+addEventListener('pagehide',()=>{loadController?.abort();map?.dispose();disposeVideo?.();++detailGeneration;if(localVideoUrl)URL.revokeObjectURL(localVideoUrl);});
 function syncTacticStatus(){
  document.body.classList.toggle('tactic-active',!!activeTactic);$('#tactic-status').hidden=!activeTactic;
  $('#tactics-entry').setAttribute('aria-pressed',String(!!activeTactic));

@@ -74,3 +74,35 @@
 .point-name-toggle{position:absolute;left:18px;bottom:116px;z-index:5;padding:8px 12px;border:1px solid #43534e;border-radius:5px;background:#111b1eee;color:#9eada7;font-size:13px;line-height:1.4}.point-name-toggle.active{background:#365058;color:#d7f3f3}.point-name-toggle:focus-visible{outline:2px solid #f2bc7d;outline-offset:3px}
 #map-labels.point-names-hidden .world-label:not(.world-marker),#map-labels.point-names-hidden .marker-caption{display:none}
 @media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){.point-name-toggle{left:10px;bottom:40px;z-index:40;min-height:40px;font-size:14px}}
+
+/* Compact landscape controls leave more room for the map and tutorial video. */
+@media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
+ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;--phone-bar-height:34px}
+ .topbar{height:calc(var(--phone-bar-height) + env(safe-area-inset-top));gap:6px;padding-inline:max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-right))}
+ .workspace{top:calc(var(--phone-bar-height) + env(safe-area-inset-top))}
+ .brand{font-size:14px;gap:5px;line-height:1.1;letter-spacing:.5px}.brand-symbol{width:20px;height:22px}.brand-symbol img{width:18px;height:18px}
+ .topbar>.map-picker select{min-height:26px;max-width:136px;padding:4px 6px;font-size:11px;line-height:1.2}
+ .header-actions{gap:4px}.topbar .header-actions>.developer-entry,.topbar .header-actions>#tactics-entry{padding:4px 6px;font-size:10px;line-height:1.4}
+ .mobile-actions{gap:3px}.mobile-actions button,.mobile-dismiss{min-height:28px;min-width:32px;padding:4px 7px;font-size:11px;line-height:1.3}
+ .map-view-switch{top:6px;left:8px;padding:2px}.map-view-switch button{min-height:28px;padding:4px 8px;font-size:12px}
+ .utility-switch{top:6px;right:8px;padding:2px}.utility-switch button{height:28px;min-width:35px;gap:3px;padding:3px 5px;font-size:11px}.utility-switch svg{width:18px;height:21px}
+ .team-switch{top:44px;right:8px;padding:2px}.team-switch button{min-width:67px;min-height:28px;padding:4px 7px;font-size:11px}
+ .cut-height-control{left:8px;top:44px;padding:2px 6px;gap:5px;font-size:11px}.cut-height-control span{font-size:10px}.cut-height-control input{width:84px;height:24px}
+ .level-switch{left:8px;right:auto;top:82px}.level-switch button{min-height:28px;padding:4px 8px;font-size:11px}
+ .point-name-toggle{left:8px;bottom:32px;min-height:28px;padding:4px 8px;font-size:11px}.map-controls{right:8px;bottom:32px;padding:1px}.map-controls button{width:28px;height:28px;font-size:19px}.map-controls>span{height:17px;margin:0 3px}
+ .world-marker{width:30px;height:30px}.world-marker svg{width:19px;height:22px}.marker-count{min-width:16px;height:16px;padding:0 3px;right:-6px;top:-6px;font-size:10px;line-height:14px}.marker-caption{top:33px;padding:3px 5px;font-size:10px}.origin-label{padding:3px 6px;font-size:10px}.area-label{font-size:10px}
+ .map-bottom{left:8px;right:8px;bottom:6px}.legend{gap:9px;font-size:10px}.map-bottom p{font-size:10px}
+ .sidebar{padding:7px 10px}.detail-panel{padding:7px 12px 18px;background:#141e20;isolation:isolate;-webkit-overflow-scrolling:auto}
+ .mobile-panel-head,.detail-top{top:-7px;padding:4px 0;margin-bottom:8px;font-size:12px}.detail-top{gap:6px}
+ .library-title h2{font-size:14px}.filters{margin-bottom:7px}.filters button{min-height:28px;padding:4px 0;font-size:12px}
+ .point-item{padding:7px 5px;gap:7px}.point-item strong{font-size:12px}.point-item small{font-size:10px}.smoke-icon{width:26px;height:28px}.smoke-icon svg{width:19px;height:22px}
+ .lineup-source{font-size:10px;margin:10px 0}.lineup-source select{font-size:11px;padding:4px;max-width:130px}
+ .landing-methods{padding:10px;margin-bottom:16px}.landing-methods h3{font-size:12px}.landing-method-list{grid-auto-rows:50px;gap:5px;max-height:160px}.landing-methods button{height:50px;padding:6px 8px}.landing-methods strong{font-size:11px}.landing-methods button span{margin-top:2px}
+ .detail-heading{font-size:20px}.detail-description,.steps li,.route-row{font-size:12px}.steps-title{font-size:13px}.tip,.source-link{font-size:11px}.trajectory-button{min-height:30px;padding:7px;font-size:12px}
+ .tutorial-video{display:block;position:relative;z-index:1;isolation:isolate;transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:0;object-fit:contain}
+ .tactic-status{padding:9px;font-size:11px}.tactic-status button,.tactics-dialog button{padding:5px 8px;font-size:11px}.tactics-dialog h2{font-size:18px}.tactics-dialog h3{font-size:14px}
+}
+/* A nearly invisible inner edge forces video-surface repaint on affected
+   Android browsers. Enabled only during visible inline playback by JS. */
+.tutorial-video.inline-video-refresh{outline:1px solid rgba(0,0,0,.004);outline-offset:-1px;animation:inline-video-repaint .066667s step-end infinite}
+@keyframes inline-video-repaint{0%,100%{outline-color:rgba(0,0,0,.004)}50%{outline-color:rgba(0,0,0,.008)}}
