@@ -34,8 +34,9 @@ export function setupMobileLayout(){
  listButton.onclick=()=>setPanel(body.dataset.mobilePanel==='points'?null:'points',true);
  detailButton.onclick=()=>setPanel(body.dataset.mobilePanel==='guide'?null:'guide',true);
  document.querySelectorAll('.mobile-dismiss').forEach(b=>b.onclick=()=>setPanel(null,true));
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&body.dataset.mobilePanel)setPanel(null,true);});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&body.dataset.mobilePanel&&!body.classList.contains('video-expanded'))setPanel(null,true);});
  function refresh(){
+  if(body.classList.contains('video-expanded'))return;
   const nowPortrait=phone.matches&&portrait.matches;
   rotatePrompt.setAttribute('aria-hidden',String(!nowPortrait));
   if(!isLandscape())setPanel(null);
@@ -61,6 +62,7 @@ export function setupMobileLayout(){
  };
  phone.addEventListener('change',refresh);portrait.addEventListener('change',refresh);
  document.addEventListener('fullscreenchange',refresh);
+ document.addEventListener('video-layout-change',refresh);
  refresh();
  return {initialView:phone.matches?'radar':'3d',showDetails(){if(isLandscape())setPanel('guide',true);}};
 }

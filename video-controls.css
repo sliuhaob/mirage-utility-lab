@@ -3,7 +3,10 @@
 .tutorial-player-controls[hidden]{display:none}
 .tutorial-player-controls button{display:grid;place-items:center;min-width:28px;height:28px;padding:3px 5px;border:0;border-radius:3px;background:transparent;color:#d1e0d7;font-size:11px;line-height:1;white-space:nowrap}
 .tutorial-player-controls button:hover,.tutorial-player-controls button:focus-visible{background:#2b403b}
+.tutorial-player-controls button[hidden]{display:none}
 .tutorial-player-controls svg{width:18px;height:18px}
+.video-play .pause-symbol,.video-play[data-state=pause] .play-symbol{display:none}
+.video-play[data-state=pause] .pause-symbol{display:block}
 .tutorial-player-controls input{display:block;min-width:0;width:100%;height:28px;margin:0;padding:0;accent-color:#e6b77c;cursor:pointer;touch-action:pan-y}
 .video-time{font-size:10px;line-height:1;white-space:nowrap;color:#b8c9bf;font-variant-numeric:tabular-nums}
 .video-mute .sound-off,.video-mute[aria-pressed=true] .sound-waves{display:none}
@@ -17,3 +20,12 @@
 .tutorial-player:fullscreen .tutorial-video{flex:1;min-height:0;height:0;width:100%;max-height:none;aspect-ratio:auto;object-fit:contain;border-radius:0}
 .tutorial-player:fullscreen .tutorial-player-controls{border-radius:0;padding-inline:max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-right));padding-bottom:max(4px,env(safe-area-inset-bottom))}
 .tutorial-player:fullscreen .video-player-status{padding-inline:8px;flex:none}
+/* Keep the fallback above the map and outside the tutorial scroll clipping. */
+body.video-expanded .workspace{display:block;z-index:1000;overflow:visible}
+body.video-expanded #tutorial-panel{display:block!important;position:fixed;inset:0;width:100%;height:100%;padding:0;overflow:visible;border:0;isolation:auto}
+body.video-expanded #tutorial-panel>.detail-top,body.video-expanded #detail-content>:not(.video-expanded-player),body.video-expanded .rotate-prompt{display:none!important}
+.tutorial-player.video-expanded-player{position:fixed;inset:0;z-index:1001;display:flex;flex-direction:column;width:100%;height:100%;padding:0;background:#080d0e}
+.tutorial-player.video-expanded-player .tutorial-video{flex:1;min-height:0;height:0;width:100%;max-height:none;aspect-ratio:auto;object-fit:contain;border-radius:0}
+.tutorial-player.video-expanded-player .tutorial-player-controls{border-radius:0;padding-inline:max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-right));padding-bottom:max(4px,env(safe-area-inset-bottom))}
+.tutorial-player.video-expanded-player .video-player-status{padding-inline:8px;flex:none}
+.tutorial-video.video-conservative{transform:none;-webkit-backface-visibility:visible;backface-visibility:visible;isolation:auto;animation:none!important;outline:none!important}
