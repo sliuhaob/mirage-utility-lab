@@ -6,13 +6,13 @@
    expand without restoring the former vertical stack. No CSS canvas rotation. */
 @media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
  html,body{width:100%;height:100dvh;overflow:hidden;overscroll-behavior:none}body{position:relative}
- .topbar{height:calc(44px + env(safe-area-inset-top));padding:env(safe-area-inset-top) max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left));gap:12px}
+ .topbar{position:fixed;top:0;left:0;right:0;z-index:80;height:44px;margin:0;padding:0 max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left));gap:12px}
  .brand{font-size:20px;gap:8px;flex:none}.brand-symbol{width:25px;height:28px;font-size:22px}.brand-symbol span{font-size:12px}
  .brand small,.top-title,.version,.statusbar,.stage-heading{display:none}
  .mobile-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
  .mobile-actions button,.mobile-dismiss{min-height:40px;min-width:44px;padding:7px 12px;border:1px solid #43524b;border-radius:4px;background:#1c2928;font-size:14px;color:#d7dfd4}
  .mobile-actions button[aria-expanded=true]{border-color:var(--utility-color);color:var(--utility-color);background:#304038}
- .workspace{position:absolute;top:calc(44px + env(safe-area-inset-top));bottom:env(safe-area-inset-bottom);left:env(safe-area-inset-left);right:env(safe-area-inset-right);display:block;height:auto;min-height:0;max-height:none;overflow:hidden}
+ .workspace{position:fixed;top:44px;bottom:env(safe-area-inset-bottom);left:env(safe-area-inset-left);right:env(safe-area-inset-right);display:block;height:auto;min-height:0;max-height:none;overflow:hidden}
  .map-stage{position:absolute;inset:0;width:100%;height:100%;min-height:0;z-index:0}
  .sidebar,.detail-panel{display:none;position:absolute;top:0;bottom:0;height:100%;min-height:0;z-index:70;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#141e20fa;box-shadow:0 8px 28px #0008}
  .sidebar{left:0;width:min(260px,42vw);padding:10px 12px;border-right:1px solid #43524b;border-bottom:0}
@@ -78,8 +78,8 @@
 /* Compact landscape controls leave more room for the map and tutorial video. */
 @media (pointer:coarse) and (max-width:600px), (pointer:coarse) and (max-height:600px){
  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;--phone-bar-height:34px}
- .topbar{height:calc(var(--phone-bar-height) + env(safe-area-inset-top));gap:6px;padding-inline:max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-right))}
- .workspace{top:calc(var(--phone-bar-height) + env(safe-area-inset-top))}
+ .topbar{height:var(--phone-bar-height);gap:6px;padding-block:0;padding-inline:max(8px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-right))}
+ .workspace{top:var(--phone-bar-height)}
  .brand{font-size:14px;gap:5px;line-height:1.1;letter-spacing:.5px}.brand-symbol{width:20px;height:22px}.brand-symbol img{width:18px;height:18px}
  .topbar>.map-picker select{min-height:26px;max-width:136px;padding:4px 6px;font-size:11px;line-height:1.2}
  .header-actions{gap:4px}.topbar .header-actions>.developer-entry,.topbar .header-actions>#tactics-entry{padding:4px 6px;font-size:10px;line-height:1.4}
